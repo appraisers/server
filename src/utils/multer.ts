@@ -2,7 +2,6 @@ import multer from 'fastify-multer';
 import { FastifyRequest, FastifyReply } from 'fastify';
 import multerS3 from 'multer-s3';
 import fs from 'fs';
-import { MAX_FILES_COUNT } from '../modules/Listing/listing.constants';
 import path from 'path';
 import config from '../config';
 const { PATH_TO_UPLOADS } = config;
@@ -17,6 +16,8 @@ export interface File {
   path: string; // 'uploads/1613044232755-sample2-thumb.jpeg',
   size: number; // 9729
 }
+
+const MAX_FILES_COUNT = 100;
 
 const s3 = new aws.S3({
   secretAccessKey: process.env.AMAZONS3_PRIVATE_KEY,

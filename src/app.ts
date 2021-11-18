@@ -113,7 +113,7 @@ export default function build(): FastifyInstance {
   });
 
   // ROUTER FILES
-  app.register(accountRoutes, { prefix: '/api/accounts' });
+  //   app.register(accountRoutes, { prefix: '/api/accounts' });
   
   app.get('/', async (request, reply) => {
     return {
