@@ -47,11 +47,7 @@ export const registerService = async (
   sendEmail({
     type: 'account-confirmation',
     emailTo: email,
-    subject: 'Account confirmation',
-    replacements: {
-      link: `${FRONTEND_URL}/confirm/${emailConfirmationToken}`,
-      name: `${firstName} ${lastName}`,
-    }
+    subject: 'Account confirmation'
   })
   return null;
 };
@@ -69,11 +65,7 @@ export const forgotPasswordService = async (
   sendEmail({
     type: 'forgot-password',
     emailTo: email,
-    subject: 'Recovery password',
-    replacements: {
-      link: `${FRONTEND_URL}/reset/${forgotPasswordToken}`,
-      name: `${user.firstName} ${user.lastName}`,
-    }
+    subject: 'Recovery password'
   })
   return null;
 };
