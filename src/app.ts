@@ -14,9 +14,8 @@ import fastifyStatic from 'fastify-static';
 import config from './config';
 import { CommonResponse } from './utils/common.interfaces';
 
-import accountRoutes from './modules/Account/account.routes';
+import authRoutes from './modules/Auth/auth.routes';
 
-import { seedsPlugin } from './seeds';
 import { filesMultipleUpload } from './utils/multer';
 
 let app = fastify({
@@ -41,7 +40,6 @@ export default function build(): FastifyInstance {
     bodyLimit: 104857600,
   });
   app.register(fastifyTypeormPlugin, config.MAIN_DB);
-  // app.register(seedsPlugin);
   app.register(fastifyJWT, {
     secret: config.JWT_SECRET,
   });
@@ -111,7 +109,7 @@ export default function build(): FastifyInstance {
   });
 
   // ROUTER FILES
-  //   app.register(accountRoutes, { prefix: '/api/accounts' });
+  app.register(authRoutes, { prefix: '/api/auth' });
   
   app.get('/', async (request, reply) => {
     return {

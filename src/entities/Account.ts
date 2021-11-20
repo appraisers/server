@@ -7,20 +7,7 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm';
-import { Address } from './Address';
 import { Token } from './Token';
-import { Schedule } from './Schedule';
-import { Media } from './Media';
-import { FavouriteAccount } from './FavouriteAccount';
-import { Listing } from './Listing';
-import { Business } from './Business';
-import { Cart } from './Cart';
-import { FavouriteListing } from './FavouriteListing';
-import { Review } from './Review';
-import { Message } from './Message';
-import { MessageAttachment } from './MessageAttachment';
-import { ChatroomUser } from './ChatroomUser';
-import { Advertisement } from './Advertisement';
 
 export enum Roles {
   ADMIN = 'admin',
@@ -210,50 +197,4 @@ export class Account {
 
   @OneToMany(() => Token, (token) => token.user)
   tokens!: Token[];
-
-  @OneToMany(() => Address, (address) => address.account)
-  addresses!: Address[];
-
-  @OneToMany(() => Schedule, (schedule) => schedule.seller)
-  schedules!: Schedule[];
-
-  @OneToMany(() => Media, (media) => media.account)
-  medias!: Media[];
-
-  @OneToMany(() => Message, (message) => message.account)
-  messages!: Message[];
-
-  @OneToMany(() => ChatroomUser, (chatroomUser) => chatroomUser.account)
-  chatroomUsers!: ChatroomUser[];
-
-  @OneToMany(() => FavouriteAccount, (favouriteAccount) => favouriteAccount.account)
-  favouriteAccount!: FavouriteAccount[];
-
-  @OneToMany(() => FavouriteListing, (favouriteListing) => favouriteListing.owner)
-  favouriteListings!: FavouriteListing[];
-
-  @OneToMany(() => FavouriteAccount, (favouriteAccount) => favouriteAccount.owner)
-  favouriteOwner!: FavouriteAccount[];
-
-  @OneToMany(() => Listing, (listing) => listing.account)
-  listings!: Request[];
-
-  @OneToMany(() => Business, (business) => business.account)
-  businesses!: Business[];
-
-  @OneToMany(() => Cart, (cart) => cart.owner)
-  carts!: Cart[];
-
-  @OneToMany(() => Review, (review) => review.author)
-  reviews!: Review[];
-
-  @OneToMany(() => Review, (review) => review.account)
-  reviewsOnSelf!: Review[];
-
-  @OneToMany(() => MessageAttachment, (messageAttachment) => messageAttachment.account)
-  messageAttachments!: MessageAttachment;
-
-  @OneToMany(() => Advertisement, (advertisement) => advertisement.seller)
-  advertisements!: Advertisement[];
-
 }
