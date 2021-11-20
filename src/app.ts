@@ -19,8 +19,6 @@ import accountRoutes from './modules/Account/account.routes';
 import { seedsPlugin } from './seeds';
 import { filesMultipleUpload } from './utils/multer';
 
-export const stripe = require('stripe')(config.STRIPE.PRIVATE_KEY);
-
 let app = fastify({
   pluginTimeout: 20000 // resolve problem "Error: ERR_AVVIO_PLUGIN_TIMEOUT: plugin did not start in time ..."
 });
