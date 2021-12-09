@@ -1,5 +1,25 @@
 Server
 
 Start:
-
 npm run serve
+
+
+
+DataBase:
+
+docker-compose.yml :
+
+start: docker-compose up
+finish: docker-compose down
+adress: localhost: 5050.
+
+Login index PGADMIN
+Email address: admin@admin.com
+password: admin123
+database name: postgres
+
+Log In DB:
+user: admin
+password: admin123
+
+
