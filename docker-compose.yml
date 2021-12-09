@@ -1,0 +1,27 @@
+version: '3.4'
+
+services:
+  postgres:
+      image: postgres:latest
+      environment:
+          - POSTGRES_USER=admin
+          - POSTGRES_PASSWORD=admin123
+          - POSTGRES_DB=productDb
+      ports:
+          - "5437:5432"
+      restart: always
+      volumes:
+          - database-data:/var/lib/postgresql/data/
+  pgadmin:
+      image: dpage/pgadmin4
+      environment:
+          - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+          - PGADMIN_DEFAULT_PASSWORD=admin123
+      ports:
+          - '5050:80'
+      restart: always
+      volumes:
+          - pgadmin:/root/.pgadmin
+volumes:
+  database-data:
+  pgadmin:      
