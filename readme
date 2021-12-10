@@ -7,15 +7,5 @@ npm run serve
 
 database: 
 
-start: docker-compose up
-finish: docker-compose down
-adress: localhost: 5050.
-
-Login index PGADMIN
-Email address: admin@admin.com
-password: admin123
-database name: postgres
-
-Log In DB:
-user: admin
-password: admin123
+container: docker-compose.yml
+.env -> login
