@@ -25,3 +25,5 @@ yarn-error.log*
 tmp/
 temp/
 .nyc_output/
+
+.env
