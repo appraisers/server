@@ -4,9 +4,9 @@ Start:
 
 npm run serve
 
-
 database: 
 
 start: docker-compose up
 finish: docker-compose down
 adress: localhost: 5050 
+
