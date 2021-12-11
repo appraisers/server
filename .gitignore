@@ -27,3 +27,4 @@ temp/
 .nyc_output/
 
 .env
+.pgadmin
