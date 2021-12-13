@@ -3,10 +3,10 @@ Server
 Start:
 
 npm run serve
-
+ 
 database: 
 
-start: docker-compose up
-finish: docker-compose down
+start: docker-compose --env-file .env.local up  
+finish: docker-compose --env-file .env.local down
 adress: localhost: 5050 
 
