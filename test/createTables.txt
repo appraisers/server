@@ -1,0 +1,28 @@
+FOR CREATION USER TABLE:
+
+CREATE SEQUENCE table_name_id_seq;
+CREATE TABLE IF NOT EXISTS public."user"
+(
+id integer NOT NULL DEFAULT nextval('table_name_id_seq'),
+fullname character varying COLLATE pg_catalog."default",
+email character varying COLLATE pg_catalog."default",
+"createdAt" date,
+"deletedAt" date,
+workplace character varying COLLATE pg_catalog."default",
+"position" character varying COLLATE pg_catalog."default",
+rating integer,
+role character varying COLLATE pg_catalog."default",
+CONSTRAINT user_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."user"
+OWNER to admin;
+----------------
+FOR INSERT USER IN TABLE
+
+INSERT INTO public."user"(
+	fullname, email, "createdAt", "deletedAt", workplace, "position", rating, role)
+	VALUES ('1', '1', '1999-01-08', '1999-01-08', '1', '1', 1, '1');
+----------------
