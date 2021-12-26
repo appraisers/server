@@ -22,6 +22,5 @@ server.listen(process.env.PORT || 3001, '0.0.0.0', (err, address) => {
     console.error(err);
     process.exit(1);
   }
-  console.log('process.env.PORT', process.env.PORT)
   console.log(`> Server listening at ${address}`);
 });

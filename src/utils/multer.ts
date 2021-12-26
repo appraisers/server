@@ -96,8 +96,6 @@ export const filesUpload = (fieldName: string) => ([
 ]);
 
 export const filesMultipleUpload = (...args: string[]) => {
-  console.log('args', args)
-
   return ([
     upload.fields(
       args.map(item => ({
