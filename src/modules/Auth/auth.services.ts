@@ -17,9 +17,7 @@ import { buildError, genUniqNumber } from './auth.utils';
 import { UserRepository, TokenRepository } from './auth.repositories';
 import { allErrors } from './auth.messages';
 import { sendEmail } from '../../utils/mail.helper';
-import config from '../../config';
 import { Account as User } from '../../entities/Account';
-const { FRONTEND_URL } = config;
 
 export const registerService = async (
   data: RegisterRequestBody

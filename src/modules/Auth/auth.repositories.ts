@@ -4,8 +4,6 @@ import { Account as User, roles } from '../../entities/Account';
 import { RegisterRepositoryData, ConfirmRequestBody } from './auth.interfaces';
 import { EXPIRED } from './auth.constants';
 import { genSaltSync, hashSync } from 'bcryptjs';
-import { Cart } from '../../entities/Cart';
-import { AccountRepository } from '../Account/account.repository';
 
 interface CreateTokenRequest {
   user: User,
@@ -40,12 +38,6 @@ export class UserRepository extends Repository<User> {
     user.phoneConfirmationToken = phoneConfirmationToken;
     return this.save(user);
   }
-  createCart({ user }: { user: User }) {
-    const cartRepo = getRepository(Cart);
-    const cart = new Cart;
-    cart.owner = user;
-    return cartRepo.save(cart);
-  }
   confirm(data: ConfirmRequestBody): Promise<any> {
     return this.update(
       {
@@ -79,15 +71,15 @@ export class UserRepository extends Repository<User> {
     return this.findOne({ where: { [key]: val } });
   }
 
-  async getMediaForAccount(accountId: number) {
-    const accountRepo = getCustomRepository(AccountRepository);
-    const query = await accountRepo.createQueryBuilder('account')
-      .leftJoin('account.medias', 'media')
-      .select('account.id')
-      .addSelect('media.url')
-      .where('account.id = :accountId', { accountId });
-    return query.getOne();
-  }
+  // async getMediaForAccount(accountId: number) {
+  //   const accountRepo = getCustomRepository(AccountRepository);
+  //   const query = await accountRepo.createQueryBuilder('account')
+  //     .leftJoin('account.medias', 'media')
+  //     .select('account.id')
+  //     .addSelect('media.url')
+  //     .where('account.id = :accountId', { accountId });
+  //   return query.getOne();
+  // }
 }
 
 @EntityRepository(Token)

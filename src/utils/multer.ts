@@ -24,33 +24,33 @@ const s3 = new aws.S3({
   accessKeyId: process.env.AMAZONS3_ACCESS_KEY,
 });
 
-const storageS3 = multerS3({
-  s3: s3,
-  bucket: process.env.AMAZONS3_BUCKET_NAME,
-  destination: function (req: any, file: any, cb: any) {
-    const uploadPath = path.resolve(__dirname, PATH_TO_UPLOADS);
-    if (!fs.existsSync(uploadPath)) {
-      fs.mkdirSync(uploadPath, { recursive: true });
-    }
-    cb(null, uploadPath);
-  },
-  metadata: function (req: any, file: any, cb: any) {
-    console.log(file);
-    cb(null, { filename: file.originalname });
-  },
-  key: function (req: any, file: any, cb: any) {
-    // console.log(req)
-    // console.log(req.key);
-    const fileName = Date.now() + '-' + file.originalname;
-    cb(null, fileName);
-  },
-  filename: function (req: any, file: any, cb: any) {
-    // console.log(req)
-    // console.log(req.key);
-    const fileName = Date.now() + '-' + file.originalname;
-    cb(null, fileName);
-  }
-} as any)
+// const storageS3 = multerS3({
+//   s3: s3,
+//   bucket: process.env.AMAZONS3_BUCKET_NAME,
+//   destination: function (req: any, file: any, cb: any) {
+//     const uploadPath = path.resolve(__dirname, PATH_TO_UPLOADS);
+//     if (!fs.existsSync(uploadPath)) {
+//       fs.mkdirSync(uploadPath, { recursive: true });
+//     }
+//     cb(null, uploadPath);
+//   },
+//   metadata: function (req: any, file: any, cb: any) {
+//     console.log(file);
+//     cb(null, { filename: file.originalname });
+//   },
+//   key: function (req: any, file: any, cb: any) {
+//     // console.log(req)
+//     // console.log(req.key);
+//     const fileName = Date.now() + '-' + file.originalname;
+//     cb(null, fileName);
+//   },
+//   filename: function (req: any, file: any, cb: any) {
+//     // console.log(req)
+//     // console.log(req.key);
+//     const fileName = Date.now() + '-' + file.originalname;
+//     cb(null, fileName);
+//   }
+// } as any)
 
 
 const storage = multer.diskStorage(
@@ -71,7 +71,8 @@ const storage = multer.diskStorage(
 )
 
 export const upload = multer({
-  storage: process.env.NODE_ENV === 'development' ? storage : storageS3
+  //storage: process.env.NODE_ENV === 'development' ? storage : storageS3
+  storage
 } as any);
 
 

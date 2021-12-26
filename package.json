@@ -6,6 +6,7 @@
   "scripts": {
     "build": "npm run copy:assets && tsc -p tsconfig.json",
     "lint": "eslint --ext .ts ./src --quiet --fix",
+    "prettier": "./node_modules/.bin/prettier --check \"./src/**/*.{ts,tsx}\"",
     "serve": "ts-node-dev --inspect --respawn --transpile-only ./src/server.ts",
     "serve2": "npm run build && concurrently \"tsc -w -p tsconfig.json\" \"nodemon ./build/server.js\"",
     "start": "node --max_old_space_size=750 build/server.js",

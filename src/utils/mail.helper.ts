@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import * as nodemailer from 'nodemailer';
-import * as handlebars from 'handlebars';
 import * as fs from 'fs';
 import * as path from 'path';
 import config from '../config';
