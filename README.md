@@ -1,16 +1,14 @@
-Server
-
 Start:
 
 npm run serve
  
-database: 
+Database: 
 
 start docker image: docker-compose --env-file .env.local up  
 stop docker image: docker-compose --env-file .env.local down
-adress pgAdmin: localhost:5050 
+address pgAdmin: localhost:5050 
 
-create server: 
+Create server in PG_ADMIN: 
     general: name(postgres)
     connection: host name - any
                 user name - POSTGRES_USER
