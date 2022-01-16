@@ -9,8 +9,8 @@ stop docker image: docker-compose --env-file .env.local down
 address pgAdmin: localhost:5050 
 
 Create server in PG_ADMIN: 
-    general: name(postgres)
-    connection: host name - any
+    general: name - postgres
+    connection: host name - postgres
                 user name - POSTGRES_USER
                 password  - POSTGRES_PASSWORD
 
