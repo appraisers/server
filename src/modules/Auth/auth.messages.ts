@@ -5,6 +5,3 @@ export const allErrors = {
   youMustFillTheEmailOrPhoneField: 'You must fill the email or phone field',
   jwtExpires: 'jwt expired',
 }
-export const allSuccess = {
-
-}

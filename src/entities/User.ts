@@ -52,6 +52,13 @@ export class User {
   })
   role!: Roles;
 
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    name: 'forgot_password_token',
+  })
+  forgotPasswordToken!: string | null;
+
   @Column('timestamp', {
     nullable: false,
     default: () => 'CURRENT_TIMESTAMP',

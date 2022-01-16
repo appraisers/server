@@ -26,25 +26,15 @@ export class UserRepository extends Repository<User> {
     user.role = role ?? roles.user;
     return this.save(user);
   }
-  // confirm(data: ConfirmRequestBody): Promise<any> {
-  //   return this.update(
-  //     {
-  //       emailConfirmationToken: data.token,
-  //     }, {
-  //     emailConfirmationToken: null,
-  //     emailConfirmed: true
-  //   }
-  //   );
-  // }
-  // resetPassword(data: any) {
-  //   const salt = genSaltSync(10);
-  //   return this.update({
-  //     forgotPasswordToken: data.token
-  //   }, {
-  //     password: hashSync(data.password, salt),
-  //     forgotPasswordToken: null,
-  //   });
-  // }
+  resetPassword(data: any) {
+    const salt = genSaltSync(10);
+    return this.update({
+      forgotPasswordToken: data.token
+    }, {
+      password: hashSync(data.password, salt),
+      forgotPasswordToken: null,
+    });
+  }
   findOneWithPasswordByKey<T extends keyof User>(
     key: T,
     val: string | number

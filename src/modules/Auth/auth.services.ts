@@ -19,37 +19,6 @@ import { allErrors } from './auth.messages';
 import { sendEmail } from '../../utils/mail.helper';
 import { User } from '../../entities/User';
 
-export const registerService = async (
-  data: RegisterRequestBody
-): Promise<null> => {
-  const userRepo = getCustomRepository(UserRepository);
-  const { firstName, lastName, email, phone, password } = data;
-  const salt = bcrypt.genSaltSync(10);
-  if (!email && !phone) throw buildError(400, allErrors.youMustFillTheEmailOrPhoneField);
-  const emailConfirmationToken = email ? uuidv4() : null;
-  // TODO phone confirm
-  const phoneConfirmationToken = phone ? genUniqNumber() : null;
-  const phoneConfirmed = true;
-
-  const passwordHash = bcrypt.hashSync(password, salt);
-  const user = await userRepo.createUser({
-    ...data,
-    password: passwordHash,
-    emailConfirmationToken,
-    phoneConfirmed,
-    phoneConfirmationToken,
-    emailConfirmed: false
-  });
-  await userRepo.createCart({ user });
-
-  sendEmail({
-    type: 'user-confirmation',
-    emailTo: email,
-    subject: 'User confirmation'
-  })
-  return null;
-};
-
 export const forgotPasswordService = async (
   data: ForgotPasswordRequestBody
 ): Promise<null> => {
@@ -65,15 +34,6 @@ export const forgotPasswordService = async (
     emailTo: email,
     subject: 'Recovery password'
   })
-  return null;
-};
-
-export const confirmService = async (
-  data: ConfirmRequestBody
-): Promise<null> => {
-  const userRepo = getCustomRepository(UserRepository);
-  const updateResult = await userRepo.confirm(data);
-  if (!updateResult.affected) throw buildError(400, 'No such confirmation token');
   return null;
 };
 
@@ -152,11 +112,6 @@ export const checkUserEmail = async (
   const userRepo = getCustomRepository(UserRepository);
   const user = await userRepo.findOneUserByKey('email', email);
   return user?.id;
-}
-export const getMediaForUser = async (userId: number): Promise<any> => {
-  const userRepo = getCustomRepository(UserRepository);
-  const media = await userRepo.getMediaForUser(userId);
-  return media;
 }
 export const refreshTokenService = async (
   token: string, // refresh token

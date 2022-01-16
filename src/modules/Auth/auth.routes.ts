@@ -1,4 +1,3 @@
-import { allErrors } from './auth.messages';
 import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify';
 import {
   LoginResponse,
@@ -10,6 +9,7 @@ import {
   ForgotPasswordRequestBody,
   ResetPasswordRequestBody,
 } from './auth.interfaces';
+import { allErrors } from './auth.messages';
 import {
   loginSchema,
   registerSchema,
@@ -21,12 +21,9 @@ import {
 } from './auth.schemas';
 import {
   loginService,
-  registerService,
   refreshTokenService,
-  confirmService,
   checkAuthService,
   forgotPasswordService,
-  getMediaForUser,
   // updateTokensService,
   resetPasswordService,
 } from './auth.services';
@@ -39,21 +36,6 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     message: 'Success',
   };
 
-  const registerController = async (
-    request: FastifyRequest,
-    reply: FastifyReply
-  ): Promise<RegisterResponse> => {
-    try {
-      const { body } = request;
-      await registerService(body as RegisterRequestBody);
-      return commonResponse;
-    } catch (error) {
-      return {
-        statusCode: 400,
-        message: error.message,
-      };
-    }
-  };
   const forgotPasswordController = async (
     request: FastifyRequest,
     reply: FastifyReply
@@ -77,20 +59,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     } catch (error) {
       throw error;
     }
-  }
-
-  const confirmController = async (
-    request: FastifyRequest,
-    reply: FastifyReply
-  ) => {
-    try {
-      const { token } = request.params as { token: string };
-      await confirmService({ token });
-      return commonResponse;
-    } catch (error) {
-      throw error;
-    }
-  }
+  };
 
   const loginController = async (
     request: FastifyRequest,
@@ -120,14 +89,10 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       if (!authorization) throw buildError(400, 'Token is not found!');
 
       const user = await checkAuthService(authorization, fastify.jwt);
-      let tmpMedia;
-      if (user) tmpMedia = await getMediaForUser(user.id);
-      let newUser: any = { ...user };
-      if (tmpMedia.medias.length > 0) newUser = { url: tmpMedia.medias[0].url, ...user };
 
       return {
         ...commonResponse,
-        user: newUser,
+        user,
       };
     } catch (error) {
       if (error.message === allErrors.jwtExpires) {
@@ -150,10 +115,12 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     };
   };
 
-  fastify.post('/register', registerSchema, registerController);
-  fastify.post('/forgot_password', forgotPasswordSchema, forgotPasswordController);
-  fastify.post('/confirm/:token', confirmSchema, confirmController);
   fastify.post('/login', loginSchema, loginController);
+  fastify.post(
+    '/forgot_password',
+    forgotPasswordSchema,
+    forgotPasswordController
+  );
   fastify.get('/check', checkAuthSchema, checkAuthController);
   fastify.post('/refresh_tokens', refreshTokensSchema, refreshTokenController);
   fastify.post('/reset_password', resetPasswordSchema, resetPasswordController);
