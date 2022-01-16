@@ -26,7 +26,7 @@ import {
   confirmService,
   checkAuthService,
   forgotPasswordService,
-  getMediaForAccount,
+  getMediaForUser,
   // updateTokensService,
   resetPasswordService,
 } from './auth.services';
@@ -121,7 +121,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
 
       const user = await checkAuthService(authorization, fastify.jwt);
       let tmpMedia;
-      if (user) tmpMedia = await getMediaForAccount(user.id);
+      if (user) tmpMedia = await getMediaForUser(user.id);
       let newUser: any = { ...user };
       if (tmpMedia.medias.length > 0) newUser = { url: tmpMedia.medias[0].url, ...user };
 

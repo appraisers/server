@@ -1,4 +1,4 @@
-import { Account as User, Roles } from '../../entities/Account';
+import { User, Roles } from '../../entities/User';
 
 export interface CommonResponse {
   statusCode: number;
@@ -26,9 +26,7 @@ export interface LoginResponse extends CommonResponse, JwtTokens { }
 export interface RegisterRequestBody {
   email: string;
   password: string;
-  firstName?: string;
-  lastName?: string;
-  phone: string;
+  fullname?: string;
 }
 export interface ForgotPasswordRequestBody {
   email: string;

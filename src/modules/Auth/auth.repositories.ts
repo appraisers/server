@@ -1,6 +1,6 @@
 import { Token } from '../../entities/Token';
 import { EntityRepository, Repository, getRepository, getCustomRepository } from 'typeorm';
-import { Account as User, roles } from '../../entities/Account';
+import { User as User, roles } from '../../entities/User';
 import { RegisterRepositoryData, ConfirmRequestBody } from './auth.interfaces';
 import { EXPIRED } from './auth.constants';
 import { genSaltSync, hashSync } from 'bcryptjs';
@@ -13,55 +13,43 @@ interface CreateTokenRequest {
 export class UserRepository extends Repository<User> {
   createUser(data: RegisterRepositoryData): Promise<User> {
     const {
-      firstName,
-      lastName,
+      fullname,
       email,
       password,
-      phone,
       role,
-      emailConfirmed,
-      emailConfirmationToken,
-      phoneConfirmed,
-      phoneConfirmationToken,
     } = data;
 
     const user = new User();
-    user.firstName = firstName ?? null;
-    user.lastName = lastName ?? null;
+    user.fullname = fullname ?? null;
     user.email = email;
     user.password = password;
-    user.phone = phone;
     user.role = role ?? roles.user;
-    user.emailConfirmed = emailConfirmed;
-    user.emailConfirmationToken = emailConfirmationToken;
-    user.phoneConfirmed = phoneConfirmed;
-    user.phoneConfirmationToken = phoneConfirmationToken;
     return this.save(user);
   }
-  confirm(data: ConfirmRequestBody): Promise<any> {
-    return this.update(
-      {
-        emailConfirmationToken: data.token,
-      }, {
-      emailConfirmationToken: null,
-      emailConfirmed: true
-    }
-    );
-  }
-  resetPassword(data: any) {
-    const salt = genSaltSync(10);
-    return this.update({
-      forgotPasswordToken: data.token
-    }, {
-      password: hashSync(data.password, salt),
-      forgotPasswordToken: null,
-    });
-  }
+  // confirm(data: ConfirmRequestBody): Promise<any> {
+  //   return this.update(
+  //     {
+  //       emailConfirmationToken: data.token,
+  //     }, {
+  //     emailConfirmationToken: null,
+  //     emailConfirmed: true
+  //   }
+  //   );
+  // }
+  // resetPassword(data: any) {
+  //   const salt = genSaltSync(10);
+  //   return this.update({
+  //     forgotPasswordToken: data.token
+  //   }, {
+  //     password: hashSync(data.password, salt),
+  //     forgotPasswordToken: null,
+  //   });
+  // }
   findOneWithPasswordByKey<T extends keyof User>(
     key: T,
     val: string | number
   ): Promise<User | undefined> {
-    return this.findOne({ [key]: val }, { select: ['id', 'password', 'emailConfirmed', 'phoneConfirmed', 'role', 'isActive', 'isSellerApproved'] });
+    return this.findOne({ [key]: val }, { select: ['id', 'password', 'role'] });
   }
 
   async findOneUserByKey<T extends keyof User>(
@@ -71,13 +59,13 @@ export class UserRepository extends Repository<User> {
     return this.findOne({ where: { [key]: val } });
   }
 
-  // async getMediaForAccount(accountId: number) {
-  //   const accountRepo = getCustomRepository(AccountRepository);
-  //   const query = await accountRepo.createQueryBuilder('account')
-  //     .leftJoin('account.medias', 'media')
-  //     .select('account.id')
+  // async getMediaForUser(userId: number) {
+  //   const userRepo = getCustomRepository(UserRepository);
+  //   const query = await userRepo.createQueryBuilder('user')
+  //     .leftJoin('user.medias', 'media')
+  //     .select('user.id')
   //     .addSelect('media.url')
-  //     .where('account.id = :accountId', { accountId });
+  //     .where('user.id = :userId', { userId });
   //   return query.getOne();
   // }
 }

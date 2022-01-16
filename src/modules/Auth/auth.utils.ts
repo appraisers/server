@@ -1,7 +1,7 @@
 import { FastifyRequest, JWT } from 'fastify';
-import { Roles } from '../../entities/Account';
+import { Roles } from '../../entities/User';
 import { checkAuthService, checkUserService } from './auth.services';
-import { Account as User } from '../../entities/Account';
+import { User } from '../../entities/User';
 
 export const buildError = (statusCode: number, message: string): Error => {
   return new Error(JSON.stringify({ statusCode, message }));

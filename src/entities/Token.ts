@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn, BeforeUpdate, BeforeInsert, JoinColumn, ManyToOne, Index } from 'typeorm';
-import { Account } from './Account';
+import { User } from './User';
 
 @Entity({ name: 'tokens' })
 @Index(['user', 'refreshToken'])
@@ -41,13 +41,13 @@ export class Token {
     this.updatedAt = new Date();
   }
 
-  @ManyToOne((type) => Account, (account) => account.tokens, {
+  @ManyToOne((type) => User, (user) => user.tokens, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
   @JoinColumn({
-    name: 'account_id',
+    name: 'user_id',
     referencedColumnName: 'id',
   })
-  user!: Account;
+  user!: User;
 }

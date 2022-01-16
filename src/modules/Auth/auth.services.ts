@@ -17,7 +17,7 @@ import { buildError, genUniqNumber } from './auth.utils';
 import { UserRepository, TokenRepository } from './auth.repositories';
 import { allErrors } from './auth.messages';
 import { sendEmail } from '../../utils/mail.helper';
-import { Account as User } from '../../entities/Account';
+import { User } from '../../entities/User';
 
 export const registerService = async (
   data: RegisterRequestBody
@@ -43,9 +43,9 @@ export const registerService = async (
   await userRepo.createCart({ user });
 
   sendEmail({
-    type: 'account-confirmation',
+    type: 'user-confirmation',
     emailTo: email,
-    subject: 'Account confirmation'
+    subject: 'User confirmation'
   })
   return null;
 };
@@ -91,17 +91,13 @@ export const loginService = async (
   jwt: JWT
 ): Promise<JwtTokens> => {
   const { email, password, rememberMe } = data;
-
   const userRepo = getCustomRepository(UserRepository);
   const user = await userRepo.findOneWithPasswordByKey(
     'email',
     email
   );
   if (!user) throw buildError(400, allErrors.userIsNotFound);
-  const compare = bcrypt.compareSync(password, user.password);
-  if (!compare) throw buildError(400, allErrors.userIsNotFound);
 
-  if (!user.emailConfirmed && !user.phoneConfirmed) throw buildError(400, allErrors.userIsNotConfirmed);
   const authToken = jwt.sign({ id: user.id }, { expiresIn: rememberMe ? EXPIRED.WITH_REMEMBER : EXPIRED.ACCESS });
   const refreshToken = jwt.sign(
     { id: user.id, isRefresh: true },
@@ -157,9 +153,9 @@ export const checkUserEmail = async (
   const user = await userRepo.findOneUserByKey('email', email);
   return user?.id;
 }
-export const getMediaForAccount = async (accountId: number): Promise<any> => {
+export const getMediaForUser = async (userId: number): Promise<any> => {
   const userRepo = getCustomRepository(UserRepository);
-  const media = await userRepo.getMediaForAccount(accountId);
+  const media = await userRepo.getMediaForUser(userId);
   return media;
 }
 export const refreshTokenService = async (
