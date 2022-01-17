@@ -6,6 +6,10 @@ Database:
 
 start docker image: docker-compose --env-file .env.local up  
 stop docker image: docker-compose --env-file .env.local down
+clear all docker images: 
+- docker stop $(docker ps -aq)
+- docker rm $(docker ps -aq)
+
 address pgAdmin: localhost:5050 
 
 Create server in PG_ADMIN: 
