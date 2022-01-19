@@ -14,3 +14,4 @@ Create server in PG_ADMIN:
                 user name - POSTGRES_USER
                 password  - POSTGRES_PASSWORD
 
+postman: {host}/api/{entity_name}/{route}

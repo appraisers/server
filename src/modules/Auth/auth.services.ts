@@ -57,6 +57,9 @@ export const loginService = async (
     email
   );
   if (!user) throw buildError(400, allErrors.userIsNotFound);
+  if (user.password !== password) throw buildError(400, allErrors.userIsNotFound);
+  // const compare = bcrypt.compareSync(password, user.password);
+  // if (!compare) throw buildError(400, allErrors.userIsNotFound);
 
   const authToken = jwt.sign({ id: user.id }, { expiresIn: rememberMe ? EXPIRED.WITH_REMEMBER : EXPIRED.ACCESS });
   const refreshToken = jwt.sign(
