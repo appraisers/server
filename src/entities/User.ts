@@ -18,6 +18,23 @@ export const roles = {
   user: Roles.USER,
 };
 
+export enum Position {
+  JUNIOR_DEVELOPER = 'junior developer',
+  MIDDLE_DEVELOPER = 'middle developer',
+  SENIOR_DEVELOPER = 'senior developer',
+  MANAGER = 'manager', 
+  TESTER = 'tester', 
+  BOSS = 'boss',
+}
+export const position = {
+  juniorDeveloper: Position.JUNIOR_DEVELOPER,
+  middleDeveloper: Position.MIDDLE_DEVELOPER,
+  seniorDeveloper: Position.SENIOR_DEVELOPER,
+  manager: Position.MANAGER,
+  tester: Position.TESTER,
+  boss: Position.BOSS,
+};
+
 @Entity({ name: 'users' })
 export class User {
   @PrimaryGeneratedColumn()
@@ -43,6 +60,26 @@ export class User {
     name: 'password',
   })
   password!: string;
+
+  @Column({
+    type: 'varchar',
+    name: 'workplace',
+  })
+  workplace!: string;
+
+  @Column({
+    nullable: true,
+    type: 'enum',
+    enum: Position,
+    name: 'position',
+  })
+  position!: Position | null;
+
+  @Column({
+    type: 'float',
+    name: 'rating',
+  })
+  rating!: number;
 
   @Column({
     type: 'enum',
