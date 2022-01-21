@@ -12,6 +12,7 @@ import {
   LogoutRequestBody,
   ForgotPasswordRequestBody,
   ResetPasswordRequestBody,
+  RegisterRepositoryData,
 } from './auth.interfaces';
 import { buildError, genUniqNumber } from './auth.utils';
 import { UserRepository, TokenRepository } from './auth.repositories';
@@ -68,12 +69,25 @@ export const loginService = async (
   );
 
   const tokenRepo = getCustomRepository(TokenRepository);
-  const refresh = await tokenRepo.createRefresh({ user: user, refreshToken });
+  await tokenRepo.createRefresh({ user: user, refreshToken });
 
   return {
     authToken,
     refreshToken,
   };
+};
+
+export const registrationService = async (
+  data: RegisterRequestBody,
+): Promise<null> => {
+  const userRepo = getCustomRepository(UserRepository);
+  const { email } = data;
+  const isAlreadyUser = await userRepo.findOne({ where: { email } });
+  if (isAlreadyUser) throw buildError(400, allErrors.userIsFound);
+
+  await userRepo.createUser(data);
+  
+  return null;
 };
 
 export const logoutService = async (

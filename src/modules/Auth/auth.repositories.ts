@@ -13,17 +13,17 @@ interface CreateTokenRequest {
 export class UserRepository extends Repository<User> {
   createUser(data: RegisterRepositoryData): Promise<User> {
     const {
-      fullname,
       email,
+      fullname,
+      workplace,
       password,
-      role,
     } = data;
 
     const user = new User();
     user.fullname = fullname ?? null;
     user.email = email;
+    user.workplace = workplace;
     user.password = password;
-    user.role = role ?? roles.user;
     return this.save(user);
   }
   resetPassword(data: any) {

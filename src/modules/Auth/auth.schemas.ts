@@ -40,12 +40,29 @@ export const loginSchema = {
   },
 };
 
-export const confirmSchema = {
+export const registrationSchema = {
   schema: {
-    description: 'Confirm user',
-    summary: 'Route for confirm user by email or phone',
+    description: 'Registration user',
+    summary: 'Route for registration in user',
+    body: {
+      type: 'object',
+      required: ['email', 'password', 'fullname', 'workplace'],
+      properties: {
+        email: { type: 'string' },
+        fullname: {type: 'string'},
+        workplace: {type: 'string'},
+        password: { type: 'string' },
+      },
+    },
     response: {
       200: {
+        type: 'object',
+        required: ['statusCode', 'message'],
+        properties: {
+          ...commonResponse,
+        },
+      },
+      400: {
         type: 'object',
         required: ['statusCode', 'message'],
         properties: {
@@ -58,21 +75,10 @@ export const confirmSchema = {
   },
 };
 
-export const registerSchema = {
+export const confirmSchema = {
   schema: {
-    description: 'Register user',
-    summary: 'Route for registering user',
-    body: {
-      type: 'object',
-      required: ['email', 'password', 'firstName', 'lastName'],
-      properties: {
-        email: { type: 'string' },
-        password: { type: 'string' },
-        firstName: { type: 'string' },
-        lastName: { type: 'string' },
-        phone: { type: 'string' }
-      },
-    },
+    description: 'Confirm user',
+    summary: 'Route for confirm user by email or phone',
     response: {
       200: {
         type: 'object',

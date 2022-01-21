@@ -1,18 +1,18 @@
 import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify';
 import {
   LoginResponse,
-  RegisterResponse,
   LoginRequestBody,
   RegisterRequestBody,
   CheckAuthResponse,
   RefreshTokenRequestBody,
   ForgotPasswordRequestBody,
   ResetPasswordRequestBody,
+  CommonResponse,
 } from './auth.interfaces';
 import { allErrors } from './auth.messages';
 import {
   loginSchema,
-  registerSchema,
+  registrationSchema,
   checkAuthSchema,
   confirmSchema,
   forgotPasswordSchema,
@@ -21,6 +21,7 @@ import {
 } from './auth.schemas';
 import {
   loginService,
+  registrationService,
   refreshTokenService,
   checkAuthService,
   forgotPasswordService,
@@ -39,7 +40,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
   const forgotPasswordController = async (
     request: FastifyRequest,
     reply: FastifyReply
-  ): Promise<RegisterResponse> => {
+  ): Promise<CommonResponse> => {
     try {
       const { body } = request;
       await forgotPasswordService(body as ForgotPasswordRequestBody);
@@ -74,6 +75,20 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       };
     } catch (error: any) {
       console.log('logInHandler error', error.message);
+      return error.message;
+    }
+  };
+
+  const registrationController = async (
+    request: FastifyRequest,
+    reply: FastifyReply
+  ): Promise<CommonResponse> => {
+    const { body } = request;
+    try {
+      await registrationService(body as RegisterRequestBody);
+      return commonResponse;
+    } catch (error: any) {
+      console.log('registration error', error.message);
       return error.message;
     }
   };
@@ -116,6 +131,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
   };
 
   fastify.post('/login', loginSchema, loginController);
+  fastify.post('/registration', registrationSchema, registrationController);
   fastify.post(
     '/forgot_password',
     forgotPasswordSchema,

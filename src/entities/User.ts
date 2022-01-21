@@ -76,6 +76,7 @@ export class User {
   position!: Position | null;
 
   @Column({
+    nullable: true,
     type: 'float',
     name: 'rating',
   })
