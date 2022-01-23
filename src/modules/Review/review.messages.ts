@@ -1,4 +1,5 @@
 export const allErrors = {
   incorectToken: 'Incorrect token',
-  reviewIsNotFound: 'Review is not found!',
+  reviewsIsNotFound: 'Reviews is not found!',
+  userIdNotFound: 'User ID is not found'
 }

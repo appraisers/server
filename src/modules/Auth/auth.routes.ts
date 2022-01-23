@@ -27,7 +27,6 @@ import {
   refreshTokenService,
   checkAuthService,
   forgotPasswordService,
-  // updateTokensService,
   resetPasswordService,
 } from './auth.services';
 
@@ -41,7 +40,6 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       await forgotPasswordService(body as ForgotPasswordRequestBody);
       return commonResponse;
     } catch (error) {
-      console.log('registerController error', error);
       throw error;
     }
   };
@@ -69,7 +67,6 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
         ...tokens,
       };
     } catch (error) {
-      console.log('logInHandler error', error);
       throw error;
     }
   };
@@ -83,7 +80,6 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       const user = await registrationService(body as RegisterRequestBody);
       return { ...commonResponse, user };
     } catch (error) {
-      console.log('registration error', error);
       throw error;
     }
   };

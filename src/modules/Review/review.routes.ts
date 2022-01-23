@@ -1,33 +1,42 @@
 import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify';
 import { commonResponse } from '../../common/common.constants';
 import { buildError } from '../../utils/error.helper';
-import { CheckReviewResponse } from './review.interfaces';
-import { checkReviewSchema } from './review.schemas';
-import { checkReviewService } from './review.services';
+import {
+  CheckReviewResponse,
+  CheckReviewsServiceData,
+} from './review.interfaces';
+import { allErrors } from './review.messages';
+import { checkReviewsService } from './review.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
   const checkReviewController = async (
-    request: FastifyRequest,
-    reply: FastifyReply
+    request: FastifyRequest
   ): Promise<CheckReviewResponse> => {
     try {
       const {
-        headers: { authorization },
-      } = request;
-      if (!authorization) throw buildError(400, 'Token is not found!');
+        userId,
+        offset,
+        limit,
+      } = request.params as CheckReviewsServiceData;
+      if (!userId) throw buildError(400, allErrors.userIdNotFound);
 
-      const review = await checkReviewService(authorization, fastify.jwt);
+      const data: CheckReviewsServiceData = {
+        userId,
+        offset,
+        limit,
+      };
+      const reviews = await checkReviewsService(data);
 
       return {
         ...commonResponse,
-        review,
+        reviews,
       };
     } catch (error) {
       throw error;
     }
   };
 
-  fastify.get('/check', checkReviewSchema, checkReviewController);
+  fastify.get('/check/:userId', checkReviewController);
 };
 
 export default routes;

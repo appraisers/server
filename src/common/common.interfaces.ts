@@ -5,7 +5,7 @@ export interface CommonResponse {
 }
 
 export interface DecodedJWT {
-  id: number;
+  id: ID;
   iat: number;
   exp: number;
   isRefresh?: boolean;
@@ -15,3 +15,5 @@ export interface JwtTokens {
   authToken: string;
   refreshToken: string;
 }
+
+export type ID = number;

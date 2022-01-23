@@ -2,19 +2,15 @@ import { JWT } from 'fastify';
 import { getCustomRepository } from 'typeorm';
 import { Review } from '../../entities/Review';
 import { buildError } from '../../utils/error.helper';
-import { DecodedJWT } from '../../common/common.interfaces';
 import { ReviewRepository } from './review.repositories';
 import { allErrors } from './review.messages';
+import { CheckReviewsServiceData } from './review.interfaces';
 
-export const checkReviewService = async (
-  token: string, //access
-  jwt: JWT
-): Promise<Review> => {
-  const decoded: DecodedJWT = jwt.verify(token);
-  if (decoded.isRefresh) throw buildError(400, allErrors.incorectToken);
+export const checkReviewsService = async (
+  data: CheckReviewsServiceData
+): Promise<Review[]> => {
   const reviewRepo = getCustomRepository(ReviewRepository);
-  const review = await reviewRepo.findOneReviewByKey('id', decoded.id);
-  if (!review) throw buildError(400, allErrors.reviewIsNotFound);
-
-  return review;
+  const reviews = await reviewRepo.findReviews(data);
+  if (!reviews) throw buildError(400, allErrors.reviewsIsNotFound);
+  return reviews;
 };

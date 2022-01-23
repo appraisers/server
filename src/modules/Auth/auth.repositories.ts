@@ -50,7 +50,7 @@ export class UserRepository extends Repository<User> {
     return this.findOne({ where: { [key]: val } });
   }
 
-  // async getMediaForUser(userId: number) {
+  // async getMediaForUser(userId: ID) {
   //   const userRepo = getCustomRepository(UserRepository);
   //   const query = await userRepo.createQueryBuilder('user')
   //     .leftJoin('user.medias', 'media')

@@ -1,12 +1,22 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Review } from '../../entities/Review';
+import { REVIEWS_LIMIT, REVIEWS_OFFSET } from './review.constants';
+import { CheckReviewsServiceData } from './review.interfaces';
 
 @EntityRepository(Review)
 export class ReviewRepository extends Repository<Review> {
-  async findOneReviewByKey<T extends keyof Review>(
-    key: T,
-    val: string | number
-  ): Promise<Review | undefined> {
-    return this.findOne({ where: { [key]: val } });
+  async findReviews(data: CheckReviewsServiceData): Promise<Review[] | undefined> {
+    const { userId, offset, limit } = data;
+    return (
+      this.createQueryBuilder('review')
+        .leftJoin('review.user', 'user')
+        .leftJoin('review.author', 'author')
+        .select(['review', 'user', 'author'])
+        .where('review.user_id = :userId', { userId })
+        .orderBy(`review.createdAt`, 'ASC')
+        .offset(offset ? Number(offset) : REVIEWS_OFFSET)
+        .limit(limit ? Number(limit) : REVIEWS_LIMIT)
+        .getMany()
+    );
   }
 }

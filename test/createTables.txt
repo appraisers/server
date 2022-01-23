@@ -3,3 +3,9 @@ FOR INSERT USER IN TABLE
 INSERT INTO public.users(
 	id, email, password, role, created_at, updated_at, deleted_at, fullname, forgot_password_token)
 	VALUES ('2', 'test@test.ru', 'test', 'admin', '1999-01-08', '1999-01-08', '1999-01-08', 'test user', '');
+
+FOR INSERT REVIEW IN TABLE
+
+INSERT INTO public.reviews(
+	id, description, rating, created_at, updated_at, deleted_at, user_id, author_id)
+	VALUES (1, 'text', null, '1999-11-11', '1999-11-11', '1999-11-11', 1, 2);
