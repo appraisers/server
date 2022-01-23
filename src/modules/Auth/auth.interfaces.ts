@@ -41,6 +41,10 @@ export interface CheckAuthResponse extends CommonResponse {
   user: User;
 }
 
+export interface RegistrationResponse extends CommonResponse {
+  user: User;
+}
+
 export interface DecodedJWT {
   id: number;
   iat: number;

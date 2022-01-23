@@ -11,7 +11,7 @@ interface CreateTokenRequest {
 }
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-  createUser(data: RegisterRepositoryData): Promise<User> {
+  async createUser(data: RegisterRepositoryData): Promise<User> {
     const {
       email,
       fullname,
@@ -24,7 +24,8 @@ export class UserRepository extends Repository<User> {
     user.email = email;
     user.workplace = workplace;
     user.password = password;
-    return this.save(user);
+    await this.save(user);
+    return user;
   }
   resetPassword(data: any) {
     const salt = genSaltSync(10);

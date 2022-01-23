@@ -8,13 +8,13 @@ import {
   ForgotPasswordRequestBody,
   ResetPasswordRequestBody,
   CommonResponse,
+  RegistrationResponse,
 } from './auth.interfaces';
 import { allErrors } from './auth.messages';
 import {
   loginSchema,
   registrationSchema,
   checkAuthSchema,
-  confirmSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
   refreshTokensSchema,
@@ -82,11 +82,11 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
   const registrationController = async (
     request: FastifyRequest,
     reply: FastifyReply
-  ): Promise<CommonResponse> => {
-    const { body } = request;
+  ): Promise<RegistrationResponse> => {
     try {
-      await registrationService(body as RegisterRequestBody);
-      return commonResponse;
+      const { body } = request;
+      const user = await registrationService(body as RegisterRequestBody);
+      return { ...commonResponse, user };
     } catch (error: any) {
       console.log('registration error', error.message);
       return error.message;

@@ -14,7 +14,7 @@ export const loginSchema = {
       properties: {
         email: { type: 'string' },
         password: { type: 'string' },
-        rememberMe: { type: 'boolean' }
+        rememberMe: { type: 'boolean' },
       },
     },
     response: {
@@ -49,8 +49,8 @@ export const registrationSchema = {
       required: ['email', 'password', 'fullname', 'workplace'],
       properties: {
         email: { type: 'string' },
-        fullname: {type: 'string'},
-        workplace: {type: 'string'},
+        fullname: { type: 'string' },
+        workplace: { type: 'string' },
         password: { type: 'string' },
       },
     },
@@ -60,6 +60,15 @@ export const registrationSchema = {
         required: ['statusCode', 'message'],
         properties: {
           ...commonResponse,
+          user: {
+            type: 'object',
+            properties: {
+              email: { type: 'string' },
+              fullname: { type: 'string' },
+              workplace: { type: 'string' },
+              password: { type: 'string' },
+            },
+          },
         },
       },
       400: {
@@ -132,9 +141,9 @@ export const checkAuthSchema = {
             type: 'object',
             properties: {
               id: { type: 'number' },
-              fullname: {type: 'string'},
-              position:{type: 'string'},
-              workplace:{type: 'string'},
+              fullname: { type: 'string' },
+              position: { type: 'string' },
+              workplace: { type: 'string' },
               email: { type: 'string' },
               role: { type: 'string' },
               createdAt: { type: 'string' },

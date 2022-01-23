@@ -79,15 +79,15 @@ export const loginService = async (
 
 export const registrationService = async (
   data: RegisterRequestBody,
-): Promise<null> => {
+): Promise<User> => {
   const userRepo = getCustomRepository(UserRepository);
   const { email } = data;
   const isAlreadyUser = await userRepo.findOne({ where: { email } });
   if (isAlreadyUser) throw buildError(400, allErrors.userIsFound);
 
-  await userRepo.createUser(data);
+  const user = await userRepo.createUser(data);
   
-  return null;
+  return user;
 };
 
 export const logoutService = async (
