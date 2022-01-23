@@ -1,8 +1,4 @@
-const commonResponse = {
-  statusCode: { type: 'number' },
-  error: { type: ['string'] },
-  message: { type: 'string' },
-};
+import { commonResponse } from '../../common/common.schemas';
 
 export const loginSchema = {
   schema: {

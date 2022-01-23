@@ -1,9 +1,9 @@
 import { Token } from '../../entities/Token';
 import { EntityRepository, Repository, getRepository, getCustomRepository } from 'typeorm';
-import { User as User, roles } from '../../entities/User';
+import { genSaltSync, hashSync } from 'bcryptjs';
+import { User } from '../../entities/User';
 import { RegisterRepositoryData, ConfirmRequestBody } from './auth.interfaces';
 import { EXPIRED } from './auth.constants';
-import { genSaltSync, hashSync } from 'bcryptjs';
 
 interface CreateTokenRequest {
   user: User,

@@ -1,24 +1,20 @@
 import { EXPIRED } from './auth.constants';
 import { JWT } from 'fastify';
-import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 import { getCustomRepository } from 'typeorm';
+import { sendEmail } from '../../utils/mail.helper';
+import { User } from '../../entities/User';
+import { buildError } from '../../utils/error.helper';
+import { DecodedJWT, JwtTokens } from '../../common/common.interfaces';
 import {
   LoginRequestBody,
   RegisterRequestBody,
-  JwtTokens,
-  DecodedJWT,
-  ConfirmRequestBody,
   LogoutRequestBody,
   ForgotPasswordRequestBody,
   ResetPasswordRequestBody,
-  RegisterRepositoryData,
 } from './auth.interfaces';
-import { buildError, genUniqNumber } from './auth.utils';
 import { UserRepository, TokenRepository } from './auth.repositories';
 import { allErrors } from './auth.messages';
-import { sendEmail } from '../../utils/mail.helper';
-import { User } from '../../entities/User';
 
 export const forgotPasswordService = async (
   data: ForgotPasswordRequestBody
@@ -33,8 +29,8 @@ export const forgotPasswordService = async (
   sendEmail({
     type: 'forgot-password',
     emailTo: email,
-    subject: 'Recovery password'
-  })
+    subject: 'Recovery password',
+  });
   return null;
 };
 
@@ -43,7 +39,8 @@ export const resetPasswordService = async (
 ): Promise<null> => {
   const userRepo = getCustomRepository(UserRepository);
   const updateResult = await userRepo.resetPassword(data);
-  if (!updateResult.affected) throw buildError(400, 'No such confirmation token');
+  if (!updateResult.affected)
+    throw buildError(400, 'No such confirmation token');
   return null;
 };
 
@@ -53,16 +50,17 @@ export const loginService = async (
 ): Promise<JwtTokens> => {
   const { email, password, rememberMe } = data;
   const userRepo = getCustomRepository(UserRepository);
-  const user = await userRepo.findOneWithPasswordByKey(
-    'email',
-    email
-  );
+  const user = await userRepo.findOneWithPasswordByKey('email', email);
   if (!user) throw buildError(400, allErrors.userIsNotFound);
-  if (user.password !== password) throw buildError(400, allErrors.userIsNotFound);
+  if (user.password !== password)
+    throw buildError(400, allErrors.userIsNotFound);
   // const compare = bcrypt.compareSync(password, user.password);
   // if (!compare) throw buildError(400, allErrors.userIsNotFound);
 
-  const authToken = jwt.sign({ id: user.id }, { expiresIn: rememberMe ? EXPIRED.WITH_REMEMBER : EXPIRED.ACCESS });
+  const authToken = jwt.sign(
+    { id: user.id },
+    { expiresIn: rememberMe ? EXPIRED.WITH_REMEMBER : EXPIRED.ACCESS }
+  );
   const refreshToken = jwt.sign(
     { id: user.id, isRefresh: true },
     { expiresIn: rememberMe ? EXPIRED.WITH_REMEMBER : EXPIRED.REFRESH }
@@ -78,7 +76,7 @@ export const loginService = async (
 };
 
 export const registrationService = async (
-  data: RegisterRequestBody,
+  data: RegisterRequestBody
 ): Promise<User> => {
   const userRepo = getCustomRepository(UserRepository);
   const { email } = data;
@@ -86,22 +84,19 @@ export const registrationService = async (
   if (isAlreadyUser) throw buildError(400, allErrors.userIsFound);
 
   const user = await userRepo.createUser(data);
-  
+
   return user;
 };
 
-export const logoutService = async (
-  data: LogoutRequestBody
-) => {
+export const logoutService = async (data: LogoutRequestBody) => {
   const tokenRepo = getCustomRepository(TokenRepository);
   const { refreshToken } = data;
   await tokenRepo.removeRefresh(refreshToken);
 };
 
-
 export const checkAuthService = async (
   token: string, //access
-  jwt: JWT,
+  jwt: JWT
 ): Promise<User> => {
   const decoded: DecodedJWT = jwt.verify(token);
   if (decoded.isRefresh) throw buildError(400, allErrors.incorectToken);
@@ -113,7 +108,7 @@ export const checkAuthService = async (
 };
 export const checkUserService = async (
   token: string, //access
-  jwt: JWT,
+  jwt: JWT
 ): Promise<User | undefined> => {
   if (!token) return;
   const decoded: DecodedJWT | null = jwt.decode(token);
@@ -129,7 +124,7 @@ export const checkUserEmail = async (
   const userRepo = getCustomRepository(UserRepository);
   const user = await userRepo.findOneUserByKey('email', email);
   return user?.id;
-}
+};
 export const refreshTokenService = async (
   token: string, // refresh token
   jwt: JWT

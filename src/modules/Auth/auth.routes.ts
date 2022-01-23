@@ -1,4 +1,7 @@
 import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify';
+import { buildError } from '../../utils/error.helper';
+import { commonResponse } from '../../common/common.constants';
+import { CommonResponse } from '../../common/common.interfaces';
 import {
   LoginResponse,
   LoginRequestBody,
@@ -7,7 +10,6 @@ import {
   RefreshTokenRequestBody,
   ForgotPasswordRequestBody,
   ResetPasswordRequestBody,
-  CommonResponse,
   RegistrationResponse,
 } from './auth.interfaces';
 import { allErrors } from './auth.messages';
@@ -28,15 +30,8 @@ import {
   // updateTokensService,
   resetPasswordService,
 } from './auth.services';
-import buildError from '../../utils/error.helper';
 
-// eslint-disable-next-line @typescript-eslint/require-await
 const routes = async (fastify: FastifyInstance): Promise<void> => {
-  const commonResponse = {
-    statusCode: 200,
-    message: 'Success',
-  };
-
   const forgotPasswordController = async (
     request: FastifyRequest,
     reply: FastifyReply
@@ -73,9 +68,9 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
         ...commonResponse,
         ...tokens,
       };
-    } catch (error: any) {
-      console.log('logInHandler error', error.message);
-      return error.message;
+    } catch (error) {
+      console.log('logInHandler error', error);
+      throw error;
     }
   };
 
@@ -87,9 +82,9 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       const { body } = request;
       const user = await registrationService(body as RegisterRequestBody);
       return { ...commonResponse, user };
-    } catch (error: any) {
-      console.log('registration error', error.message);
-      return error.message;
+    } catch (error) {
+      console.log('registration error', error);
+      throw error;
     }
   };
 

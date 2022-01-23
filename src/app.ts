@@ -1,5 +1,3 @@
-import { FastifyRequest } from 'fastify';
-/* eslint-disable @typescript-eslint/no-floating-promises */
 import path from 'path';
 import fastify, { FastifyInstance } from 'fastify';
 import 'reflect-metadata';
@@ -12,9 +10,10 @@ import * as fastifyTypeormPlugin from 'fastify-typeorm-plugin';
 import fastifyStatic from 'fastify-static';
 
 import config from './config';
-import { CommonResponse } from './utils/common.interfaces';
+import { CommonResponse } from './common/common.interfaces';
 
 import authRoutes from './modules/Auth/auth.routes';
+import reviewRoutes from './modules/Review/review.routes';
 
 import { filesMultipleUpload } from './utils/multer';
 
@@ -110,6 +109,7 @@ export default function build(): FastifyInstance {
 
   // ROUTER FILES
   app.register(authRoutes, { prefix: '/api/auth' });
+  app.register(reviewRoutes, { prefix: '/api/review' });
   
   app.get('/', async (request, reply) => {
     return {

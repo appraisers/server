@@ -1,10 +1,6 @@
-import { User, Roles } from '../../entities/User';
+import { User } from '../../entities/User';
+import { CommonResponse, JwtTokens } from '../../common/common.interfaces';
 
-export interface CommonResponse {
-  statusCode: number;
-  message: string;
-  error?: string;
-}
 export interface LoginRequestBody {
   email: string;
   password: string;
@@ -14,10 +10,6 @@ export interface LogoutRequestBody {
   refreshToken: string;
 }
 export interface UpdateTokenRequestBody {
-  refreshToken: string;
-}
-export interface JwtTokens {
-  authToken: string;
   refreshToken: string;
 }
 
@@ -43,13 +35,6 @@ export interface CheckAuthResponse extends CommonResponse {
 
 export interface RegistrationResponse extends CommonResponse {
   user: User;
-}
-
-export interface DecodedJWT {
-  id: number;
-  iat: number;
-  exp: number;
-  isRefresh?: boolean;
 }
 
 export interface RefreshTokenRequestBody {

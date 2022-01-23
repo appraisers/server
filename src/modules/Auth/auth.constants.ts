@@ -1,4 +1,3 @@
-
 const ONE_DAY = 60 * 60 * 24;
 export const EXPIRED = {
   ACCESS: 60 * 60 * 12, //12h
