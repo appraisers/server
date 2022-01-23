@@ -16,14 +16,22 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
   ): Promise<CheckReviewResponse> => {
     try {
       const { userId, offset, limit } = request.params as CheckReviewsData;
+      const {
+        headers: { authorization },
+      } = request;
       if (!userId) throw buildError(400, allErrors.userIdNotFound);
+      if (!authorization) throw buildError(400, allErrors.tokenNotFound);
 
       const data: CheckReviewsData = {
         userId,
         offset,
         limit,
       };
-      const reviews = await checkReviewsService(data);
+      const reviews = await checkReviewsService(
+        data,
+        authorization,
+        fastify.jwt
+      );
 
       return {
         ...commonResponse,
@@ -38,11 +46,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     request: FastifyRequest
   ): Promise<CreateReviewResponse> => {
     try {
-      const {
-        userId,
-        description,
-        rating,
-      } = request.body as CreateReviewData;
+      const { userId, description, rating } = request.body as CreateReviewData;
       const {
         headers: { authorization },
       } = request;

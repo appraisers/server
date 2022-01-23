@@ -9,9 +9,13 @@ import { allErrors } from './review.messages';
 import { CheckReviewsData, CreateReviewData } from './review.interfaces';
 
 export const checkReviewsService = async (
-  data: CheckReviewsData
+  data: CheckReviewsData,
+  token: string,
+  jwt: JWT
 ): Promise<Review[]> => {
   const reviewRepo = getCustomRepository(ReviewRepository);
+  const decoded: DecodedJWT = jwt.verify(token);
+  if (decoded.isRefresh) throw buildError(400, allErrors.incorectToken);
   const reviews = await reviewRepo.findReviews(data);
   if (!reviews) throw buildError(400, allErrors.reviewsIsNotFound);
 
