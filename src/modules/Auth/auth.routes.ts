@@ -85,7 +85,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       const {
         headers: { authorization },
       } = request;
-      if (!authorization) throw buildError(400, 'Token is not found!');
+      if (!authorization) throw buildError(400, allErrors.tokenNotFound);
 
       const user = await checkAuthService(authorization, fastify.jwt);
 

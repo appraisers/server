@@ -25,6 +25,7 @@ export class UserRepository extends Repository<User> {
     user.workplace = workplace;
     user.password = password;
     await this.save(user);
+  
     return user;
   }
   resetPassword(data: any) {
