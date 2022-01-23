@@ -11,7 +11,7 @@
     "serve2": "npm run build && concurrently \"tsc -w -p tsconfig.json\" \"nodemon ./build/server.js\"",
     "start": "node --max_old_space_size=750 build/server.js",
     "test": "tap --reporter=list --watch",
-    "copy:assets": "mkdir -p ./build/emails/ && cp -rv ./src/emails/** ./build/emails/",
+    "copy:assets": "mkdir -p ./build/emails/",
     "migration:generate": "ts-node ./node_modules/.bin/typeorm migration:generate -f ormconfig.js -n",
     "migration:run": "ts-node ./node_modules/.bin/typeorm migration:run -f ormconfig.js",
     "migration:revert": "ts-node ./node_modules/.bin/typeorm migration:revert -f ormconfig.js"
