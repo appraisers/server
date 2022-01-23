@@ -46,7 +46,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       await forgotPasswordService(body as ForgotPasswordRequestBody);
       return commonResponse;
     } catch (error) {
-      console.log('registerController error', error.message);
+      console.log('registerController error', error);
       throw error;
     }
   };
@@ -109,7 +109,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
         ...commonResponse,
         user,
       };
-    } catch (error) {
+    } catch (error: any) {
       if (error.message === allErrors.jwtExpires) {
         throw buildError(401, allErrors.jwtExpires);
       }
