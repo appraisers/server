@@ -8,10 +8,10 @@ const config = {
   MAIN_DB: {
     type: 'postgres',
     host: process.env.POSTGRES_HOST,
-    port: 5437 || process.env.POSTGRES_PORT,
+    port: process.env.POSTGRES_PORT,
     username: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
-    database: 'postgres' || process.env.POSTGRES_DB,
+    database: process.env.POSTGRES_DB,
     synchronize: true,
     logging: false,
     entities: process.env.NODE_ENV === 'production' ? ['build/entities/**/*.js'] : ['src/entities/**/*.ts'],
