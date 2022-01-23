@@ -5,7 +5,7 @@ export interface CheckReviewResponse extends CommonResponse {
   reviews: Review[];
 }
 
-export interface CheckReviewsServiceData {
+export interface CheckReviewsData {
   userId: ID,
   offset: number,
   limit: number,

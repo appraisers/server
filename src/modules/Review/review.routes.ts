@@ -1,9 +1,9 @@
-import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify';
+import { FastifyRequest, FastifyInstance } from 'fastify';
 import { commonResponse } from '../../common/common.constants';
 import { buildError } from '../../utils/error.helper';
 import {
   CheckReviewResponse,
-  CheckReviewsServiceData,
+  CheckReviewsData,
 } from './review.interfaces';
 import { allErrors } from './review.messages';
 import { checkReviewsService } from './review.services';
@@ -17,10 +17,10 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
         userId,
         offset,
         limit,
-      } = request.params as CheckReviewsServiceData;
+      } = request.params as CheckReviewsData;
       if (!userId) throw buildError(400, allErrors.userIdNotFound);
 
-      const data: CheckReviewsServiceData = {
+      const data: CheckReviewsData = {
         userId,
         offset,
         limit,

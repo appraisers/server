@@ -4,10 +4,10 @@ import { Review } from '../../entities/Review';
 import { buildError } from '../../utils/error.helper';
 import { ReviewRepository } from './review.repositories';
 import { allErrors } from './review.messages';
-import { CheckReviewsServiceData } from './review.interfaces';
+import { CheckReviewsData } from './review.interfaces';
 
 export const checkReviewsService = async (
-  data: CheckReviewsServiceData
+  data: CheckReviewsData
 ): Promise<Review[]> => {
   const reviewRepo = getCustomRepository(ReviewRepository);
   const reviews = await reviewRepo.findReviews(data);

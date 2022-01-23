@@ -1,4 +1,4 @@
-import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify';
+import { FastifyRequest, FastifyInstance } from 'fastify';
 import { buildError } from '../../utils/error.helper';
 import { commonResponse } from '../../common/common.constants';
 import { CommonResponse } from '../../common/common.interfaces';
@@ -32,8 +32,7 @@ import {
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
   const forgotPasswordController = async (
-    request: FastifyRequest,
-    reply: FastifyReply
+    request: FastifyRequest
   ): Promise<CommonResponse> => {
     try {
       const { body } = request;
@@ -43,10 +42,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       throw error;
     }
   };
-  const resetPasswordController = async (
-    request: FastifyRequest,
-    reply: FastifyReply
-  ) => {
+  const resetPasswordController = async (request: FastifyRequest) => {
     try {
       await resetPasswordService(request.body as ResetPasswordRequestBody);
       return commonResponse;
@@ -56,8 +52,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
   };
 
   const loginController = async (
-    request: FastifyRequest,
-    reply: FastifyReply
+    request: FastifyRequest
   ): Promise<LoginResponse> => {
     const { body } = request;
     try {
@@ -72,8 +67,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
   };
 
   const registrationController = async (
-    request: FastifyRequest,
-    reply: FastifyReply
+    request: FastifyRequest
   ): Promise<RegistrationResponse> => {
     try {
       const { body } = request;
@@ -85,8 +79,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
   };
 
   const checkAuthController = async (
-    request: FastifyRequest,
-    reply: FastifyReply
+    request: FastifyRequest
   ): Promise<CheckAuthResponse> => {
     try {
       const {
@@ -109,8 +102,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
   };
 
   const refreshTokenController = async (
-    request: FastifyRequest,
-    reply: FastifyReply
+    request: FastifyRequest
   ): Promise<LoginResponse> => {
     const { refreshToken } = request.body as RefreshTokenRequestBody;
 
