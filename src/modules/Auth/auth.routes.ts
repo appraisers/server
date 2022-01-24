@@ -1,5 +1,4 @@
 import { FastifyRequest, FastifyInstance } from 'fastify';
-import { buildError } from '../../utils/error.helper';
 import { commonResponse } from '../../common/common.constants';
 import { CommonResponse } from '../../common/common.interfaces';
 import { sendEmail } from '../../utils/mail.helper';
@@ -7,7 +6,6 @@ import {
   LoginResponse,
   LoginRequestBody,
   RegisterRequestBody,
-  CheckAuthResponse,
   RefreshTokenRequestBody,
   ForgotPasswordRequestBody,
   ResetPasswordRequestBody,
@@ -17,7 +15,6 @@ import { allErrors } from './auth.messages';
 import {
   loginSchema,
   registrationSchema,
-  checkAuthSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
   refreshTokensSchema,
@@ -26,7 +23,6 @@ import {
   loginService,
   registrationService,
   refreshTokenService,
-  checkAuthService,
   forgotPasswordService,
   resetPasswordService,
 } from './auth.services';
@@ -79,29 +75,6 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     }
   };
 
-  const checkAuthController = async (
-    request: FastifyRequest
-  ): Promise<CheckAuthResponse> => {
-    try {
-      const {
-        headers: { authorization },
-      } = request;
-      if (!authorization) throw buildError(400, allErrors.tokenNotFound);
-
-      const user = await checkAuthService(authorization, fastify.jwt);
-
-      return {
-        ...commonResponse,
-        user,
-      };
-    } catch (error: any) {
-      if (error.message === allErrors.jwtExpires) {
-        throw buildError(401, allErrors.jwtExpires);
-      }
-      throw error;
-    }
-  };
-
   const emailController = async (): Promise<CommonResponse> => {
     try {
       sendEmail({
@@ -134,7 +107,6 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     forgotPasswordSchema,
     forgotPasswordController
   );
-  fastify.get('/check', checkAuthSchema, checkAuthController);
   fastify.get('/email', emailController);
   fastify.post('/refresh_tokens', refreshTokensSchema, refreshTokenController);
   fastify.post('/reset_password', resetPasswordSchema, resetPasswordController);
