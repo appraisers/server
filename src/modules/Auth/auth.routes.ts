@@ -31,17 +31,20 @@ import {
 } from './auth.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
+
+
+
   const forgotPasswordController = async (
     request: FastifyRequest
   ): Promise<CommonResponse> => {
     try {
-      const { body } = request;
-      await forgotPasswordService(body as ForgotPasswordRequestBody);
+      await forgotPasswordService(request.body as ForgotPasswordRequestBody);
       return commonResponse;
     } catch (error) {
       throw error;
     }
   };
+
   const resetPasswordController = async (request: FastifyRequest) => {
     try {
       await resetPasswordService(request.body as ResetPasswordRequestBody);

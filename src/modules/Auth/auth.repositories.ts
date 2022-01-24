@@ -33,8 +33,8 @@ export class UserRepository extends Repository<User> {
     return this.update({
       forgotPasswordToken: data.token
     }, {
-      password: hashSync(data.password, salt),
-      forgotPasswordToken: null,
+      password: hashSync(data.token, salt),
+      forgotPasswordToken: data.password,
     });
   }
   findOneWithPasswordByKey<T extends keyof User>(
