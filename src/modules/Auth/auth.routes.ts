@@ -2,6 +2,7 @@ import { FastifyRequest, FastifyInstance } from 'fastify';
 import { buildError } from '../../utils/error.helper';
 import { commonResponse } from '../../common/common.constants';
 import { CommonResponse } from '../../common/common.interfaces';
+import { sendEmail } from '../../utils/mail.helper';
 import {
   LoginResponse,
   LoginRequestBody,
@@ -101,6 +102,19 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     }
   };
 
+  const emailController = async (): Promise<CommonResponse> => {
+    try {
+      sendEmail({
+        type: 'forgot-password',
+        emailTo: 'kirill-garnov@mail.ru',
+        subject: 'Reset password',
+      });
+      return commonResponse;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const refreshTokenController = async (
     request: FastifyRequest
   ): Promise<LoginResponse> => {
@@ -121,6 +135,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     forgotPasswordController
   );
   fastify.get('/check', checkAuthSchema, checkAuthController);
+  fastify.get('/email', emailController);
   fastify.post('/refresh_tokens', refreshTokensSchema, refreshTokenController);
   fastify.post('/reset_password', resetPasswordSchema, resetPasswordController);
 };
