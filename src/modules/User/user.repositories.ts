@@ -1,6 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { User } from '../../entities/User';
-import { RegisterRepositoryData } from './user.interfaces';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {

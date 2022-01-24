@@ -1,9 +1,9 @@
 import { JWT } from 'fastify';
 import { getCustomRepository } from 'typeorm';
-import { buildError } from '../../utils/error.helper';
-import { DecodedJWT } from '../../common/common.interfaces';
 import { UserRepository } from './user.repositories';
 import { allErrors } from './user.messages';
+import { DecodedJWT } from '../../common/common.interfaces';
+import { buildError } from '../../utils/error.helper';
 import { User } from '../../entities/User';
 
 export const checkUserService = async (

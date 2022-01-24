@@ -1,10 +1,7 @@
 import { FastifyRequest, FastifyInstance } from 'fastify';
 import { commonResponse } from '../../common/common.constants';
 import { buildError } from '../../utils/error.helper';
-import {
-   CheckAuthResponse,
-
-} from './user.interfaces';
+import { CheckAuthResponse } from './user.interfaces';
 import { allErrors } from './user.messages';
 import { checkUserService } from './user.services';
 
