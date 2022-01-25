@@ -15,12 +15,9 @@ import {
 } from './auth.interfaces';
 import { UserRepository, TokenRepository } from './auth.repositories';
 import { allErrors } from './auth.messages';
-import { userInfo } from 'os';
-
 export const forgotPasswordService = async (
   data: ForgotPasswordRequestBody
 ): Promise<null> => {
-  
     const userRepo = getCustomRepository(UserRepository);
     const { email } = data;
     const user = await userRepo.findOne({ where: { email } });
@@ -30,7 +27,7 @@ export const forgotPasswordService = async (
     userRepo.save(user);
     sendEmail({
     type: 'forgot-password',
-    emailTo: `${user.email}`,
+    emailTo: user.email,
     subject: 'Recovery password',
   });
   return null;

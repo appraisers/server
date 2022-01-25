@@ -34,7 +34,7 @@ export class UserRepository extends Repository<User> {
       forgotPasswordToken: data.token
     }, {
       password: hashSync(data.token, salt),
-      forgotPasswordToken: data.password,
+      forgotPasswordToken: null,
     });
   }
   findOneWithPasswordByKey<T extends keyof User>(

@@ -31,9 +31,6 @@ import {
 } from './auth.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
-
-
-
   const forgotPasswordController = async (
     request: FastifyRequest
   ): Promise<CommonResponse> => {
@@ -89,9 +86,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
         headers: { authorization },
       } = request;
       if (!authorization) throw buildError(400, allErrors.tokenNotFound);
-
       const user = await checkAuthService(authorization, fastify.jwt);
-
       return {
         ...commonResponse,
         user,
@@ -108,7 +103,6 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     request: FastifyRequest
   ): Promise<LoginResponse> => {
     const { refreshToken } = request.body as RefreshTokenRequestBody;
-
     const newTokens = await refreshTokenService(refreshToken, fastify.jwt);
     return {
       ...newTokens,
