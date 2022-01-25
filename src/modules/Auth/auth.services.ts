@@ -27,7 +27,7 @@ export const forgotPasswordService = async (
     userRepo.save(user);
     sendEmail({
     type: 'forgot-password',
-    emailTo: user.email,
+    emailTo: `${user.email}`,
     subject: 'Recovery password',
   });
   return null;
@@ -91,31 +91,6 @@ export const logoutService = async (data: LogoutRequestBody) => {
   const tokenRepo = getCustomRepository(TokenRepository);
   const { refreshToken } = data;
   await tokenRepo.removeRefresh(refreshToken);
-};
-
-export const checkAuthService = async (
-  token: string, //access
-  jwt: JWT
-): Promise<User> => {
-  const decoded: DecodedJWT = jwt.verify(token);
-  if (decoded.isRefresh) throw buildError(400, allErrors.incorectToken);
-  const userRepo = getCustomRepository(UserRepository);
-  const user = await userRepo.findOneUserByKey('id', decoded.id);
-  if (!user) throw buildError(400, allErrors.userIsNotFound);
-
-  return user;
-};
-export const checkUserService = async (
-  token: string, //access
-  jwt: JWT
-): Promise<User | undefined> => {
-  if (!token) return;
-  const decoded: DecodedJWT | null = jwt.decode(token);
-  if (!decoded || decoded.isRefresh) return;
-  const userRepo = getCustomRepository(UserRepository);
-  const user = await userRepo.findOneUserByKey('id', decoded.id);
-  if (!user) return;
-  return user;
 };
 export const checkUserEmail = async (
   email: string

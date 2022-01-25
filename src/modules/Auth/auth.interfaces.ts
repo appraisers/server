@@ -29,10 +29,6 @@ export interface ConfirmRequestBody {
 }
 export type RegisterRepositoryData = RegisterRequestBody;
 
-export interface CheckAuthResponse extends CommonResponse {
-  user: User;
-}
-
 export interface RegistrationResponse extends CommonResponse {
   user: User;
 }

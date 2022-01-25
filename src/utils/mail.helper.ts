@@ -15,12 +15,12 @@ const {
 } = config.EMAIL;
 type SendEmail = {
   type: string;
-  emailTo: string | null;
+  emailTo: string;
   subject: string;
 };
 type MailOptions = {
   from: string;
-  to: string | null;
+  to: string;
   subject: string;
   html: any;
 };
@@ -47,8 +47,9 @@ export const sendEmail = async ({
     from: SMTP_FROM,
     to: emailTo,
     subject,
-    html: 'Hello,<br> you successfully created account! </br>',
-  } as any;
+    html: source,
+  } as MailOptions;
   const info = await transporter.sendMail(mailOptions);
+  console.log("send email info", info);
   return true;
 };

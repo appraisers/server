@@ -123,38 +123,6 @@ export const forgotPasswordSchema = {
   },
 };
 
-export const checkAuthSchema = {
-  description: 'Check that user is Authenticated',
-  summary: 'Check that user is Authenticated',
-  schema: {
-    response: {
-      200: {
-        type: 'object',
-        required: ['message', 'statusCode'],
-        properties: {
-          ...commonResponse,
-          user: {
-            type: 'object',
-            properties: {
-              id: { type: 'number' },
-              fullname: { type: 'string' },
-              position: { type: 'string' },
-              workplace: { type: 'string' },
-              email: { type: 'string' },
-              role: { type: 'string' },
-              createdAt: { type: 'string' },
-              updatedAt: { type: 'string' },
-              deletedAt: { type: 'string' },
-            },
-          },
-        },
-      },
-      '4xx': { $ref: 'commonErrorSchema#' },
-      '5xx': { $ref: 'commonErrorSchema#' },
-    },
-  },
-};
-
 export const refreshTokensSchema = {
   description: 'Update access and refresh tokens',
   summary: 'Route for refreshing a tokens',
