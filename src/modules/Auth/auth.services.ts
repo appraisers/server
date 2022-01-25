@@ -28,8 +28,7 @@ export const forgotPasswordService = async (
     sendEmail({
     type: 'Forgot-Password',
     emailTo: `${user.email}`,
-    subject: `Did you forget your password?  `,
-    token: `${user.forgotPasswordToken}`
+    subject: 'Did you forget your password?'
   });
   return null;
 };

@@ -80,8 +80,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       sendEmail({
         type: 'forgot-password',
         emailTo: 'kirill-garnov@mail.ru',
-        subject: 'Reset password',
-        token: 'token'
+        subject: 'Reset password'
       });
       return commonResponse;
     } catch (error) {

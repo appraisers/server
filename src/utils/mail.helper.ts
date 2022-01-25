@@ -29,8 +29,6 @@ export const sendEmail = async ({
   type,
   emailTo,
   subject,
-  token,
-  
 }: SendEmail): Promise<boolean> => {
   const filePath = path.join(__dirname, `../emails/${type}.html`);
   const source = fs.readFileSync(filePath, 'utf-8').toString();
