@@ -26,9 +26,10 @@ export const forgotPasswordService = async (
     user.forgotPasswordToken = forgotPasswordToken;
     userRepo.save(user);
     sendEmail({
-    type: 'forgot-password',
+    type: 'Forgot-Password',
     emailTo: `${user.email}`,
-    subject: 'Recovery password',
+    subject: `Did you forget your password?  `,
+    token: `${user.forgotPasswordToken}`
   });
   return null;
 };

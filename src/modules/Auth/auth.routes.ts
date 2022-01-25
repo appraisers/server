@@ -81,6 +81,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
         type: 'forgot-password',
         emailTo: 'kirill-garnov@mail.ru',
         subject: 'Reset password',
+        token: 'token'
       });
       return commonResponse;
     } catch (error) {

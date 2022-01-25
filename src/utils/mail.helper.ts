@@ -17,6 +17,7 @@ type SendEmail = {
   type: string;
   emailTo: string;
   subject: string;
+  token: string;
 };
 type MailOptions = {
   from: string;
@@ -28,6 +29,8 @@ export const sendEmail = async ({
   type,
   emailTo,
   subject,
+  token,
+  
 }: SendEmail): Promise<boolean> => {
   const filePath = path.join(__dirname, `../emails/${type}.html`);
   const source = fs.readFileSync(filePath, 'utf-8').toString();
@@ -47,7 +50,9 @@ export const sendEmail = async ({
     from: SMTP_FROM,
     to: emailTo,
     subject,
-    html: source,
+    html: `${source}
+    <p style="font-size:22px; color:orange; font-weight:bold;">Your token is: <b style="color:black">${token}</b></p>`
+    ,
   } as MailOptions;
   const info = await transporter.sendMail(mailOptions);
   console.log("send email info", info);
