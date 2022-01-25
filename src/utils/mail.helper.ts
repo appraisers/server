@@ -17,7 +17,6 @@ type SendEmail = {
   type: string;
   emailTo: string;
   subject: string;
-  token: string;
 };
 type MailOptions = {
   from: string;
@@ -48,8 +47,7 @@ export const sendEmail = async ({
     from: SMTP_FROM,
     to: emailTo,
     subject,
-    html: `${source}
-    <p style="font-size:22px; color:orange; font-weight:bold;">Your token is: <b style="color:black">${token}</b></p>`
+    html: source
     ,
   } as MailOptions;
   const info = await transporter.sendMail(mailOptions);
