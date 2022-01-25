@@ -32,13 +32,13 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     request: FastifyRequest
   ): Promise<CommonResponse> => {
     try {
-      const { body } = request;
-      await forgotPasswordService(body as ForgotPasswordRequestBody);
+      await forgotPasswordService(request.body as ForgotPasswordRequestBody);
       return commonResponse;
     } catch (error) {
       throw error;
     }
   };
+
   const resetPasswordController = async (request: FastifyRequest) => {
     try {
       await resetPasswordService(request.body as ResetPasswordRequestBody);
@@ -80,7 +80,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       sendEmail({
         type: 'forgot-password',
         emailTo: 'kirill-garnov@mail.ru',
-        subject: 'Reset password',
+        subject: 'Reset password'
       });
       return commonResponse;
     } catch (error) {
@@ -92,7 +92,6 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     request: FastifyRequest
   ): Promise<LoginResponse> => {
     const { refreshToken } = request.body as RefreshTokenRequestBody;
-
     const newTokens = await refreshTokenService(refreshToken, fastify.jwt);
     return {
       ...newTokens,

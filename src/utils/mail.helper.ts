@@ -47,7 +47,8 @@ export const sendEmail = async ({
     from: SMTP_FROM,
     to: emailTo,
     subject,
-    html: source,
+    html: source
+    ,
   } as MailOptions;
   const info = await transporter.sendMail(mailOptions);
   console.log("send email info", info);

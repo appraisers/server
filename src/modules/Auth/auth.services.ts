@@ -15,21 +15,20 @@ import {
 } from './auth.interfaces';
 import { UserRepository, TokenRepository } from './auth.repositories';
 import { allErrors } from './auth.messages';
-
 export const forgotPasswordService = async (
   data: ForgotPasswordRequestBody
 ): Promise<null> => {
-  const userRepo = getCustomRepository(UserRepository);
-  const { email } = data;
-  const user = await userRepo.findOne({ where: { email } });
-  if (!user) throw buildError(400, allErrors.userIsNotFound);
-  const forgotPasswordToken = uuidv4();
-  user.forgotPasswordToken = forgotPasswordToken;
-  await userRepo.save(user);
-  sendEmail({
-    type: 'forgot-password',
-    emailTo: email,
-    subject: 'Recovery password',
+    const userRepo = getCustomRepository(UserRepository);
+    const { email } = data;
+    const user = await userRepo.findOne({ where: { email } });
+    if (!user) throw buildError(400, allErrors.userIsNotFound);
+    const forgotPasswordToken = uuidv4();
+    user.forgotPasswordToken = forgotPasswordToken;
+    userRepo.save(user);
+    sendEmail({
+    type: 'Forgot-Password',
+    emailTo: `${user.email}`,
+    subject: 'Did you forget your password?'
   });
   return null;
 };

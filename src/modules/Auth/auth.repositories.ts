@@ -1,10 +1,9 @@
 import { Token } from '../../entities/Token';
 import { EntityRepository, Repository, getRepository, getCustomRepository } from 'typeorm';
-import { genSaltSync, hashSync } from 'bcryptjs';
+//import { genSaltSync, hashSync } from 'bcryptjs';
 import { User } from '../../entities/User';
 import { RegisterRepositoryData, ConfirmRequestBody } from './auth.interfaces';
 import { EXPIRED } from './auth.constants';
-
 interface CreateTokenRequest {
   user: User,
   refreshToken: string;
@@ -25,15 +24,14 @@ export class UserRepository extends Repository<User> {
     user.workplace = workplace;
     user.password = password;
     await this.save(user);
-  
     return user;
   }
   resetPassword(data: any) {
-    const salt = genSaltSync(10);
+   // const salt = genSaltSync(10);
     return this.update({
       forgotPasswordToken: data.token
     }, {
-      password: hashSync(data.password, salt),
+      password: data.password,
       forgotPasswordToken: null,
     });
   }
