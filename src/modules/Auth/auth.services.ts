@@ -6,6 +6,7 @@ import { sendEmail } from '../../utils/mail.helper';
 import { User } from '../../entities/User';
 import { buildError } from '../../utils/error.helper';
 import { DecodedJWT, JwtTokens } from '../../common/common.interfaces';
+import config from '../../config';
 import {
   LoginRequestBody,
   RegisterRequestBody,
@@ -15,20 +16,26 @@ import {
 } from './auth.interfaces';
 import { UserRepository, TokenRepository } from './auth.repositories';
 import { allErrors } from './auth.messages';
+
+const { FRONTEND_URL } = config;
+
 export const forgotPasswordService = async (
   data: ForgotPasswordRequestBody
 ): Promise<null> => {
-    const userRepo = getCustomRepository(UserRepository);
-    const { email } = data;
-    const user = await userRepo.findOne({ where: { email } });
-    if (!user) throw buildError(400, allErrors.userIsNotFound);
-    const forgotPasswordToken = uuidv4();
-    user.forgotPasswordToken = forgotPasswordToken;
-    userRepo.save(user);
-    sendEmail({
-    type: 'Forgot-Password',
-    emailTo: `${user.email}`,
-    subject: 'Did you forget your password?'
+  const userRepo = getCustomRepository(UserRepository);
+  const { email } = data;
+  const user = await userRepo.findOne({ where: { email } });
+  if (!user) throw buildError(400, allErrors.userIsNotFound);
+  const forgotPasswordToken = uuidv4();
+  user.forgotPasswordToken = forgotPasswordToken;
+  userRepo.save(user);
+  sendEmail({
+    type: 'forgot-password',
+    emailTo: String(user.email),
+    subject: 'Did you forget your password?',
+    replacements: {
+      link: `${FRONTEND_URL}/forgot_password_2/${forgotPasswordToken}`,
+    }
   });
   return null;
 };
@@ -41,6 +48,19 @@ export const resetPasswordService = async (
   if (!updateResult.affected)
     throw buildError(400, 'No such confirmation token');
   return null;
+};
+
+export const checkAuthService = async (
+  token: string, //access
+  jwt: JWT
+): Promise<User> => {
+  const decoded: DecodedJWT = jwt.verify(token);
+  if (decoded.isRefresh) throw buildError(400, allErrors.incorectToken);
+  const userRepo = getCustomRepository(UserRepository);
+  const user = await userRepo.findOneUserByKey('id', decoded.id);
+  if (!user) throw buildError(400, allErrors.userIsNotFound);
+
+  return user;
 };
 
 export const loginService = async (
