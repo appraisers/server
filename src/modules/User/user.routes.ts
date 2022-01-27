@@ -1,9 +1,13 @@
 import { FastifyRequest, FastifyInstance } from 'fastify';
 import { commonResponse } from '../../common/common.constants';
 import { buildError } from '../../utils/error.helper';
-import { CheckAuthResponse } from './user.interfaces';
+import {
+  CheckAuthResponse,
+  UpdateUserRequestBody,
+  UpdateUserResponse,
+} from './user.interfaces';
 import { allErrors } from './user.messages';
-import { checkUserService } from './user.services';
+import { checkUserService, updateUserService } from './user.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
   const checkUserController = async (
@@ -28,9 +32,28 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       throw error;
     }
   };
- 
+  const updateUserController = async (
+    request: FastifyRequest
+  ): Promise<UpdateUserResponse> => {
+    try {
+      const { body } = request;
+      const {
+        headers: { authorization },
+      } = request;
+      if (!authorization) throw buildError(400, allErrors.tokenNotFound);
+      const user = await updateUserService(
+        body as UpdateUserRequestBody,
+        authorization,
+        fastify.jwt
+      );
+      return { ...commonResponse, user };
+    } catch (error) {
+      throw error;
+    }
+  };
 
   fastify.get('/check', checkUserController);
+  fastify.post('/update', updateUserController);
 };
 
 export default routes;
