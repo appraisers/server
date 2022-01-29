@@ -1,11 +1,5 @@
-import { ID } from "../../common/common.interfaces";
+import { CommonResponse, ID } from "../../common/common.interfaces";
 import { Position, Roles, User } from "../../entities/User"; 
-
-export interface CommonResponse {
-    statusCode: number;
-    message: string;
-    error?: string;
-}
 
 export interface CheckAuthResponse extends CommonResponse {
     user: User;
@@ -33,4 +27,8 @@ export interface UpdateUserRequestBody {
 export type UpdateRepositoryData = UpdateUserRequestBody;  
 export interface UpdateUserResponse extends CommonResponse {
     user: User;
+}
+
+export interface InviteUserRequestBody {
+    email: string;
 }

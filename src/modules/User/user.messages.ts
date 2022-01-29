@@ -3,4 +3,5 @@ export const allErrors = {
   tokenNotFound: 'Token is not found',
   userNotFound: 'User is not found',
   jwtExpires: 'JWT expired',
+  emailNotFound: 'Email not found'
 }
