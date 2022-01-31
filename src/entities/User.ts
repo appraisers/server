@@ -13,9 +13,11 @@ import { Token } from './Token';
 export enum Roles {
   ADMIN = 'admin',
   USER = 'user',
+  MODERATOR = 'moderator',
 }
 export const roles = {
   admin: Roles.ADMIN,
+  moderator: Roles.MODERATOR,
   user: Roles.USER,
 };
 
@@ -111,6 +113,13 @@ export class User {
     name: 'updated_at',
   })
   updatedAt!: Date;
+
+  @Column('timestamp', {
+    nullable: true,
+    default: () => 'NULL',
+    name: 'updated_review_at',
+  })
+  updatedReviewAt!: Date;
 
   @Column('timestamp', {
     select: false,

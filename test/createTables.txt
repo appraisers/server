@@ -1,11 +1,71 @@
-FOR INSERT USER IN TABLE
-
-INSERT INTO public.users(
-	id, email, password, role, created_at, updated_at, deleted_at, fullname, forgot_password_token)
-	VALUES ('2', 'test@test.ru', 'test', 'admin', '1999-01-08', '1999-01-08', '1999-01-08', 'test user', '');
-
 FOR INSERT REVIEW IN TABLE
 
 INSERT INTO public.reviews(
 	id, description, rating, created_at, updated_at, deleted_at, user_id, author_id)
 	VALUES (1, 'text', null, '1999-11-11', '1999-11-11', '1999-11-11', 1, 2);
+-------------------------------------------------------------------------------------------
+Insert hardcoded questions
+
+INSERT INTO public.questions(
+	id, description, category, weight, created_at, updated_at, deleted_at)
+	VALUES (1, 'Насколько точно тестируемый соблюдает дедлайны?', 'effectiveness', 5, '2022-01-29', null, null);
+INSERT INTO public.questions(
+	id, description, category, weight, created_at, updated_at, deleted_at)
+	VALUES (2, 'Насколько усердно тестируемый работает?', 'effectiveness', 6, '2022-01-29', null, null);
+INSERT INTO public.questions(
+	id, description, category, weight, created_at, updated_at, deleted_at)
+	VALUES (3, 'Насколько тестируемый умеется адаптироваться к проблемам?', 'effectiveness', 6, '2022-01-29', null, null);
+INSERT INTO public.questions(
+	id, description, category, weight, created_at, updated_at, deleted_at)
+	VALUES (4, 'Насколько часто тестируемый делает перерывы?', 'effectiveness', 3, '2022-01-29', null, null);
+INSERT INTO public.questions(
+	id, description, category, weight, created_at, updated_at, deleted_at)
+	VALUES (5, 'Насколько часто у тестируемого были конфликты?', 'interaction', 6, '2022-01-29', null, null);
+INSERT INTO public.questions(
+	id, description, category, weight, created_at, updated_at, deleted_at)
+	VALUES (6, 'Насколько тестируемый отзывчив?', 'interaction', 4, '2022-01-29', null, null);
+INSERT INTO public.questions(
+	id, description, category, weight, created_at, updated_at, deleted_at)
+	VALUES (7, 'Насколько эффективно тестируемый работает в команде?', 'interaction', 10, '2022-01-29', null, null);
+INSERT INTO public.questions(
+	id, description, category, weight, created_at, updated_at, deleted_at)
+	VALUES (8, 'Насколько свободно тестируемый общается на свободные темы?', 'interaction', 4, '2022-01-29', null, null);
+INSERT INTO public.questions(
+	id, description, category, weight, created_at, updated_at, deleted_at)
+	VALUES (9, 'Насколько тестируемый вежлив?', 'interaction', 8, '2022-01-29', null, null);
+INSERT INTO public.questions(
+	id, description, category, weight, created_at, updated_at, deleted_at)
+	VALUES (10, 'Как вы считаете, можно ли уже повысить тестируемого?', 'assessment of abilities', 10, '2022-01-29', null, null);
+INSERT INTO public.questions(
+	id, description, category, weight, created_at, updated_at, deleted_at)
+	VALUES (11, 'Как вы считаете, заслужил ли тестируемый бонус?', 'assessment of abilities', 8, '2022-01-29', null, null);
+INSERT INTO public.questions(
+	id, description, category, weight, created_at, updated_at, deleted_at)
+	VALUES (12, 'Как вы считаете, приносит ли тестируемый вклад в компанию?', 'assessment of abilities', 5, '2022-01-29', null, null);
+INSERT INTO public.questions(
+	id, description, category, weight, created_at, updated_at, deleted_at)
+	VALUES (13, 'Насколько легко тестируемый обучается новым технологиям?', 'personal qualities', 8, '2022-01-29', null, null);
+INSERT INTO public.questions(
+	id, description, category, weight, created_at, updated_at, deleted_at)
+	VALUES (14, 'Насколько тестируемый инициативный?', 'personal qualities', 6, '2022-01-29', null, null);
+INSERT INTO public.questions(
+	id, description, category, weight, created_at, updated_at, deleted_at)
+	VALUES (15, 'Насколько тестируемый подходит системно к работе?', 'personal qualities', 7, '2022-01-29', null, null);
+INSERT INTO public.questions(
+	id, description, category, weight, created_at, updated_at, deleted_at)
+	VALUES (16, 'Насколько тестируемый самостоятелен в работе?', 'personal qualities', 9, '2022-01-29', null, null);
+INSERT INTO public.questions(
+	id, description, category, weight, created_at, updated_at, deleted_at)
+	VALUES (17, 'Насколько адекватно тестируемый принимает конструктивную критику?', 'personal qualities', 4, '2022-01-29', null, null);
+INSERT INTO public.questions(
+	id, description, category, weight, created_at, updated_at, deleted_at)
+	VALUES (18, 'Насколько тестируемый умеет выражать свои мысли?', 'personal qualities', 7, '2022-01-29', null, null);
+INSERT INTO public.questions(
+	id, description, category, weight, created_at, updated_at, deleted_at)
+	VALUES (19, 'Насколько тестируемый выполняет требования заказчика?', 'personal qualities', 10, '2022-01-29', null, null);
+INSERT INTO public.questions(
+	id, description, category, weight, created_at, updated_at, deleted_at)
+	VALUES (20, 'Насколько долго тестируемый может работать на проекте?', 'personal qualities', 4, '2022-01-29', null, null);
+INSERT INTO public.questions(
+	id, description, category, weight, created_at, updated_at, deleted_at)
+	VALUES (21, 'Насколько тестируемый имеет лидерские способности?', 'personal qualities', 8, '2022-01-29', null, null);

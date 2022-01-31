@@ -10,6 +10,9 @@ export class UserRepository extends Repository<User> {
   ): Promise<User | undefined> {
     return this.findOne({ where: { [key]: val } });
   }
+  async getAllUsers(): Promise<User[] | undefined> {
+    return this.createQueryBuilder('user').select('user').where('user.role = :role', { role: Roles.USER }).getMany();
+  }
   updateUser(data: UpdateRepositoryData) {
     const { email, workplace, fullname, position, rating, role, id } = data;
 
