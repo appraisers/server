@@ -1,14 +1,20 @@
 import { FastifyRequest, FastifyInstance } from 'fastify';
+import { CommonResponse } from '../../common/common.interfaces';
 import { commonResponse } from '../../common/common.constants';
 import { buildError } from '../../utils/error.helper';
 import {
+  InviteAppriceData,
   CheckReviewResponse,
   CheckReviewsData,
   CreateReviewData,
   CreateReviewResponse,
 } from './review.interfaces';
 import { allErrors } from './review.messages';
-import { checkReviewsService, createReviewService } from './review.services';
+import {
+  checkReviewsService,
+  createReviewService,
+  inviteAppriceService,
+} from './review.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
   const checkReviewController = async (
@@ -73,8 +79,31 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     }
   };
 
+  const inviteAppriceController = async (
+    request: FastifyRequest
+  ): Promise<CommonResponse> => {
+    try {
+      const { body } = request;
+      const {
+        headers: { authorization },
+      } = request;
+      if (!authorization) throw buildError(400, allErrors.tokenNotFound);
+
+      await inviteAppriceService(
+        body as InviteAppriceData,
+        authorization,
+        fastify.jwt
+      );
+
+      return commonResponse;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   fastify.get('/check/:userId', checkReviewController);
   fastify.post('/create_review', createReviewController);
+  fastify.post('/invite_appraise', inviteAppriceController);
 };
 
 export default routes;
