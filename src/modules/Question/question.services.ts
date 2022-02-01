@@ -1,20 +1,16 @@
 
 import { getCustomRepository } from 'typeorm';
-import { Review } from '../../entities/Question';
-import config from '../../config';
+import { Question } from 'src/entities/Question';
 import {
-  RegisterRequestBody,
+  AddQuestionRequestBody,
 } from './question.interfaces';
 import { QuestionRepository } from './question.repositories';
 
 
-const { FRONTEND_URL } = config;
-
 export const registrationService = async (
-  data: RegisterRequestBody
-): Promise<Review> => {
+  data: AddQuestionRequestBody
+): Promise<Question> => {
   const userRepo = getCustomRepository(QuestionRepository);
-  const { description } = data;
   const question = await userRepo.createQuestion(data);
   return question;
 };

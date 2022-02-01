@@ -1,4 +1,4 @@
-import { Review } from '../../entities/Question';
+import { Question } from '../../entities/Question';
 import { CommonResponse} from '../../common/common.interfaces';
 
 
@@ -11,7 +11,7 @@ export interface AddQuestionRequestBody {
 export type RegisterRepositoryData = AddQuestionRequestBody;
 
 export interface RegistrationResponse extends CommonResponse {
-  review: Review;
+  question: Question;
 }
 
 
