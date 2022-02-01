@@ -1,19 +1,51 @@
-import { User } from "../../entities/User"; 
-
-export interface CommonResponse {
-    statusCode: number;
-    message: string;
-    error?: string;
-}
+import { CommonResponse, ID } from '../../common/common.interfaces';
+import { Position, Roles, User } from '../../entities/User';
 
 export interface CheckAuthResponse extends CommonResponse {
-    user: User;
+  user: User;
+}
+
+export interface AllInviteUsersServiceResponse {
+  fullname: string;
+  email: string;
+}
+export interface AllInviteUsersResponse extends CommonResponse {
+  users: AllInviteUsersServiceResponse[];
+}
+
+export interface AllUsersServiceResponse {
+  fullname: string;
+  updatedReviewAt: Date;
+  rating: number;
+}
+export interface AllUsersResponse extends CommonResponse {
+  users: AllUsersServiceResponse[];
 }
 
 export type RegisterRepositoryData = RegisterRequestBody;
 export interface RegisterRequestBody {
-    email: string;
-    workplace: string;
-    fullname: string;
-    password: string;
+  email: string;
+  workplace: string;
+  fullname: string;
+  password: string;
+}
+
+export interface UpdateUserRequestBody {
+  token: string;
+  id: ID;
+  email: string;
+  password: string;
+  workplace: string;
+  fullname: string;
+  position: Position;
+  rating: number;
+  role: Roles;
+}
+export type UpdateRepositoryData = UpdateUserRequestBody;
+export interface UpdateUserResponse extends CommonResponse {
+  user: User;
+}
+
+export interface InviteUserRequestBody {
+  email: string;
 }

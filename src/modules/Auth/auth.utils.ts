@@ -1,6 +1,7 @@
 import { FastifyRequest, JWT } from 'fastify';
 import { Roles } from '../../entities/User';
-import { checkAuthService, checkUserService } from './auth.services';
+import { checkAuthService } from './auth.services';
+import { checkUserService } from '../User/user.services';
 import { User } from '../../entities/User';
 import { buildError } from '../../utils/error.helper';
 

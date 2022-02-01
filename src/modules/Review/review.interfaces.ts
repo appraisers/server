@@ -10,19 +10,27 @@ export interface CreateReviewResponse extends CommonResponse {
   review: Review;
 }
 
+export interface InviteAppriceResponse extends CommonResponse {
+  user: InviteAppriceData[];
+}
+export interface InviteAppriceData {
+  userId: number;
+  email: string;
+}
+
 export interface CheckReviewsData {
-  userId: ID,
-  offset: number,
-  limit: number,
+  userId: ID;
+  offset: number;
+  limit: number;
 }
 
 export interface CreateReviewData {
-  userId: ID,
+  userId: ID;
   description: string;
   rating: number;
 }
 
 export interface CreateReviewRepositoryData extends CreateReviewData {
-  author: User,
-  user: User
+  author: User;
+  user: User;
 }

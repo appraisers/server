@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import * as nodemailer from 'nodemailer';
+import * as handlebars from 'handlebars';
 import * as fs from 'fs';
 import * as path from 'path';
 import config from '../config';
@@ -17,6 +18,7 @@ type SendEmail = {
   type: string;
   emailTo: string;
   subject: string;
+  replacements?: Object;
 };
 type MailOptions = {
   from: string;
@@ -28,12 +30,16 @@ export const sendEmail = async ({
   type,
   emailTo,
   subject,
+  replacements,
 }: SendEmail): Promise<boolean> => {
   const filePath = path.join(__dirname, `../emails/${type}.html`);
   const source = fs.readFileSync(filePath, 'utf-8').toString();
 
   if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS)
     throw buildError(500, 'Email send error');
+
+  const template = handlebars.compile(source);
+  const htmlToSend = template(replacements);
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -47,10 +53,9 @@ export const sendEmail = async ({
     from: SMTP_FROM,
     to: emailTo,
     subject,
-    html: source
-    ,
+    html: htmlToSend,
   } as MailOptions;
   const info = await transporter.sendMail(mailOptions);
-  console.log("send email info", info);
+  console.log('send email info', info);
   return true;
 };
