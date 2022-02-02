@@ -26,11 +26,21 @@ export interface CheckReviewsData {
 
 export interface CreateReviewData {
   userId: ID;
-  description: string;
-  rating: number;
 }
 
 export interface CreateReviewRepositoryData extends CreateReviewData {
   author: User;
   user: User;
+}
+
+export interface AddAnswerData {
+  userId: ID;
+  ids: number[];
+  answers: number[];
+}
+
+export interface UpdateTemporaryRatingData {
+  reviewId: ID;
+  temporaryRating: number;
+  answeredQuestions: number;
 }

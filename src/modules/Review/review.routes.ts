@@ -3,6 +3,7 @@ import { CommonResponse } from '../../common/common.interfaces';
 import { commonResponse } from '../../common/common.constants';
 import { buildError } from '../../utils/error.helper';
 import {
+  AddAnswerData,
   InviteAppriceData,
   CheckReviewResponse,
   CheckReviewsData,
@@ -11,6 +12,7 @@ import {
 } from './review.interfaces';
 import { allErrors } from './review.messages';
 import {
+  addAnswerService,
   checkReviewsService,
   createReviewService,
   inviteAppriceService,
@@ -48,37 +50,6 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     }
   };
 
-  const createReviewController = async (
-    request: FastifyRequest
-  ): Promise<CreateReviewResponse> => {
-    try {
-      const { userId, description, rating } = request.body as CreateReviewData;
-      const {
-        headers: { authorization },
-      } = request;
-      if (!authorization) throw buildError(400, allErrors.tokenNotFound);
-      if (!userId) throw buildError(400, allErrors.userIdNotFound);
-
-      const data: CreateReviewData = {
-        userId,
-        description,
-        rating,
-      };
-      const review = await createReviewService(
-        data,
-        authorization,
-        fastify.jwt
-      );
-
-      return {
-        ...commonResponse,
-        review,
-      };
-    } catch (error) {
-      throw error;
-    }
-  };
-
   const inviteAppriceController = async (
     request: FastifyRequest
   ): Promise<CommonResponse> => {
@@ -101,8 +72,24 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     }
   };
 
+  const addAnswerController = async (
+    request: FastifyRequest
+  ): Promise<CommonResponse> => {
+    try {
+      const {
+        headers: { authorization },
+      } = request;
+      if (!authorization) throw buildError(400, allErrors.tokenNotFound);
+      const { body } = request;
+      await addAnswerService(body as AddAnswerData, authorization, fastify.jwt);
+      return commonResponse;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   fastify.get('/check/:userId', checkReviewController);
-  fastify.post('/create_review', createReviewController);
+  fastify.post('/add_answer', addAnswerController);
   fastify.post('/invite_appraise', inviteAppriceController);
 };
 
