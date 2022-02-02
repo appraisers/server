@@ -117,6 +117,13 @@ export const forgotPasswordSchema = {
           ...commonResponse,
         },
       },
+      400: {
+        type: 'object',
+        required: ['statusCode', 'message'],
+        properties: {
+          ...commonResponse,
+        },
+      },
       '4xx': { $ref: 'commonErrorSchema#' },
       '5xx': { $ref: 'commonErrorSchema#' },
     },
@@ -156,14 +163,21 @@ export const resetPasswordSchema = {
   schema: {
     body: {
       type: 'object',
-      required: ['token', 'password'],
+      required: ['forgotPasswordToken', 'password'],
       properties: {
-        token: { type: 'string' },
+        forgotPasswordToken: { type: 'string' },
         password: { type: 'string' },
       },
     },
     response: {
       200: {
+        type: 'object',
+        required: ['statusCode', 'message'],
+        properties: {
+          ...commonResponse,
+        },
+      },
+      400: {
         type: 'object',
         required: ['statusCode', 'message'],
         properties: {
