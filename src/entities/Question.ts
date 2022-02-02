@@ -15,7 +15,7 @@ export enum Category {
 }
 
 @Entity({ name: 'questions' })
-export class Review {
+export class Question {
   @PrimaryGeneratedColumn()
   id!: number;
 

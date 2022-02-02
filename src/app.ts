@@ -15,6 +15,7 @@ import { CommonResponse } from './common/common.interfaces';
 import authRoutes from './modules/Auth/auth.routes';
 import reviewRoutes from './modules/Review/review.routes';
 import userRoutes from './modules/User/user.routes';
+import questionRoutes from './modules/Question/question.routes';
 
 import { filesMultipleUpload } from './utils/multer';
 
@@ -112,6 +113,7 @@ export default function build(): FastifyInstance {
   app.register(authRoutes, { prefix: '/api/auth' });
   app.register(reviewRoutes, { prefix: '/api/review' });
   app.register(userRoutes, { prefix: '/api/user' });
+  app.register(questionRoutes, { prefix: '/api/question' });
   
   app.get('/', async (request, reply) => {
     return {
