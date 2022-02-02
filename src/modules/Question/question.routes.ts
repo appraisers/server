@@ -13,7 +13,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     try {
       const { body } = request;
       const {
-        headers: {authorization} , 
+        headers:{authorization}, 
       } = request;
       if (!authorization) throw buildError(400, allErrors.tokenNotFound);
       const question = await addQuestionService(body as AddQuestionRequestBody, authorization, fastify.jwt);
