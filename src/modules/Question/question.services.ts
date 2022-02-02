@@ -1,7 +1,7 @@
 
 import { getCustomRepository } from 'typeorm';
 import { Question } from '../../entities/Question';
-import {AddQuestionRequestBody}from './question.interfaces';
+import { AddQuestionRequestBody } from './question.interfaces';
 import { DecodedJWT } from 'src/common/common.interfaces';
 import { UserRepository } from '../Auth/auth.repositories';
 import { JWT } from 'fastify-jwt';
