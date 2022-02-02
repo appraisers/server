@@ -1,6 +1,5 @@
 import { EntityRepository, Repository} from 'typeorm';
-//import { genSaltSync, hashSync } from 'bcryptjs';
-import { Question } from 'src/entities/Question';
+import { Question } from '../../entities/Question';
 import { RegisterRepositoryData} from './question.interfaces';
 
 @EntityRepository(Question)

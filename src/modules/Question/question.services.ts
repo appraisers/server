@@ -1,17 +1,17 @@
 
 import { getCustomRepository } from 'typeorm';
-import { Question } from 'src/entities/Question';
+import { Question } from '../../entities/Question';
 import {
   AddQuestionRequestBody,
 } from './question.interfaces';
 import { QuestionRepository } from './question.repositories';
 
 
-export const registrationService = async (
+export const addQuestionService = async (
   data: AddQuestionRequestBody
 ): Promise<Question> => {
-  const userRepo = getCustomRepository(QuestionRepository);
-  const question = await userRepo.createQuestion(data);
+  const questionRepo = getCustomRepository(QuestionRepository);
+  const question = await questionRepo.createQuestion(data);
   return question;
 };
 

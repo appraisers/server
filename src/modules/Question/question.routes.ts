@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyInstance } from 'fastify';
 import { commonResponse } from '../../common/common.constants';
 import {AddQuestionRequestBody, RegistrationResponse} from './question.interfaces';
-import {registrationService} from './question.services';
+import {addQuestionService} from './question.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
   
@@ -10,15 +10,14 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
   ): Promise<RegistrationResponse> => {
     try {
       const { body } = request;
-      const question = await registrationService(body as AddQuestionRequestBody);
+      const question = await addQuestionService(body as AddQuestionRequestBody);
       return { ...commonResponse, question };
     } catch (error) {
       throw error;
     }
   };
 
-  fastify.post('/addquestion', addQuestionController);
-  
+  fastify.post('/add-question', addQuestionController);
 };
 
 export default routes;
