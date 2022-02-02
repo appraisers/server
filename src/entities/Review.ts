@@ -43,6 +43,27 @@ export class Review {
   })
   rating!: number;
 
+  @Column({
+    default: true,
+    type: 'boolean',
+    name: 'active_session'
+  })
+  activeSession!: boolean;
+
+  @Column({
+    default: 0,
+    type: 'float',
+    name: 'temporary_rating'
+  })
+  temporaryRating!: number;
+
+  @Column({
+    nullable: true,
+    type: 'float',
+    name: 'answered_questions'
+  })
+  answeredQuestions!: number;
+
   @Column('timestamp', {
     nullable: false,
     default: () => 'CURRENT_TIMESTAMP',
