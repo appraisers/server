@@ -1,10 +1,10 @@
-import { EntityRepository, Repository} from 'typeorm';
+import { EntityRepository, Repository } from 'typeorm';
 import { Question } from '../../entities/Question';
-import { RegisterRepositoryData} from './question.interfaces';
+import { QuestionRepositoryData } from './question.interfaces';
 
 @EntityRepository(Question)
 export class QuestionRepository extends Repository<Question> {
-  async createQuestion(data: RegisterRepositoryData): Promise<Question> {
+  async createQuestion(data: QuestionRepositoryData): Promise<Question> {
     const {
       description,
       category,
