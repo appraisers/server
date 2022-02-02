@@ -1,6 +1,5 @@
-import { JWT } from 'fastify';
 import { getCustomRepository } from 'typeorm';
-import { DecodedJWT } from '../../common/common.interfaces';
+import { DecodedJWT, JWT } from '../../common/common.interfaces';
 import { sendEmail } from '../../utils/mail.helper';
 import { buildError } from '../../utils/error.helper';
 import { User } from '../../entities/User';

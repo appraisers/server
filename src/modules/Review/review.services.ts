@@ -1,9 +1,8 @@
-import { JWT } from 'fastify';
 import { getCustomRepository } from 'typeorm';
 import { Review } from '../../entities/Review';
 import { buildError } from '../../utils/error.helper';
 import { UserRepository } from '../Auth/auth.repositories';
-import { DecodedJWT } from '../../common/common.interfaces';
+import { DecodedJWT, JWT } from '../../common/common.interfaces';
 import { sendEmail } from '../../utils/mail.helper';
 import { checkAdminOrModeratorService } from '../User/user.services';
 import config from '../../config';

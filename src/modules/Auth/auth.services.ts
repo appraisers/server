@@ -1,11 +1,10 @@
 import { EXPIRED } from './auth.constants';
-import { JWT } from 'fastify';
 import { v4 as uuidv4 } from 'uuid';
 import { getCustomRepository } from 'typeorm';
 import { sendEmail } from '../../utils/mail.helper';
 import { User } from '../../entities/User';
 import { buildError } from '../../utils/error.helper';
-import { DecodedJWT, JwtTokens } from '../../common/common.interfaces';
+import { DecodedJWT, JWT, JwtTokens } from '../../common/common.interfaces';
 import config from '../../config';
 import {
   LoginRequestBody,
