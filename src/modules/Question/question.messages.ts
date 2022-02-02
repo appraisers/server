@@ -3,4 +3,4 @@ export const allErrors = {
   incorectToken: 'Incorrect token',
   userIsNotFound: 'User is not found',
   tokenNotFound: 'Token is not found',
-}
+};

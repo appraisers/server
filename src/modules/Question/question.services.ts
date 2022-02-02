@@ -1,4 +1,3 @@
-
 import { getCustomRepository } from 'typeorm';
 import { Question } from '../../entities/Question';
 import { AddQuestionRequestBody } from './question.interfaces';
@@ -8,7 +7,7 @@ import { JWT } from 'fastify-jwt';
 import { QuestionRepository } from './question.repositories';
 import { allErrors } from './question.messages';
 import { checkAdminOrModeratorService } from '../User/user.services';
-export const addQuestionService = async(
+export const addQuestionService = async (
   data: AddQuestionRequestBody,
   token: string,
   jwt: JWT
@@ -22,7 +21,6 @@ export const addQuestionService = async(
   if (isAdminOrModerator) {
     const questionRepo = getCustomRepository(QuestionRepository);
     const question = await questionRepo.createQuestion(data);
-    return question; 
+    return question;
   }
 };
-
