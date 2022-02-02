@@ -1,22 +1,26 @@
 import { Token } from '../../entities/Token';
-import { EntityRepository, Repository, getRepository, getCustomRepository } from 'typeorm';
+import {
+  EntityRepository,
+  Repository,
+  getRepository,
+  getCustomRepository,
+} from 'typeorm';
 //import { genSaltSync, hashSync } from 'bcryptjs';
 import { User } from '../../entities/User';
-import { RegisterRepositoryData, ConfirmRequestBody } from './auth.interfaces';
+import {
+  RegisterRepositoryData,
+  ConfirmRequestBody,
+  ResetPasswordData,
+} from './auth.interfaces';
 import { EXPIRED } from './auth.constants';
 interface CreateTokenRequest {
-  user: User,
+  user: User;
   refreshToken: string;
 }
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
   async createUser(data: RegisterRepositoryData): Promise<User> {
-    const {
-      email,
-      fullname,
-      workplace,
-      password,
-    } = data;
+    const { email, fullname, workplace, password } = data;
 
     const user = new User();
     user.fullname = fullname ?? null;
@@ -26,14 +30,20 @@ export class UserRepository extends Repository<User> {
     await this.save(user);
     return user;
   }
-  resetPassword(data: any) {
-   // const salt = genSaltSync(10);
-    return this.update({
-      forgotPasswordToken: data.token
-    }, {
-      password: data.password,
-      forgotPasswordToken: null,
-    });
+  resetPassword(data: ResetPasswordData) {
+    // const salt = genSaltSync(10);
+    const { password, forgotPasswordToken } = data;
+    
+    return this.createQueryBuilder('user')
+      .update(User)
+      .set({
+        password: password,
+        forgotPasswordToken: null,
+      })
+      .where('forgot_password_token = :forgotPasswordToken', {
+        forgotPasswordToken,
+      })
+      .execute();
   }
   findOneWithPasswordByKey<T extends keyof User>(
     key: T,
@@ -72,6 +82,6 @@ export class TokenRepository extends Repository<Token> {
   }
   async removeRefresh(refreshToken: string): Promise<any> {
     const refresh = await this.findOne({ where: { refreshToken } });
-    refresh && await this.remove(refresh);
+    refresh && (await this.remove(refresh));
   }
 }

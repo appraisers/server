@@ -41,3 +41,4 @@ export interface ResetPasswordRequestBody {
   password: string;
 }
 
+export type ResetPasswordData = ResetPasswordRequestBody;

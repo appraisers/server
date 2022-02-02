@@ -25,7 +25,9 @@ export const forgotPasswordService = async (
   const userRepo = getCustomRepository(UserRepository);
   const { email } = data;
   const user = await userRepo.findOne({ where: { email } });
-  if (!user) throw buildError(400, allErrors.userIsNotFound);
+  if (!user) {
+    throw buildError(400, allErrors.userIsNotFound);
+  }
   const forgotPasswordToken = uuidv4();
   user.forgotPasswordToken = forgotPasswordToken;
   userRepo.save(user);
@@ -35,7 +37,7 @@ export const forgotPasswordService = async (
     subject: 'Did you forget your password?',
     replacements: {
       link: `${FRONTEND_URL}/forgot_password_2/${forgotPasswordToken}`,
-    }
+    },
   });
   return null;
 };
@@ -45,13 +47,14 @@ export const resetPasswordService = async (
 ): Promise<null> => {
   const userRepo = getCustomRepository(UserRepository);
   const updateResult = await userRepo.resetPassword(data);
-  if (!updateResult.affected)
-    throw buildError(400, 'No such confirmation token');
+  if (!updateResult.affected) {
+    throw buildError(400, allErrors.noSuchConfirmationToken);
+  }
   return null;
 };
 
 export const checkAuthService = async (
-  token: string, //access
+  token: string,
   jwt: JWT
 ): Promise<User> => {
   const decoded: DecodedJWT = jwt.verify(token);
@@ -70,9 +73,12 @@ export const loginService = async (
   const { email, password, rememberMe } = data;
   const userRepo = getCustomRepository(UserRepository);
   const user = await userRepo.findOneWithPasswordByKey('email', email);
-  if (!user) throw buildError(400, allErrors.userIsNotFound);
-  if (user.password !== password)
+  if (!user) {
     throw buildError(400, allErrors.userIsNotFound);
+  }
+  if (user.password !== password) {
+    throw buildError(400, allErrors.userIsNotFound);
+  }
   // const compare = bcrypt.compareSync(password, user.password);
   // if (!compare) throw buildError(400, allErrors.userIsNotFound);
 
