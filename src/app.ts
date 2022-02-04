@@ -40,7 +40,7 @@ export default function build(): FastifyInstance {
   app.register(fastifyFormbody, {
     bodyLimit: 104857600,
   });
-  app.register(fastifyTypeormPlugin, config.MAIN_DB);
+  app.register(fastifyTypeormPlugin as any, config.MAIN_DB);
   app.register(fastifyJWT, {
     secret: config.JWT_SECRET,
   });
