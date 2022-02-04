@@ -5,10 +5,12 @@ import {
   QuestionResponse,
 } from './question.interfaces';
 import { addQuestionService } from './question.services';
+import { getQuestionsService } from './question.services';
 import { loginService } from '../Auth/auth.services';
 import { allErrors } from '../Auth/auth.messages';
 import { LoginRequestBody } from '../Auth/auth.interfaces';
-import { buildError } from 'src/utils/error.helper';
+import { buildError } from '../../utils/error.helper';
+import { GetQuestionsData } from './question.interfaces';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
   const addQuestionController = async (
@@ -30,6 +32,20 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       throw error;
     }
   };
+
+  const getQuestionsController = async (
+    request: FastifyRequest
+  ): Promise<QuestionResponse> => {
+    try {
+      const { questionId } = request.params as GetQuestionsData;
+      const getquestions = await getQuestionsService(questionId);
+      // const getquestions = await getQuestionsService(questionId);
+      return { ...commonResponse, getquestions };
+    } catch (error) {
+      throw error;
+    }
+  };
   fastify.post('/add-question', addQuestionController);
+  fastify.get('/questions', getQuestionsController);
 };
 export default routes;

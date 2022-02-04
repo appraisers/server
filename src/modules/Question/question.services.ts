@@ -5,6 +5,7 @@ import { DecodedJWT } from 'src/common/common.interfaces';
 import { UserRepository } from '../Auth/auth.repositories';
 import { JWT } from 'fastify-jwt';
 import { QuestionRepository } from './question.repositories';
+import { CommonResponse, ID } from '../../common/common.interfaces';
 import { allErrors } from './question.messages';
 import { checkAdminOrModeratorService } from '../User/user.services';
 export const addQuestionService = async (
@@ -23,4 +24,10 @@ export const addQuestionService = async (
     const question = await questionRepo.createQuestion(data);
     return question;
   }
+};
+
+export const getQuestionsService = async (questionId: ID) => {
+  const questionRepo = getCustomRepository(QuestionRepository);
+  const questions = await questionRepo.fourQuestions(questionId);
+  return questions;
 };
