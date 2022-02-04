@@ -17,7 +17,7 @@ export class QuestionRepository extends Repository<Question> {
   async fourQuestions(data: number) {
     const questionId = data;
     const questions = [];
-    for (let i = questionId; i < 4; i++) {
+    for (let i = questionId + 1; i <= questionId + 5; i++) {
       questions.push(this.findOne({ where: { ['id']: i } }));
     }
     return questions;
