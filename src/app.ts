@@ -93,7 +93,7 @@ export default function build(): FastifyInstance {
     exposeRoute: true,
   });
 
-  app.ready((err) => {
+  app.ready((err: any) => {
     if (err) throw err;
     app.swagger();
   });
@@ -115,7 +115,7 @@ export default function build(): FastifyInstance {
   app.register(userRoutes, { prefix: '/api/user' });
   app.register(questionRoutes, { prefix: '/api/question' });
   
-  app.get('/', async (request, reply) => {
+  app.get('/', async () => {
     return {
       work: true
     }
@@ -134,7 +134,7 @@ export default function build(): FastifyInstance {
 
 
   // ERROR HANDLER
-  app.setErrorHandler((error, request, reply) => {
+  app.setErrorHandler((error: any, reply: any) => {
     try {
       const errObj = JSON.parse(error.message) as CommonResponse;
 
