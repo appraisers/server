@@ -88,7 +88,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     }
   };
 
-  fastify.get('/check/userId', checkReviewController);
+  fastify.get('/check/:userId', checkReviewController);
   fastify.post('/add_answer', addAnswerController);
   fastify.post('/invite_appraise', inviteAppriceController);
 };
