@@ -1,23 +1,22 @@
 import { FastifyRequest, FastifyInstance } from 'fastify';
 import { commonResponse } from '../../common/common.constants';
+import { buildError } from '../../utils/error.helper';
+import { allErrors } from '../Auth/auth.messages';
 import {
   AddQuestionRequestBody,
+  GetQuestionResponse,
   QuestionResponse,
 } from './question.interfaces';
 import { addQuestionService } from './question.services';
 import { getQuestionsService } from './question.services';
-import { loginService } from '../Auth/auth.services';
-import { allErrors } from '../Auth/auth.messages';
-import { LoginRequestBody } from '../Auth/auth.interfaces';
-import { buildError } from '../../utils/error.helper';
-import { GetQuestionsData } from './question.interfaces';
+import { GetQuestionsRequestBody } from './question.interfaces';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
   const addQuestionController = async (
     request: FastifyRequest
   ): Promise<QuestionResponse> => {
+    const { body } = request;
     try {
-      const { body } = request;
       const {
         headers: { authorization },
       } = request;
@@ -32,15 +31,20 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       throw error;
     }
   };
-
   const getQuestionsController = async (
     request: FastifyRequest
-  ): Promise<QuestionResponse> => {
+  ): Promise<GetQuestionResponse> => {
     try {
-      const { questionId } = request.params as GetQuestionsData;
-      const getquestions = await getQuestionsService(questionId);
-      // const getquestions = await getQuestionsService(questionId);
-      return { ...commonResponse, getquestions };
+      const id = Number(
+        JSON.parse(JSON.stringify(request.query as GetQuestionsRequestBody))[
+          'id'
+        ]
+      );
+      const data: GetQuestionsRequestBody = {
+        id,
+      };
+      const questions = await getQuestionsService(data);
+      return { ...commonResponse, questions };
     } catch (error) {
       throw error;
     }

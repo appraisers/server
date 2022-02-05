@@ -5,11 +5,14 @@ export interface AddQuestionRequestBody {
   category: string;
   weight: number;
 }
-export interface GetQuestionsData {
-  questionId: number;
+export interface GetQuestionsRequestBody {
+  id: ID;
 }
-
+export type QuestionId = GetQuestionsRequestBody;
 export type QuestionRepositoryData = AddQuestionRequestBody;
 export interface QuestionResponse extends CommonResponse {
-  question: Question;
+  question: Question | undefined;
+}
+export interface GetQuestionResponse extends CommonResponse {
+  questions: {};
 }

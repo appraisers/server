@@ -1,6 +1,4 @@
-export const allErrors = {
-  userIsNotConfirmed: 'User is not confirmed',
-  incorectToken: 'Incorrect token',
-  userIsNotFound: 'User is not found',
+export const questionErrors = {
+  questionIdNotFound: `Question doesn't exist`,
   tokenNotFound: 'Token is not found',
 };
