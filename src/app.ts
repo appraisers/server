@@ -40,7 +40,7 @@ export default function build(): FastifyInstance {
   app.register(fastifyFormbody, {
     bodyLimit: 104857600,
   });
-  app.register(fastifyTypeormPlugin, config.MAIN_DB);
+  app.register(fastifyTypeormPlugin as any, config.MAIN_DB);
   app.register(fastifyJWT, {
     secret: config.JWT_SECRET,
   });
@@ -93,7 +93,7 @@ export default function build(): FastifyInstance {
     exposeRoute: true,
   });
 
-  app.ready((err) => {
+  app.ready((err: any) => {
     if (err) throw err;
     app.swagger();
   });
@@ -135,7 +135,7 @@ export default function build(): FastifyInstance {
   );
 
   // ERROR HANDLER
-  app.setErrorHandler((error, request, reply) => {
+  app.setErrorHandler((error: any, reply: any) => {
     try {
       const errObj = JSON.parse(error.message) as CommonResponse;
 
