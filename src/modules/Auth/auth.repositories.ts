@@ -33,7 +33,7 @@ export class UserRepository extends Repository<User> {
   resetPassword(data: ResetPasswordData) {
     // const salt = genSaltSync(10);
     const { password, forgotPasswordToken } = data;
-    
+
     return this.createQueryBuilder('user')
       .update(User)
       .set({

@@ -11,7 +11,7 @@ export interface GetQuestionsRequestBody {
 export type QuestionId = GetQuestionsRequestBody;
 export type QuestionRepositoryData = AddQuestionRequestBody;
 export interface QuestionResponse extends CommonResponse {
-  question: Question | undefined;
+  question: Question;
 }
 export interface GetQuestionResponse extends CommonResponse {
   questions: {};

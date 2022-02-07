@@ -2,17 +2,17 @@ import { getCustomRepository } from 'typeorm';
 import { Question } from '../../entities/Question';
 import { AddQuestionRequestBody, QuestionId } from './question.interfaces';
 import { DecodedJWT } from 'src/common/common.interfaces';
-import { UserRepository } from '../Auth/auth.repositories';
 import { JWT } from 'fastify-jwt';
 import { QuestionRepository } from './question.repositories';
-import { CommonResponse, ID } from '../../common/common.interfaces';
 import { checkAdminOrModeratorService } from '../User/user.services';
 import { GetQuestionsRequestBody } from './question.interfaces';
+import { buildError } from 'src/utils/error.helper';
+import { allErrors } from '../Auth/auth.messages';
 export const addQuestionService = async (
   data: AddQuestionRequestBody,
   token: string,
   jwt: JWT
-): Promise<Question | undefined> => {
+): Promise<Question> => {
   const decoded: DecodedJWT = jwt.verify(token);
   const isAdminOrModerator = await checkAdminOrModeratorService(
     decoded.id,
@@ -23,6 +23,8 @@ export const addQuestionService = async (
     const questionRepo = getCustomRepository(QuestionRepository);
     const question = await questionRepo.createQuestion(data);
     return question;
+  } else {
+    throw buildError(400, allErrors.noSuchConfirmationToken);
   }
 };
 export const getQuestionsService = async (
