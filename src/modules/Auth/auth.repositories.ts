@@ -21,7 +21,6 @@ interface CreateTokenRequest {
 export class UserRepository extends Repository<User> {
   async createUser(data: RegisterRepositoryData): Promise<User> {
     const { email, fullname, workplace, password } = data;
-
     const user = new User();
     user.fullname = fullname ?? null;
     user.email = email;
@@ -33,7 +32,6 @@ export class UserRepository extends Repository<User> {
   resetPassword(data: ResetPasswordData) {
     // const salt = genSaltSync(10);
     const { password, forgotPasswordToken } = data;
-
     return this.createQueryBuilder('user')
       .update(User)
       .set({
