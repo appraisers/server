@@ -134,17 +134,17 @@ export default function build(): FastifyInstance {
     }
   );
 
-  // ERROR HANDLER
-  app.setErrorHandler((error: any, reply: any) => {
-    try {
-      const errObj = JSON.parse(error.message) as CommonResponse;
+// ERROR HANDLER
+// app.setErrorHandler((error: any, reply: any) => {
+//   try {
+//     const errObj = JSON.parse(error.message) as CommonResponse;
 
-      reply.status(200).send(errObj);
-    } catch (err) {
-      reply
-        .status(500)
-        .send({ statusCode: 500, message: error.message || 'Unknown error' });
-    }
-  });
+//     reply.status(200).send(errObj);
+//   } catch (err) {
+//     reply
+//       .status(500)
+//       .send({ statusCode: 500, message: error.message || 'Unknown error' });
+//   }
+// });
   return app;
 }
