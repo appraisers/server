@@ -1,23 +1,21 @@
 import { FastifyRequest, FastifyInstance } from 'fastify';
 import { commonResponse } from '../../common/common.constants';
+import { buildError } from '../../utils/error.helper';
+import { allErrors } from './question.messages';
 import {
   AddQuestionRequestBody,
+  GetQuestionResponse,
   QuestionResponse,
+  GetQuestionsRequestBody,
 } from './question.interfaces';
-import { addQuestionService } from './question.services';
-import { getQuestionsService } from './question.services';
-import { loginService } from '../Auth/auth.services';
-import { allErrors } from '../Auth/auth.messages';
-import { LoginRequestBody } from '../Auth/auth.interfaces';
-import { buildError } from '../../utils/error.helper';
-import { GetQuestionsData } from './question.interfaces';
+import { addQuestionService, getQuestionsService } from './question.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
   const addQuestionController = async (
     request: FastifyRequest
   ): Promise<QuestionResponse> => {
+    const { body } = request;
     try {
-      const { body } = request;
       const {
         headers: { authorization },
       } = request;
@@ -32,15 +30,21 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       throw error;
     }
   };
-
   const getQuestionsController = async (
     request: FastifyRequest
-  ): Promise<QuestionResponse> => {
+  ): Promise<GetQuestionResponse | null> => {
     try {
-      const { questionId } = request.params as GetQuestionsData;
-      const getquestions = await getQuestionsService(questionId);
-      // const getquestions = await getQuestionsService(questionId);
-      return { ...commonResponse, getquestions };
+      const { offset, limit } = request.query as GetQuestionsRequestBody;
+      if (offset != null && limit != null) {
+        const data: GetQuestionsRequestBody = {
+          offset,
+          limit,
+        };
+        const questions = await getQuestionsService(data);
+        return { ...commonResponse, questions };
+      }
+      return null;
+      //TODO : if (offset == null || limit == null) throw buildError(400, allErrors.tokenNotFound);
     } catch (error) {
       throw error;
     }

@@ -20,13 +20,13 @@ import questionRoutes from './modules/Question/question.routes';
 import { filesMultipleUpload } from './utils/multer';
 
 let app = fastify({
-  pluginTimeout: 20000 // resolve problem "Error: ERR_AVVIO_PLUGIN_TIMEOUT: plugin did not start in time ..."
+  pluginTimeout: 20000, // resolve problem "Error: ERR_AVVIO_PLUGIN_TIMEOUT: plugin did not start in time ..."
 });
 
-
 export default function build(): FastifyInstance {
-
-  app.register(fastifyCors, { /* put your options here */ })
+  app.register(fastifyCors, {
+    /* put your options here */
+  });
   // app.register(fastifyMultipart, {
   //   attachFieldsToBody: true,
   //   limits: {
@@ -48,7 +48,7 @@ export default function build(): FastifyInstance {
     root: path.join(__dirname, 'public'),
     list: true,
     prefix: '/public/', // optional: default '/'
-  })
+  });
   app.register(multer.contentParser);
   app.register(fastifySwagger, {
     routePrefix: '/documentation',
@@ -114,24 +114,25 @@ export default function build(): FastifyInstance {
   app.register(reviewRoutes, { prefix: '/api/review' });
   app.register(userRoutes, { prefix: '/api/user' });
   app.register(questionRoutes, { prefix: '/api/question' });
-  
+
   app.get('/', async () => {
     return {
-      work: true
-    }
-  })
+      work: true,
+    };
+  });
 
   // Test Route for Upload functionality Multer || MulterS3
-  app.post('/upload_aws',
+  app.post(
+    '/upload_aws',
     {
-      preHandler: filesMultipleUpload('listingMedia', 'galleryMedias')
+      preHandler: filesMultipleUpload('listingMedia', 'galleryMedias'),
     },
     async (request: any, reply: any) => {
       reply
         .status(200)
         .send({ statusCode: 200, img: request.files || 'There are no images' });
-    })
-
+    }
+  );
 
   // ERROR HANDLER
   app.setErrorHandler((error: any, reply: any) => {

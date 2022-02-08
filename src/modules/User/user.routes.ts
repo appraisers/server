@@ -29,9 +29,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
         headers: { authorization },
       } = request;
       if (!authorization) throw buildError(400, allErrors.tokenNotFound);
-
       const user = await checkUserService(authorization, fastify.jwt);
-
       return {
         ...commonResponse,
         user,

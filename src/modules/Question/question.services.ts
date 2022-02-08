@@ -1,13 +1,16 @@
 import { getCustomRepository } from 'typeorm';
 import { Question } from '../../entities/Question';
-import { AddQuestionRequestBody } from './question.interfaces';
+import {
+  AddQuestionRequestBody,
+  GetQuestionsRequestBody,
+} from './question.interfaces';
 import { DecodedJWT } from 'src/common/common.interfaces';
-import { UserRepository } from '../Auth/auth.repositories';
 import { JWT } from 'fastify-jwt';
 import { QuestionRepository } from './question.repositories';
-import { CommonResponse, ID } from '../../common/common.interfaces';
-import { allErrors } from './question.messages';
 import { checkAdminOrModeratorService } from '../User/user.services';
+import { buildError } from '../../utils/error.helper';
+import { allErrors } from './question.messages';
+
 export const addQuestionService = async (
   data: AddQuestionRequestBody,
   token: string,
@@ -23,11 +26,14 @@ export const addQuestionService = async (
     const questionRepo = getCustomRepository(QuestionRepository);
     const question = await questionRepo.createQuestion(data);
     return question;
+  } else {
+    throw buildError(400, allErrors.tokenNotFound);
   }
 };
-
-export const getQuestionsService = async (questionId: ID) => {
+export const getQuestionsService = async (
+  data: GetQuestionsRequestBody
+): Promise<Question[]> => {
   const questionRepo = getCustomRepository(QuestionRepository);
-  const questions = await questionRepo.fourQuestions(questionId);
-  return questions;
+  const question = await questionRepo.getQuestion(data);
+  return question;
 };

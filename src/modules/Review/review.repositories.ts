@@ -24,10 +24,7 @@ export class ReviewRepository extends Repository<Review> {
   }
 
   async createReview(data: CreateReviewRepositoryData): Promise<Review> {
-    const {
-      user,
-      author,
-    } = data;
+    const { user, author } = data;
 
     const review = new Review();
     review.user = user;
