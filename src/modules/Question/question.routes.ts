@@ -9,8 +9,6 @@ import {
   GetQuestionsRequestBody,
 } from './question.interfaces';
 import { addQuestionService, getQuestionsService } from './question.services';
-import { AutoScaling } from 'aws-sdk';
-import build from 'src/app';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
   const addQuestionController = async (
