@@ -9,6 +9,8 @@ import {
   GetQuestionsRequestBody,
 } from './question.interfaces';
 import { addQuestionService, getQuestionsService } from './question.services';
+import { AutoScaling } from 'aws-sdk';
+import build from 'src/app';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
   const addQuestionController = async (
@@ -32,15 +34,19 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
   };
   const getQuestionsController = async (
     request: FastifyRequest
-  ): Promise<GetQuestionResponse> => {
+  ): Promise<GetQuestionResponse | null> => {
     try {
       const { offset, limit } = request.query as GetQuestionsRequestBody;
-      const data: GetQuestionsRequestBody = {
-        offset,
-        limit,
-      };
-      const questions = await getQuestionsService(data);
-      return { ...commonResponse, questions };
+      if (offset != null && limit != null) {
+        const data: GetQuestionsRequestBody = {
+          offset,
+          limit,
+        };
+        const questions = await getQuestionsService(data);
+        return { ...commonResponse, questions };
+      }
+      return null;
+      //TODO : if (offset == null || limit == null) throw buildError(400, allErrors.tokenNotFound);
     } catch (error) {
       throw error;
     }

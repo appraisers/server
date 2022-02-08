@@ -1,5 +1,5 @@
 import { Question } from '../../entities/Question';
-import { CommonResponse, ID } from '../../common/common.interfaces';
+import { CommonResponse } from '../../common/common.interfaces';
 export interface AddQuestionRequestBody {
   description: string;
   category: string;
@@ -9,7 +9,6 @@ export interface GetQuestionsRequestBody {
   offset: number;
   limit: number;
 }
-export type QuestionId = GetQuestionsRequestBody;
 export type QuestionRepositoryData = AddQuestionRequestBody;
 export interface QuestionResponse extends CommonResponse {
   question: Question;

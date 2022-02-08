@@ -115,7 +115,7 @@ export default function build(): FastifyInstance {
   app.register(userRoutes, { prefix: '/api/user' });
   app.register(questionRoutes, { prefix: '/api/question' });
 
-  app.get('/', async () => {
+  app.get('/', async (req, res) => {
     return {
       work: true,
     };
