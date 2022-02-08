@@ -6,7 +6,8 @@ export interface AddQuestionRequestBody {
   weight: number;
 }
 export interface GetQuestionsRequestBody {
-  id: ID;
+  offset: number;
+  limit: number;
 }
 export type QuestionId = GetQuestionsRequestBody;
 export type QuestionRepositoryData = AddQuestionRequestBody;

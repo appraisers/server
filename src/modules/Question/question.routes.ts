@@ -34,10 +34,10 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     request: FastifyRequest
   ): Promise<GetQuestionResponse> => {
     try {
-      const { id } = request.query as GetQuestionsRequestBody;
-      if (!id) buildError(400, allErrors.questionIdNotFound);
+      const { offset, limit } = request.query as GetQuestionsRequestBody;
       const data: GetQuestionsRequestBody = {
-        id,
+        offset,
+        limit,
       };
       const questions = await getQuestionsService(data);
       return { ...commonResponse, questions };

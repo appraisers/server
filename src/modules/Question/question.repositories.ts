@@ -16,12 +16,12 @@ export class QuestionRepository extends Repository<Question> {
     return question;
   }
   async getQuestion(data: GetQuestionsRequestBody): Promise<Question[]> {
-    const { id } = data;
+    const { offset, limit } = data;
     return this.createQueryBuilder('question')
       .select(['question'])
-      .orderBy('question.id')
-      .offset(id)
-      .limit(4)
+      .orderBy('question.id', 'ASC')
+      .offset(offset)
+      .limit(limit)
       .getMany();
   }
 }
