@@ -1,13 +1,15 @@
 import { getCustomRepository } from 'typeorm';
 import { Question } from '../../entities/Question';
-import { AddQuestionRequestBody, QuestionId } from './question.interfaces';
+import {
+  AddQuestionRequestBody,
+  GetQuestionsRequestBody,
+} from './question.interfaces';
 import { DecodedJWT } from 'src/common/common.interfaces';
 import { JWT } from 'fastify-jwt';
 import { QuestionRepository } from './question.repositories';
 import { checkAdminOrModeratorService } from '../User/user.services';
-import { GetQuestionsRequestBody } from './question.interfaces';
-import { buildError } from 'src/utils/error.helper';
-import { allErrors } from '../Auth/auth.messages';
+import { buildError } from '../../utils/error.helper';
+import { allErrors } from './question.messages';
 export const addQuestionService = async (
   data: AddQuestionRequestBody,
   token: string,
@@ -24,12 +26,12 @@ export const addQuestionService = async (
     const question = await questionRepo.createQuestion(data);
     return question;
   } else {
-    throw buildError(400, allErrors.noSuchConfirmationToken);
+    throw buildError(400, allErrors.tokenNotFound);
   }
 };
 export const getQuestionsService = async (
   data: GetQuestionsRequestBody
-): Promise<{}> => {
+): Promise<Question[]> => {
   const questionRepo = getCustomRepository(QuestionRepository);
   const question = await questionRepo.getQuestion(data);
   return question;

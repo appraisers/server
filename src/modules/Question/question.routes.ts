@@ -1,15 +1,14 @@
 import { FastifyRequest, FastifyInstance } from 'fastify';
 import { commonResponse } from '../../common/common.constants';
 import { buildError } from '../../utils/error.helper';
-import { allErrors } from '../Auth/auth.messages';
+import { allErrors } from './question.messages';
 import {
   AddQuestionRequestBody,
   GetQuestionResponse,
   QuestionResponse,
+  GetQuestionsRequestBody,
 } from './question.interfaces';
-import { addQuestionService } from './question.services';
-import { getQuestionsService } from './question.services';
-import { GetQuestionsRequestBody } from './question.interfaces';
+import { addQuestionService, getQuestionsService } from './question.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
   const addQuestionController = async (
@@ -35,11 +34,8 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     request: FastifyRequest
   ): Promise<GetQuestionResponse> => {
     try {
-      const id = Number(
-        JSON.parse(JSON.stringify(request.query as GetQuestionsRequestBody))[
-          'id'
-        ]
-      );
+      const { id } = request.query as GetQuestionsRequestBody;
+      if (!id) buildError(400, allErrors.questionIdNotFound);
       const data: GetQuestionsRequestBody = {
         id,
       };

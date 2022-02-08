@@ -14,5 +14,5 @@ export interface QuestionResponse extends CommonResponse {
   question: Question;
 }
 export interface GetQuestionResponse extends CommonResponse {
-  questions: {};
+  questions: Question[];
 }

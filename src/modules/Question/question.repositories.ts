@@ -18,7 +18,7 @@ export class QuestionRepository extends Repository<Question> {
   async getQuestion(data: GetQuestionsRequestBody): Promise<Question[]> {
     const { id } = data;
     return this.createQueryBuilder('question')
-      .select(['question', 'question', 'id'])
+      .select(['question'])
       .orderBy('question.id')
       .offset(id)
       .limit(4)
