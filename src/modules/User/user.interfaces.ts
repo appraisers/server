@@ -49,3 +49,9 @@ export interface UpdateUserResponse extends CommonResponse {
 export interface InviteUserRequestBody {
   email: string;
 }
+export interface DeleteUserResponse extends CommonResponse {
+  user: User;
+}
+export interface DeleteUserRequestBody{
+  userId: ID;
+}

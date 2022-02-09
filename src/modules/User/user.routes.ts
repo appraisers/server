@@ -7,6 +7,8 @@ import {
   AllInviteUsersResponse,
   AllUsersResponse,
   CheckAuthResponse,
+  DeleteUserResponse,
+  DeleteUserRequestBody,
   InviteUserRequestBody,
   UpdateUserRequestBody,
   UpdateUserResponse,
@@ -16,6 +18,7 @@ import {
   allInviteUsersService,
   allUsersService,
   checkUserService,
+  deleteUserService,
   inviteUserService,
   updateUserService,
 } from './user.services';
@@ -113,11 +116,33 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       throw error;
     }
   };
+  const deleteUserController = async (
+    request: FastifyRequest
+  ): Promise<DeleteUserResponse> => {
+    try {
+      const { body } = request;
+      const {
+        headers: { authorization },
+      } = request;
+      if (!authorization) throw buildError(400, allErrors.tokenNotFound);
+      const user = await deleteUserService(
+        body as DeleteUserRequestBody,
+        authorization,
+        fastify.jwt
+      )
+      return {
+        ...commonResponse,
+        user};
+    } catch (error) {
+      throw error;
+    }
+  };
   fastify.get('/all-users', allUsersController);
   fastify.get('/all-invite-users', allInviteUsersController);
   fastify.get('/check', checkUserController);
   fastify.post('/update', updateUserController);
   fastify.post('/invite', inviteUserController);
+  fastify.post('/delete', deleteUserController);
 };
 
 export default routes;

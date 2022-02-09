@@ -8,6 +8,7 @@ import { allErrors } from './user.messages';
 import {
   AllInviteUsersServiceResponse,
   AllUsersServiceResponse,
+  DeleteUserRequestBody,
   InviteUserRequestBody,
   UpdateUserRequestBody,
 } from './user.interfaces';
@@ -108,6 +109,34 @@ export const updateUserService = async (
 
   return user;
 };
+
+export const deleteUserService = async (
+  data: DeleteUserRequestBody,
+  token: string,
+  jwt: JWT
+): Promise<User> => {
+  const { userId } = data;
+  const decoded: DecodedJWT = jwt.verify(token);
+  if (decoded.isRefresh) throw buildError(400, allErrors.incorectToken);
+  const userRepo = getCustomRepository(UserRepository);
+
+  const isAdminOrModerator = await checkAdminOrModeratorService(
+    decoded.id,
+    token,
+    jwt
+  );
+  if (isAdminOrModerator) {
+    const isUser = await userRepo.findOneUserByKey('id', userId);
+    if (!isUser) throw buildError(400, allErrors.userNotFound);
+
+    const deleteResult = await userRepo.deleteUser({ userId });
+    if (!deleteResult?.affected) throw buildError(400, allErrors.userNotFound);
+  }
+  const user = await userRepo.findOneUserByKey('id', userId);
+  if (!user) throw buildError(400, allErrors.userNotFound);
+  return user;
+};
+
 export const inviteUserService = async (
   body: InviteUserRequestBody
 ): Promise<null> => {
