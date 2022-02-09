@@ -37,10 +37,19 @@ export interface AddAnswerData {
   userId: ID;
   ids: number[];
   answers: number[];
+  isLastAnswer: boolean;
 }
 
 export interface UpdateTemporaryRatingData {
   reviewId: ID;
   temporaryRating: number;
   answeredQuestions: number;
+}
+
+export interface LastUpdateTemporaryRatingData {
+  reviewId: ID;
+  temporaryRating: number;
+  answeredQuestions: number;
+  activeSession: boolean;
+  rating: number;
 }

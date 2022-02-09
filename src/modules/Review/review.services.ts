@@ -80,7 +80,7 @@ export const addAnswerService = async (
   const decoded: DecodedJWT = jwt.verify(token);
   if (decoded.isRefresh) throw buildError(400, allErrors.incorectToken);
 
-  const { userId, ids, answers } = data;
+  const { userId, ids, answers, isLastAnswer } = data;
   // Find author
   const user = await userRepo.findOne({ where: { id: userId } });
   if (!user) throw buildError(400, allErrors.userNotFound);
@@ -94,6 +94,8 @@ export const addAnswerService = async (
 
   let temporaryRating = review.temporaryRating;
   let answeredQuestions = review.answeredQuestions;
+  let activeSession = review.activeSession;
+  let rating = review.rating;
   // Check temporaryRating
   if (temporaryRating !== 0 && !temporaryRating) {
     throw buildError(400, allErrors.temporaryRatingIsNotFound);
@@ -129,10 +131,24 @@ export const addAnswerService = async (
     temporaryRating,
     reviewId: review.id,
   };
+  if (isLastAnswer) {
+    activeSession = false;
+    answeredQuestions = 0;
+    rating = temporaryRating;
+    temporaryRating = 0;
+    const dataForLastUpdate = {
+      answeredQuestions,
+      temporaryRating,
+      activeSession,
+      rating,
+      reviewId: review.id,
+    };
+    reviewRepo.lastUpdateTemporaryRating(dataForLastUpdate);
+  }
   const updateReview = await reviewRepo.updateTemporaryRating(dataForUpdate);
-  if (!updateReview?.affected) throw buildError(400, allErrors.reviewNotFound);
-
-  console.log(temporaryRating, ids, answers);
+  if (!updateReview?.affected) {
+    throw buildError(400, allErrors.reviewNotFound);
+  }
   return null;
 };
 
