@@ -1,6 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Question } from '../../entities/Question';
 import {
+  FindArrayQuestionsByIdData,
   GetQuestionsRequestBody,
   QuestionRepositoryData,
 } from './question.interfaces';
@@ -22,6 +23,12 @@ export class QuestionRepository extends Repository<Question> {
       .orderBy('question.id', 'ASC')
       .offset(offset)
       .limit(limit)
+      .getMany();
+  }
+  async findArrayQuestionsById(data: FindArrayQuestionsByIdData): Promise<Question[]> {
+    const { ids } = data;
+    return this.createQueryBuilder('question')
+      .where('question.id IN (:...ids)', { ids })
       .getMany();
   }
 }

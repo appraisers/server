@@ -4,6 +4,7 @@ import { buildError } from '../../utils/error.helper';
 import { UserRepository } from '../Auth/auth.repositories';
 import { DecodedJWT, JWT } from '../../common/common.interfaces';
 import { sendEmail } from '../../utils/mail.helper';
+import { QuestionRepository } from '../Question/question.repositories';
 import { checkAdminOrModeratorService } from '../User/user.services';
 import config from '../../config';
 import { ReviewRepository } from './review.repositories';
@@ -77,6 +78,7 @@ export const addAnswerService = async (
 ): Promise<null> => {
   const reviewRepo = getCustomRepository(ReviewRepository);
   const userRepo = getCustomRepository(UserRepository);
+  const questionRepo = getCustomRepository(QuestionRepository);
   const decoded: DecodedJWT = jwt.verify(token);
   if (decoded.isRefresh) throw buildError(400, allErrors.incorectToken);
 
@@ -107,16 +109,21 @@ export const addAnswerService = async (
   if (ids.length !== REVIEWS_ANSWERS_IDS_COUNT) {
     throw buildError(400, allErrors.incorectLengthId);
   }
+  
+  // Get questions from params
+  let questions = await questionRepo.findArrayQuestionsById({ ids });
 
   // Count sum answers
-  answers.forEach((value) => {
+  answers.forEach((value, index) => {
     if (
       value < REVIEWS_ANSWERS_MIN_VALUE ||
       value > REVIEWS_ANSWERS_MAX_VALUE
     ) {
       throw buildError(400, allErrors.incorectAnswer);
     }
-    temporaryRating += value;
+    const weight = questions[index]?.weight;
+    if (!weight) throw buildError(400, allErrors.weightNotFound);
+    temporaryRating += (value * weight) / 10;
   });
   // Update count of question
   answeredQuestions += REVIEWS_ANSWERS_COUNT;
@@ -124,7 +131,9 @@ export const addAnswerService = async (
   // Count average rating
   temporaryRating =
     temporaryRating /
-    (temporaryRating === 0 ? REVIEWS_ANSWERS_COUNT : REVIEWS_ANSWERS_COUNT + 1);
+    (review.temporaryRating === 0
+      ? REVIEWS_ANSWERS_COUNT
+      : REVIEWS_ANSWERS_COUNT + 1);
 
   const dataForUpdate = {
     answeredQuestions,

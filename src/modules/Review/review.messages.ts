@@ -10,4 +10,5 @@ export const allErrors = {
   incorectLengthAnswer: 'Incorrect number of responses',
   incorectLengthId: 'Incorrect number of IDs',
   temporaryRatingIsNotFound: 'Temporary rating is not found',
+  weightNotFound: 'Weight is not found',
 };

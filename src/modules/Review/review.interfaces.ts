@@ -35,7 +35,7 @@ export interface CreateReviewRepositoryData extends CreateReviewData {
 
 export interface AddAnswerData {
   userId: ID;
-  ids: number[];
+  ids: ID[];
   answers: number[];
   isLastAnswer: boolean;
 }
