@@ -14,15 +14,27 @@ const config = {
     database: process.env.POSTGRES_DB,
     synchronize: true,
     logging: false,
-    entities: process.env.NODE_ENV === 'production' ? ['build/entities/**/*.js'] : ['src/entities/**/*.ts'],
-    migrations: process.env.NODE_ENV === 'production' ? ['build/migrations/**/*.js'] : ['src/migrations/**/*.ts'],
-    subscribers: process.env.NODE_ENV === 'production' ? ['build/subscribers/**/*.js'] : ['src/subscribers/**/*.ts'],
+    entities:
+      process.env.NODE_ENV === 'production'
+        ? ['build/entities/**/*.js']
+        : ['src/entities/**/*.ts'],
+    migrations:
+      process.env.NODE_ENV === 'production'
+        ? ['build/migrations/**/*.js']
+        : ['src/migrations/**/*.ts'],
+    subscribers:
+      process.env.NODE_ENV === 'production'
+        ? ['build/subscribers/**/*.js']
+        : ['src/subscribers/**/*.ts'],
     ssl: process.env.NODE_ENV === 'production' ? true : false,
-    extra: process.env.NODE_ENV === 'production' ? {
-      ssl: {
-        rejectUnauthorized: false
-      }
-    } : {},
+    extra:
+      process.env.NODE_ENV === 'production'
+        ? {
+            ssl: {
+              rejectUnauthorized: false,
+            },
+          }
+        : {},
     cli: {
       entitiesDir: 'src/entity',
       migrationsDir: 'src/migration',
@@ -36,9 +48,10 @@ const config = {
     SMTP_FROM: process.env.SMTP_FROM,
     SMTP_USER: process.env.SMTP_USER,
     SMTP_PASS: process.env.SMTP_PASS,
+    SMTP_SERVICE: process.env.SMTP_SERVICE,
   },
   FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:3000',
-  PATH_TO_UPLOADS: process.env.PATH_TO_UPLOADS || '../public/uploads'
+  PATH_TO_UPLOADS: process.env.PATH_TO_UPLOADS || '../public/uploads',
 };
 
 export default config;
