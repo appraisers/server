@@ -1,15 +1,15 @@
 import { getCustomRepository } from 'typeorm';
+import { JWT } from 'fastify-jwt';
 import { Question } from '../../entities/Question';
 import {
   AddQuestionRequestBody,
   GetQuestionsRequestBody,
 } from './question.interfaces';
-import { DecodedJWT } from 'src/common/common.interfaces';
-import { JWT } from 'fastify-jwt';
+import { DecodedJWT } from '../../common/common.interfaces';
+import { allErrors } from '../../common/common.messages';
 import { QuestionRepository } from './question.repositories';
 import { checkAdminOrModeratorService } from '../User/user.services';
 import { buildError } from '../../utils/error.helper';
-import { allErrors } from './question.messages';
 
 export const addQuestionService = async (
   data: AddQuestionRequestBody,

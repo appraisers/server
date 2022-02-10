@@ -1,6 +1,7 @@
 import { FastifyRequest, FastifyInstance } from 'fastify';
 import { CommonResponse } from '../../common/common.interfaces';
 import { commonResponse } from '../../common/common.constants';
+import { allErrors } from '../../common/common.messages';
 import { buildError } from '../../utils/error.helper';
 import {
   AddAnswerData,
@@ -10,7 +11,6 @@ import {
   CreateReviewData,
   CreateReviewResponse,
 } from './review.interfaces';
-import { allErrors } from './review.messages';
 import {
   addAnswerService,
   checkReviewsService,
