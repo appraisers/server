@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npm run copy:assets && tsc -p tsconfig.json && ls",
+    "build": "npm run copy:assets && tsc -p tsconfig.json && cd build && ls",
     "lint": "eslint --ext .ts ./src --quiet --fix",
     "prettier": "./node_modules/.bin/prettier --check \"./src/**/*.{ts,tsx}\"",
     "serve": "ts-node-dev --inspect --respawn --transpile-only ./src/server.ts",
