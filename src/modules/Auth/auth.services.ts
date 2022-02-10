@@ -4,6 +4,7 @@ import { getCustomRepository } from 'typeorm';
 import { sendEmail } from '../../utils/mail.helper';
 import { User } from '../../entities/User';
 import { buildError } from '../../utils/error.helper';
+import { allErrors } from  '../../common/common.messages';
 import { DecodedJWT, JWT, JwtTokens } from '../../common/common.interfaces';
 import config from '../../config';
 import {
@@ -14,7 +15,6 @@ import {
   ResetPasswordRequestBody,
 } from './auth.interfaces';
 import { UserRepository, TokenRepository } from './auth.repositories';
-import { allErrors } from './auth.messages';
 
 const { FRONTEND_URL } = config;
 
@@ -25,7 +25,7 @@ export const forgotPasswordService = async (
   const { email } = data;
   const user = await userRepo.findOne({ where: { email } });
   if (!user) {
-    throw buildError(400, allErrors.userIsNotFound);
+    throw buildError(400, allErrors.userNotFound);
   }
   const forgotPasswordToken = uuidv4();
   user.forgotPasswordToken = forgotPasswordToken;
@@ -60,7 +60,7 @@ export const checkAuthService = async (
   if (decoded.isRefresh) throw buildError(400, allErrors.incorectToken);
   const userRepo = getCustomRepository(UserRepository);
   const user = await userRepo.findOneUserByKey('id', decoded.id);
-  if (!user) throw buildError(400, allErrors.userIsNotFound);
+  if (!user) throw buildError(400, allErrors.userNotFound);
 
   return user;
 };
@@ -73,13 +73,13 @@ export const loginService = async (
   const userRepo = getCustomRepository(UserRepository);
   const user = await userRepo.findOneWithPasswordByKey('email', email);
   if (!user) {
-    throw buildError(400, allErrors.userIsNotFound);
+    throw buildError(400, allErrors.userNotFound);
   }
   if (user.password !== password) {
-    throw buildError(400, allErrors.userIsNotFound);
+    throw buildError(400, allErrors.userNotFound);
   }
   // const compare = bcrypt.compareSync(password, user.password);
-  // if (!compare) throw buildError(400, allErrors.userIsNotFound);
+  // if (!compare) throw buildError(400, allErrors.userNotFound);
 
   const authToken = jwt.sign(
     { id: user.id },
@@ -105,7 +105,7 @@ export const registrationService = async (
   const userRepo = getCustomRepository(UserRepository);
   const { email } = data;
   const isAlreadyUser = await userRepo.findOne({ where: { email } });
-  if (isAlreadyUser) throw buildError(400, allErrors.userIsFound);
+  if (isAlreadyUser) throw buildError(400, allErrors.userFound);
 
   const user = await userRepo.createUser(data);
 
@@ -133,7 +133,7 @@ export const refreshTokenService = async (
 
   const userRepo = getCustomRepository(UserRepository);
   const user = await userRepo.findOneUserByKey('id', decoded.id);
-  if (!user) throw buildError(400, allErrors.userIsNotFound);
+  if (!user) throw buildError(400, allErrors.userNotFound);
 
   const authToken = jwt.sign({ id: user.id }, { expiresIn: EXPIRED.ACCESS });
   const refreshToken = jwt.sign(

@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyInstance } from 'fastify';
+import { allErrors } from  '../../common/common.messages';
 import { commonResponse } from '../../common/common.constants';
 import { buildError } from '../../utils/error.helper';
-import { allErrors } from './question.messages';
 import {
   AddQuestionRequestBody,
   GetQuestionResponse,

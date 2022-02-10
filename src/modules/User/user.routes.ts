@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyInstance } from 'fastify';
-import { sendEmail } from '../../utils/mail.helper';
+import { allErrors } from  '../../common/common.messages';
 import { commonResponse } from '../../common/common.constants';
 import { CommonResponse } from '../../common/common.interfaces';
 import { buildError } from '../../utils/error.helper';
@@ -15,7 +15,6 @@ import {
   UpdateUserRequestBody,
   UpdateUserResponse,
 } from './user.interfaces';
-import { allErrors } from './user.messages';
 import {
   allInviteUsersService,
   allUsersService,

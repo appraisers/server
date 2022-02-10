@@ -2,13 +2,13 @@ import { getCustomRepository } from 'typeorm';
 import { Review } from '../../entities/Review';
 import { buildError } from '../../utils/error.helper';
 import { UserRepository } from '../Auth/auth.repositories';
+import { allErrors } from  '../../common/common.messages';
 import { DecodedJWT, JWT } from '../../common/common.interfaces';
 import { sendEmail } from '../../utils/mail.helper';
 import { QuestionRepository } from '../Question/question.repositories';
 import { checkAdminOrModeratorService } from '../User/user.services';
 import config from '../../config';
 import { ReviewRepository } from './review.repositories';
-import { allErrors } from './review.messages';
 import {
   AddAnswerData,
   CheckReviewsData,

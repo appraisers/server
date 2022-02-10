@@ -1,10 +1,10 @@
 import { getCustomRepository } from 'typeorm';
+import { allErrors } from  '../../common/common.messages';
 import { DecodedJWT, JWT } from '../../common/common.interfaces';
 import { sendEmail } from '../../utils/mail.helper';
 import { buildError } from '../../utils/error.helper';
 import { roles, User } from '../../entities/User';
 import { UserRepository } from './user.repositories';
-import { allErrors } from './user.messages';
 import {
   AllInviteUsersServiceResponse,
   AllUsersServiceResponse,
