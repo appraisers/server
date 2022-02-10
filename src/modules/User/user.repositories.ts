@@ -1,6 +1,10 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Roles, User } from '../../entities/User';
-import { DeleteUserRequestBody, UpdateRepositoryData } from './user.interfaces';
+import {
+  ChangeUserRoleRequestBody,
+  DeleteUserRequestBody,
+  UpdateRepositoryData,
+} from './user.interfaces';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -41,6 +45,17 @@ export class UserRepository extends Repository<User> {
       .update(User)
       .set({
         deletedAt: new Date(),
+      })
+      .where('id = :userId', { userId })
+      .execute();
+  }
+  changeRoleUser(data: ChangeUserRoleRequestBody) {
+    const { userId, role } = data;
+
+    return this.createQueryBuilder('user')
+      .update(User)
+      .set({
+        role: role,
       })
       .where('id = :userId', { userId })
       .execute();

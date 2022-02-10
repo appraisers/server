@@ -52,6 +52,13 @@ export interface InviteUserRequestBody {
 export interface DeleteUserResponse extends CommonResponse {
   user: User;
 }
-export interface DeleteUserRequestBody{
+export interface DeleteUserRequestBody {
   userId: ID;
+}
+export interface ChangeUserRoleResponse extends CommonResponse {
+  user: User;
+}
+export interface ChangeUserRoleRequestBody {
+  userId: ID;
+  role: Roles;
 }

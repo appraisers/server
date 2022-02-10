@@ -7,6 +7,8 @@ import {
   AllInviteUsersResponse,
   AllUsersResponse,
   CheckAuthResponse,
+  ChangeUserRoleResponse,
+  ChangeUserRoleRequestBody,
   DeleteUserResponse,
   DeleteUserRequestBody,
   InviteUserRequestBody,
@@ -18,6 +20,7 @@ import {
   allInviteUsersService,
   allUsersService,
   checkUserService,
+  changeUserRoleService,
   deleteUserService,
   inviteUserService,
   updateUserService,
@@ -129,10 +132,33 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
         body as DeleteUserRequestBody,
         authorization,
         fastify.jwt
-      )
+      );
       return {
         ...commonResponse,
-        user};
+        user,
+      };
+    } catch (error) {
+      throw error;
+    }
+  };
+  const changeUserRoleController = async (
+    request: FastifyRequest
+  ): Promise<ChangeUserRoleResponse> => {
+    try {
+      const { body } = request;
+      const {
+        headers: { authorization },
+      } = request;
+      if (!authorization) throw buildError(400, allErrors.tokenNotFound);
+      const user = await changeUserRoleService(
+        body as ChangeUserRoleRequestBody,
+        authorization,
+        fastify.jwt
+      );
+      return {
+        ...commonResponse,
+        user,
+      };
     } catch (error) {
       throw error;
     }
@@ -143,6 +169,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
   fastify.post('/update', updateUserController);
   fastify.post('/invite', inviteUserController);
   fastify.post('/delete', deleteUserController);
+  fastify.post('/change-role', changeUserRoleController);
 };
 
 export default routes;

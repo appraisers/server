@@ -2,12 +2,13 @@ import { getCustomRepository } from 'typeorm';
 import { DecodedJWT, JWT } from '../../common/common.interfaces';
 import { sendEmail } from '../../utils/mail.helper';
 import { buildError } from '../../utils/error.helper';
-import { User } from '../../entities/User';
+import { roles, User } from '../../entities/User';
 import { UserRepository } from './user.repositories';
 import { allErrors } from './user.messages';
 import {
   AllInviteUsersServiceResponse,
   AllUsersServiceResponse,
+  ChangeUserRoleRequestBody,
   DeleteUserRequestBody,
   InviteUserRequestBody,
   UpdateUserRequestBody,
@@ -23,7 +24,23 @@ export const checkAdminOrModeratorService = async (
   const userRepo = getCustomRepository(UserRepository);
   const user = await userRepo.findOneUserByKey('id', id);
   if (!user) throw buildError(400, allErrors.userNotFound);
-  if (user.role === 'admin' || user.role === 'moderator') {
+  if (user.role === roles.admin || user.role === roles.moderator) {
+    return true;
+  }
+  return false;
+};
+
+export const checkAdminService = async (
+  id: number,
+  token: string,
+  jwt: JWT
+): Promise<boolean> => {
+  const decoded: DecodedJWT = jwt.verify(token);
+  if (decoded.isRefresh) throw buildError(400, allErrors.incorectToken);
+  const userRepo = getCustomRepository(UserRepository);
+  const user = await userRepo.findOneUserByKey('id', id);
+  if (!user) throw buildError(400, allErrors.userNotFound);
+  if (user.role === roles.admin) {
     return true;
   }
   return false;
@@ -131,6 +148,35 @@ export const deleteUserService = async (
 
     const deleteResult = await userRepo.deleteUser({ userId });
     if (!deleteResult?.affected) throw buildError(400, allErrors.userNotFound);
+  }
+  const user = await userRepo.findOneUserByKey('id', userId);
+  if (!user) throw buildError(400, allErrors.userNotFound);
+  return user;
+};
+
+export const changeUserRoleService = async (
+  data: ChangeUserRoleRequestBody,
+  token: string,
+  jwt: JWT
+): Promise<User> => {
+  const { userId, role } = data;
+  const decoded: DecodedJWT = jwt.verify(token);
+  if (decoded.isRefresh) throw buildError(400, allErrors.incorectToken);
+  const userRepo = getCustomRepository(UserRepository);
+
+  const isAdmin = await checkAdminService(
+    decoded.id,
+    token,
+    jwt
+  );
+  if (isAdmin) {
+    const isUser = await userRepo.findOneUserByKey('id', userId);
+    if (!isUser) throw buildError(400, allErrors.userNotFound);
+    // Check role in enum Roles
+    if(!(roles[role])) throw buildError(400, allErrors.roleNotFound)
+
+    const changeRoleResult = await userRepo.changeRoleUser({ ...data, userId });
+    if (!changeRoleResult?.affected) throw buildError(400, allErrors.userNotFound);
   }
   const user = await userRepo.findOneUserByKey('id', userId);
   if (!user) throw buildError(400, allErrors.userNotFound);

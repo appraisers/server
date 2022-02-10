@@ -5,4 +5,5 @@ export const allErrors = {
   usersNotFound: 'Users are not found',
   jwtExpires: 'JWT expired',
   emailNotFound: 'Email not found',
+  roleNotFound: 'Role is not found',
 };
