@@ -14,7 +14,8 @@
     "copy:assets": "mkdir -p ./build/emails/",
     "migration:generate": "ts-node ./node_modules/.bin/typeorm migration:generate -f ormconfig.js -n",
     "migration:run": "ts-node ./node_modules/.bin/typeorm migration:run -f ormconfig.js",
-    "migration:revert": "ts-node ./node_modules/.bin/typeorm migration:revert -f ormconfig.js"
+    "migration:revert": "ts-node ./node_modules/.bin/typeorm migration:revert -f ormconfig.js",
+    "postinstall": "ng build --aot --prod"
   },
   "keywords": [],
   "author": "Kirill_Garnov",
