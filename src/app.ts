@@ -93,8 +93,8 @@ export default function build(): FastifyInstance {
     exposeRoute: true,
   });
 
-  app.ready((err: any) => {
-    if (err) throw err;
+  app.ready((err) => {
+    if (err instanceof Error) throw err;
     app.swagger();
   });
 
@@ -120,19 +120,6 @@ export default function build(): FastifyInstance {
       work: true,
     };
   });
-
-  // Test Route for Upload functionality Multer || MulterS3
-  app.post(
-    '/upload_aws',
-    {
-      preHandler: filesMultipleUpload('listingMedia', 'galleryMedias'),
-    },
-    async (request: any, reply: any) => {
-      reply
-        .status(200)
-        .send({ statusCode: 200, img: request.files || 'There are no images' });
-    }
-  );
 
 // ERROR HANDLER
 // app.setErrorHandler((error: any, reply: any) => {

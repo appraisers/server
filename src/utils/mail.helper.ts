@@ -32,7 +32,7 @@ export const sendEmail = async ({
   subject,
   replacements,
 }: SendEmail): Promise<boolean> => {
-  const filePath = path.join(__dirname, "../emails", `${type}.html`);
+  const filePath = path.join(__dirname, `../emails/${type}.html`);
   const source = fs.readFileSync(filePath, 'utf-8').toString();
 
   if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS)
