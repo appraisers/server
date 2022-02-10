@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyInstance } from 'fastify';
-import { allErrors } from  '../../common/common.messages';
+import { allErrors } from '../../common/common.messages';
 import { commonResponse } from '../../common/common.constants';
 import { CommonResponse } from '../../common/common.interfaces';
 import { buildError } from '../../utils/error.helper';
@@ -39,8 +39,8 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
         ...commonResponse,
         user,
       };
-    } catch (error: any) {
-      if (error.message === allErrors.jwtExpires) {
+    } catch (error) {
+      if (error instanceof Error && error.message === allErrors.jwtExpires) {
         throw buildError(401, allErrors.jwtExpires);
       }
       throw error;

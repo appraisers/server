@@ -137,6 +137,7 @@ export default function build(): FastifyInstance {
 // ERROR HANDLER
 // app.setErrorHandler((error: any, reply: any) => {
 //   try {
+//     if (error instanceof Error)
 //     const errObj = JSON.parse(error.message) as CommonResponse;
 
 //     reply.status(200).send(errObj);

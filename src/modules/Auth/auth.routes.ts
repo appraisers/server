@@ -11,7 +11,6 @@ import {
   ResetPasswordRequestBody,
   RegistrationResponse,
 } from './auth.interfaces';
-import { allErrors } from './auth.messages';
 import {
   loginSchema,
   registrationSchema,
