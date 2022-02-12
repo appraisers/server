@@ -33,6 +33,7 @@ export interface RegisterRequestBody {
 export interface UpdateUserRequestBody {
   token: string;
   id: ID;
+  authorId: ID;
   email: string;
   password: string;
   workplace: string;
