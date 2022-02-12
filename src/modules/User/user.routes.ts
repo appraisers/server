@@ -54,11 +54,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     try {
       const { body } = request;
       const { id: authorId } = request.user as User;
-      const {
-        headers: { authorization },
-      } = request;
-      if (!authorization) throw buildError(400, allErrors.tokenNotFound);
-      const data = Object.assign(body, {authorId})
+      const data = Object.assign(body, { authorId });
       const updatedUser = await updateUserService(
         data as UpdateUserRequestBody
       );
@@ -72,25 +68,16 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
   ): Promise<CommonResponse> => {
     try {
       const { body } = request;
-      const {
-        headers: { authorization },
-      } = request;
-      if (!authorization) throw buildError(400, allErrors.tokenNotFound);
       await inviteUserService(body as InviteUserRequestBody);
       return commonResponse;
     } catch (error) {
       throw error;
     }
   };
-  const allInviteUsersController = async (
-    request: FastifyRequest
-  ): Promise<AllInviteUsersResponse> => {
+  const allInviteUsersController = async (): Promise<
+    AllInviteUsersResponse
+  > => {
     try {
-      const {
-        headers: { authorization },
-      } = request;
-      if (!authorization) throw buildError(400, allErrors.tokenNotFound);
-
       const users = await allInviteUsersService();
 
       return {
@@ -101,15 +88,8 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       throw error;
     }
   };
-  const allUsersController = async (
-    request: FastifyRequest
-  ): Promise<AllUsersResponse> => {
+  const allUsersController = async (): Promise<AllUsersResponse> => {
     try {
-      const {
-        headers: { authorization },
-      } = request;
-      if (!authorization) throw buildError(400, allErrors.tokenNotFound);
-
       const users = await allUsersService();
 
       return {
@@ -125,10 +105,6 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
   ): Promise<DeleteUserResponse> => {
     try {
       const { body } = request;
-      const {
-        headers: { authorization },
-      } = request;
-      if (!authorization) throw buildError(400, allErrors.tokenNotFound);
       const user = await deleteUserService(body as DeleteUserRequestBody);
       return {
         ...commonResponse,
@@ -143,10 +119,6 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
   ): Promise<ChangeUserRoleResponse> => {
     try {
       const { body } = request;
-      const {
-        headers: { authorization },
-      } = request;
-      if (!authorization) throw buildError(400, allErrors.tokenNotFound);
       const user = await changeUserRoleService(
         body as ChangeUserRoleRequestBody
       );
