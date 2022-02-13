@@ -3,18 +3,17 @@ import { CommonResponse } from '../../common/common.interfaces';
 import { commonResponse } from '../../common/common.constants';
 import { allErrors } from '../../common/common.messages';
 import { buildError } from '../../utils/error.helper';
+import { roles } from '../../entities/User';
+import { checkAuthHook, allowedFor } from '../../utils/utils';
 import {
   AddAnswerData,
   InviteAppriceData,
   CheckReviewResponse,
   CheckReviewsData,
-  CreateReviewData,
-  CreateReviewResponse,
 } from './review.interfaces';
 import {
   addAnswerService,
   checkReviewsService,
-  createReviewService,
   inviteAppriceService,
 } from './review.services';
 
@@ -24,11 +23,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
   ): Promise<CheckReviewResponse> => {
     try {
       const { userId, offset, limit } = request.params as CheckReviewsData;
-      const {
-        headers: { authorization },
-      } = request;
       if (!userId) throw buildError(400, allErrors.userIdNotFound);
-      if (!authorization) throw buildError(400, allErrors.tokenNotFound);
 
       const data: CheckReviewsData = {
         userId,
@@ -36,9 +31,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
         limit,
       };
       const reviews = await checkReviewsService(
-        data,
-        authorization,
-        fastify.jwt
+        data
       );
 
       return {
@@ -55,17 +48,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
   ): Promise<CommonResponse> => {
     try {
       const { body } = request;
-      const {
-        headers: { authorization },
-      } = request;
-      if (!authorization) throw buildError(400, allErrors.tokenNotFound);
-
-      await inviteAppriceService(
-        body as InviteAppriceData,
-        authorization,
-        fastify.jwt
-      );
-
+      await inviteAppriceService(body as InviteAppriceData);
       return commonResponse;
     } catch (error) {
       throw error;
@@ -88,9 +71,28 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     }
   };
 
-  fastify.get('/check/:userId', checkReviewController);
-  fastify.post('/add_answer', addAnswerController);
-  fastify.post('/invite_appraise', inviteAppriceController);
+  fastify.get(
+    '/check/:userId',
+    {
+      onRequest: checkAuthHook(fastify.jwt),
+    },
+    checkReviewController
+  );
+  fastify.post(
+    '/add_answer',
+    {
+      onRequest: checkAuthHook(fastify.jwt),
+    },
+    addAnswerController
+  );
+  fastify.post(
+    '/invite_appraise',
+    {
+      onRequest: checkAuthHook(fastify.jwt),
+      preValidation: allowedFor([roles.admin, roles.moderator]),
+    },
+    inviteAppriceController
+  );
 };
 
 export default routes;
