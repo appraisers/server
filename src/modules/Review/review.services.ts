@@ -20,12 +20,13 @@ import {
   REVIEWS_ANSWERS_IDS_COUNT,
   REVIEWS_ANSWERS_MIN_VALUE,
   REVIEWS_ANSWERS_MAX_VALUE,
+  DONT_KNOW_ANSWER,
 } from './review.constants';
 
 const { FRONTEND_URL } = config;
 
 export const checkReviewsService = async (
-  data: CheckReviewsData,
+  data: CheckReviewsData
 ): Promise<Review[]> => {
   const reviewRepo = getCustomRepository(ReviewRepository);
   const reviews = await reviewRepo.findReviews(data);
@@ -79,6 +80,7 @@ export const addAnswerService = async (
   let answeredQuestions = review.answeredQuestions;
   let activeSession = review.activeSession;
   let rating = review.rating;
+  let answerDontKnowCount = 0;
   // Check temporaryRating
   if (temporaryRating !== 0 && !temporaryRating) {
     throw buildError(400, allErrors.temporaryRatingIsNotFound);
@@ -97,24 +99,30 @@ export const addAnswerService = async (
   // Count sum answers
   answers.forEach((value, index) => {
     if (
-      value < REVIEWS_ANSWERS_MIN_VALUE ||
+      (value < REVIEWS_ANSWERS_MIN_VALUE && value !== DONT_KNOW_ANSWER) ||
       value > REVIEWS_ANSWERS_MAX_VALUE
-    ) {
+    )
       throw buildError(400, allErrors.incorectAnswer);
+
+    if (DONT_KNOW_ANSWER === value) {
+      answerDontKnowCount += 1;
+    } else {
+      const weight = questions[index]?.weight;
+      if (!weight) throw buildError(400, allErrors.weightNotFound);
+      temporaryRating += (value * weight) / 10;
     }
-    const weight = questions[index]?.weight;
-    if (!weight) throw buildError(400, allErrors.weightNotFound);
-    temporaryRating += (value * weight) / 10;
   });
   // Update count of question
   answeredQuestions += REVIEWS_ANSWERS_COUNT;
 
-  // Count average rating
-  temporaryRating =
-    temporaryRating /
-    (review.temporaryRating === 0
-      ? REVIEWS_ANSWERS_COUNT
-      : REVIEWS_ANSWERS_COUNT + 1);
+  // Count average rating (if value === -1 don't effect on temporaryRating)
+  if (answerDontKnowCount !== REVIEWS_ANSWERS_COUNT) {
+    temporaryRating =
+      temporaryRating /
+      (review.temporaryRating === 0
+        ? REVIEWS_ANSWERS_COUNT - answerDontKnowCount
+        : REVIEWS_ANSWERS_COUNT + 1 - answerDontKnowCount);
+  }
 
   const dataForUpdate = {
     answeredQuestions,
