@@ -22,7 +22,16 @@ export class UserRepository extends Repository<User> {
       .getMany();
   }
   updateUser(data: UpdateRepositoryData) {
-    const { email, workplace, fullname, position, rating, role, id } = data;
+    const {
+      email,
+      workplace,
+      fullname,
+      position,
+      rating,
+      role,
+      id,
+      authorId,
+    } = data;
 
     return this.createQueryBuilder('user')
       .update(User)
@@ -35,7 +44,7 @@ export class UserRepository extends Repository<User> {
         role: role ?? Roles.USER,
         updatedAt: new Date(),
       })
-      .where('id = :accountId', { accountId: id })
+      .where('id = :accountId', { accountId: id ?? authorId })
       .execute();
   }
   deleteUser(data: DeleteUserRequestBody) {

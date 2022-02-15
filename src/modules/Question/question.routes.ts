@@ -1,7 +1,9 @@
 import { FastifyRequest, FastifyInstance } from 'fastify';
-import { allErrors } from  '../../common/common.messages';
 import { commonResponse } from '../../common/common.constants';
+import { checkAuthHook, allowedFor } from '../../utils/utils';
 import { buildError } from '../../utils/error.helper';
+import { allErrors } from '../../common/common.messages';
+import { roles } from '../../entities/User';
 import {
   AddQuestionRequestBody,
   GetQuestionResponse,
@@ -16,15 +18,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
   ): Promise<QuestionResponse> => {
     const { body } = request;
     try {
-      const {
-        headers: { authorization },
-      } = request;
-      if (!authorization) throw buildError(400, allErrors.tokenNotFound);
-      const question = await addQuestionService(
-        body as AddQuestionRequestBody,
-        authorization,
-        fastify.jwt
-      );
+      const question = await addQuestionService(body as AddQuestionRequestBody);
       return { ...commonResponse, question };
     } catch (error) {
       throw error;
@@ -42,14 +36,20 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
         };
         const questions = await getQuestionsService(data);
         return { ...commonResponse, questions };
-      }
-      return null;
-      //TODO : if (offset == null || limit == null) throw buildError(400, allErrors.tokenNotFound);
+      } 
+      throw buildError(400, allErrors.offsetOrLimitNotFound);
     } catch (error) {
       throw error;
     }
   };
-  fastify.post('/add-question', addQuestionController);
+  fastify.post(
+    '/add-question',
+    {
+      onRequest: checkAuthHook(fastify.jwt),
+      preValidation: allowedFor([roles.admin, roles.moderator]),
+    },
+    addQuestionController
+  );
   fastify.get('/questions', getQuestionsController);
 };
 export default routes;
