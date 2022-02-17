@@ -62,11 +62,9 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
         headers: { authorization },
       } = request;
       if (!authorization) throw buildError(400, allErrors.tokenNotFound);
-      const { ids, answers } = request.body as AddAnswerData;
-      const { id: userId } = request.user as User;
-      const data = { ids, userId, answers };
+      const { body } = request;
       const isLastAnswer = await addAnswerService(
-        data as AddAnswerData,
+        body as AddAnswerData,
         authorization,
         fastify.jwt
       );

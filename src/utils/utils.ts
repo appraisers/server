@@ -1,9 +1,10 @@
-import { FastifyRequest, JWT } from 'fastify';
+import { FastifyRequest } from 'fastify';
 import path from 'path';
 import fs from 'fs';
 import util from 'util';
 import { pipeline } from 'stream';
 import config from '../config';
+import { JWT } from '../common/common.interfaces';
 import { Roles, User } from '../entities/User';
 import { buildError } from '../utils/error.helper';
 import { checkAuthService } from '../modules/Auth/auth.services';
