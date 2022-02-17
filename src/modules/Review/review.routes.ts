@@ -3,7 +3,7 @@ import { CommonResponse } from '../../common/common.interfaces';
 import { commonResponse } from '../../common/common.constants';
 import { allErrors } from '../../common/common.messages';
 import { buildError } from '../../utils/error.helper';
-import { roles } from '../../entities/User';
+import { roles, User } from '../../entities/User';
 import { checkAuthHook, allowedFor } from '../../utils/utils';
 import {
   AddAnswerData,
@@ -62,9 +62,11 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
         headers: { authorization },
       } = request;
       if (!authorization) throw buildError(400, allErrors.tokenNotFound);
-      const { body } = request;
+      const { ids, answers } = request.body as AddAnswerData;
+      const { id: userId } = request.user as User;
+      const data = { ids, userId, answers };
       const isLastAnswer = await addAnswerService(
-        body as AddAnswerData,
+        data as AddAnswerData,
         authorization,
         fastify.jwt
       );
