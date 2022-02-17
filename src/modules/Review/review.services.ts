@@ -32,7 +32,6 @@ export const checkReviewsService = async (
   const reviewRepo = getCustomRepository(ReviewRepository);
   const reviews = await reviewRepo.findReviews(data);
   if (!reviews) throw buildError(400, allErrors.reviewsIsNotFound);
-
   return reviews;
 };
 
@@ -183,7 +182,7 @@ export const addFinishAnswerService = async (
   data: FinishAnswerData,
   token: string,
   jwt: JWT
-): Promise<Review[]> => {
+): Promise<null> => {
   const { description, userId } = data;
   const userRepo = getCustomRepository(UserRepository);
   const reviewRepo = getCustomRepository(ReviewRepository);
@@ -191,10 +190,9 @@ export const addFinishAnswerService = async (
   const user = await userRepo.findOneUserByKey('id', userId);
   if (!user) throw buildError(400, allErrors.userNotFound);
   sendEmail({
-    type: 'Successfull Rating!',
+    type: 'succesfull-qualified',
     emailTo: user.email,
-    subject:
-      'You have been successfully qualified! You can see the result in your profile.',
+    subject: 'You have been successfully qualified!',
   });
-  return [];
+  return null;
 };

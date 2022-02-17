@@ -1,7 +1,6 @@
 import { User } from '../../entities/User';
 import { Review } from '../../entities/Review';
 import { CommonResponse, ID } from '../../common/common.interfaces';
-import { stringList } from 'aws-sdk/clients/datapipeline';
 
 export interface CheckReviewResponse extends CommonResponse {
   reviews: Review[];
