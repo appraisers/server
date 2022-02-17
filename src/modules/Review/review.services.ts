@@ -58,13 +58,13 @@ export const inviteAppriceService = async (
 export const addAnswerService = async (
   data: AddAnswerData,
   token: string,
-  jwt: JWT
-): Promise<null> => {
+  jwt: JWT,
+): Promise<boolean> => {
   const reviewRepo = getCustomRepository(ReviewRepository);
   const userRepo = getCustomRepository(UserRepository);
   const questionRepo = getCustomRepository(QuestionRepository);
 
-  const { userId, ids, answers, isLastAnswer } = data;
+  const { userId, ids, answers } = data;
   // Find appraising user
   const user = await userRepo.findOne({ where: { id: userId } });
   if (!user) throw buildError(400, allErrors.userNotFound);
@@ -84,13 +84,6 @@ export const addAnswerService = async (
   // Check temporaryRating
   if (temporaryRating !== 0 && !temporaryRating) {
     throw buildError(400, allErrors.temporaryRatingIsNotFound);
-  }
-  // Check answers, ids from body
-  if (answers.length !== REVIEWS_ANSWERS_COUNT) {
-    throw buildError(400, allErrors.incorectLengthAnswer);
-  }
-  if (ids.length !== REVIEWS_ANSWERS_IDS_COUNT) {
-    throw buildError(400, allErrors.incorectLengthId);
   }
 
   // Get questions from params
@@ -113,15 +106,15 @@ export const addAnswerService = async (
     }
   });
   // Update count of question
-  answeredQuestions += REVIEWS_ANSWERS_COUNT;
+  answeredQuestions += answers.length;
 
   // Count average rating (if value === -1 don't effect on temporaryRating)
-  if (answerDontKnowCount !== REVIEWS_ANSWERS_COUNT) {
+  if (answerDontKnowCount !== answers.length) {
     temporaryRating =
       temporaryRating /
       (review.temporaryRating === 0
-        ? REVIEWS_ANSWERS_COUNT - answerDontKnowCount
-        : REVIEWS_ANSWERS_COUNT + 1 - answerDontKnowCount);
+        ? answers.length - answerDontKnowCount
+        : answers.length + 1 - answerDontKnowCount);
   }
 
   const dataForUpdate = {
@@ -129,7 +122,17 @@ export const addAnswerService = async (
     temporaryRating,
     reviewId: review.id,
   };
-  if (isLastAnswer) {
+  //добавить сервис который смотрит количество вопрослов - answeredQuestions
+  //если результат больше REVIEWS_ANSWERS_COUNT, то isLastAnswers - false, else true
+
+  let isLastAnswers;
+  let countQuestions = await questionRepo.getCountAllQuestions();
+
+  if (countQuestions === answeredQuestions) {
+    isLastAnswers = true;
+  } else isLastAnswers = false;
+
+  if (isLastAnswers) {
     activeSession = false;
     answeredQuestions = 0;
     rating = temporaryRating;
@@ -147,7 +150,8 @@ export const addAnswerService = async (
   if (!updateReview?.affected) {
     throw buildError(400, allErrors.reviewNotFound);
   }
-  return null;
+
+  return isLastAnswers;
 };
 
 export const createReviewService = async (

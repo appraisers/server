@@ -3,10 +3,11 @@ import { CommonResponse } from '../../common/common.interfaces';
 import { commonResponse } from '../../common/common.constants';
 import { allErrors } from '../../common/common.messages';
 import { buildError } from '../../utils/error.helper';
-import { roles } from '../../entities/User';
+import { roles, User } from '../../entities/User';
 import { checkAuthHook, allowedFor } from '../../utils/utils';
 import {
   AddAnswerData,
+  AddAnswerControllerResponse,
   InviteAppriceData,
   CheckReviewResponse,
   CheckReviewsData,
@@ -30,9 +31,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
         offset,
         limit,
       };
-      const reviews = await checkReviewsService(
-        data
-      );
+      const reviews = await checkReviewsService(data);
 
       return {
         ...commonResponse,
@@ -57,15 +56,19 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
 
   const addAnswerController = async (
     request: FastifyRequest
-  ): Promise<CommonResponse> => {
+  ): Promise<AddAnswerControllerResponse> => {
     try {
       const {
         headers: { authorization },
       } = request;
       if (!authorization) throw buildError(400, allErrors.tokenNotFound);
       const { body } = request;
-      await addAnswerService(body as AddAnswerData, authorization, fastify.jwt);
-      return commonResponse;
+      const isLastAnswer = await addAnswerService(
+        body as AddAnswerData,
+        authorization,
+        fastify.jwt
+      );
+      return { ...commonResponse, isLastAnswer };
     } catch (error) {
       throw error;
     }

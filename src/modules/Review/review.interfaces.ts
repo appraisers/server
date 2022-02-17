@@ -37,6 +37,9 @@ export interface AddAnswerData {
   userId: ID;
   ids: ID[];
   answers: number[];
+}
+
+export interface AddAnswerControllerResponse extends CommonResponse {
   isLastAnswer: boolean;
 }
 

@@ -31,4 +31,7 @@ export class QuestionRepository extends Repository<Question> {
       .where('question.id IN (:...ids)', { ids })
       .getMany();
   }
+  async getCountAllQuestions(): Promise<number> {
+    return this.count();
+  }
 }
