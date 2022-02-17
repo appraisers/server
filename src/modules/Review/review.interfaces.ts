@@ -40,6 +40,10 @@ export interface AddAnswerData {
   isLastAnswer: boolean;
 }
 
+export interface AddAnswerControllerResponse extends CommonResponse {
+  isLastAnswer: boolean;
+}
+
 export interface UpdateTemporaryRatingData {
   reviewId: ID;
   temporaryRating: number;
