@@ -190,9 +190,9 @@ export const addFinishAnswerService = async (
   const user = await userRepo.findOneUserByKey('id', userId);
   if (!user) throw buildError(400, allErrors.userNotFound);
   sendEmail({
-    type: 'succesfull-qualified',
+    type: 'successfully-evaluated',
     emailTo: user.email,
-    subject: 'You have been successfully qualified!',
+    subject: 'You have been successfully evaluated!',
   });
   return null;
 };
