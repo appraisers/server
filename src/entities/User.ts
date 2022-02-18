@@ -25,8 +25,8 @@ export enum Position {
   JUNIOR_DEVELOPER = 'junior developer',
   MIDDLE_DEVELOPER = 'middle developer',
   SENIOR_DEVELOPER = 'senior developer',
-  MANAGER = 'manager', 
-  TESTER = 'tester', 
+  MANAGER = 'manager',
+  TESTER = 'tester',
   BOSS = 'boss',
 }
 export const position = {
@@ -56,7 +56,7 @@ export class User {
     type: 'varchar',
     name: 'email',
   })
-  email!: string | null;
+  email!: string;
 
   @Column({
     type: 'varchar',

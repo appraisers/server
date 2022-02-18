@@ -14,6 +14,7 @@ import {
   CreateReviewData,
   InviteAppriceResponse,
   InviteAppriceData,
+  FinishAnswerData,
 } from './review.interfaces';
 import {
   REVIEWS_ANSWERS_COUNT,
@@ -31,7 +32,6 @@ export const checkReviewsService = async (
   const reviewRepo = getCustomRepository(ReviewRepository);
   const reviews = await reviewRepo.findReviews(data);
   if (!reviews) throw buildError(400, allErrors.reviewsIsNotFound);
-
   return reviews;
 };
 
@@ -58,7 +58,7 @@ export const inviteAppriceService = async (
 export const addAnswerService = async (
   data: AddAnswerData,
   token: string,
-  jwt: JWT,
+  jwt: JWT
 ): Promise<boolean> => {
   const reviewRepo = getCustomRepository(ReviewRepository);
   const userRepo = getCustomRepository(UserRepository);
@@ -176,4 +176,23 @@ export const createReviewService = async (
   });
 
   return review;
+};
+
+export const addFinishAnswerService = async (
+  data: FinishAnswerData,
+  token: string,
+  jwt: JWT
+): Promise<null> => {
+  const { description, userId } = data;
+  const userRepo = getCustomRepository(UserRepository);
+  const reviewRepo = getCustomRepository(ReviewRepository);
+  await reviewRepo.setDescriptionReview(data);
+  const user = await userRepo.findOneUserByKey('id', userId);
+  if (!user) throw buildError(400, allErrors.userNotFound);
+  sendEmail({
+    type: 'successfully-appraisers',
+    emailTo: user.email,
+    subject: 'You have been successfully evaluated!',
+  });
+  return null;
 };

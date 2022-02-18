@@ -56,3 +56,8 @@ export interface LastUpdateTemporaryRatingData {
   activeSession: boolean;
   rating: number;
 }
+
+export interface FinishAnswerData {
+  userId: ID;
+  description: string;
+}

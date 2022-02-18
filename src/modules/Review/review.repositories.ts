@@ -5,6 +5,7 @@ import { REVIEWS_LIMIT, REVIEWS_OFFSET } from './review.constants';
 import {
   CheckReviewsData,
   CreateReviewRepositoryData,
+  FinishAnswerData,
   LastUpdateTemporaryRatingData,
   UpdateTemporaryRatingData,
 } from './review.interfaces';
@@ -45,11 +46,7 @@ export class ReviewRepository extends Repository<Review> {
   }
 
   async updateTemporaryRating(data: UpdateTemporaryRatingData) {
-    const {
-      temporaryRating,
-      answeredQuestions,
-      reviewId,
-    } = data;
+    const { temporaryRating, answeredQuestions, reviewId } = data;
     return this.createQueryBuilder('review')
       .update(Review)
       .set({
@@ -83,6 +80,18 @@ export class ReviewRepository extends Repository<Review> {
       })
       .where('id = :reviewId', {
         reviewId,
+      })
+      .execute();
+  }
+  async setDescriptionReview(data: FinishAnswerData) {
+    const { userId, description } = data;
+    return this.createQueryBuilder('review')
+      .update(Review)
+      .set({
+        description: description,
+      })
+      .where('id = :userId', {
+        userId,
       })
       .execute();
   }

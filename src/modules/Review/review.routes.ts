@@ -11,11 +11,13 @@ import {
   InviteAppriceData,
   CheckReviewResponse,
   CheckReviewsData,
+  FinishAnswerData,
 } from './review.interfaces';
 import {
   addAnswerService,
   checkReviewsService,
   inviteAppriceService,
+  addFinishAnswerService,
 } from './review.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
@@ -73,7 +75,25 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       throw error;
     }
   };
-
+  const addFinishAnswerController = async (
+    request: FastifyRequest
+  ): Promise<CommonResponse> => {
+    try {
+      const {
+        headers: { authorization },
+      } = request;
+      if (!authorization) throw buildError(400, allErrors.tokenNotFound);
+      const { body } = request;
+      await addFinishAnswerService(
+        body as FinishAnswerData,
+        authorization,
+        fastify.jwt
+      );
+      return { ...commonResponse };
+    } catch (error) {
+      throw error;
+    }
+  };
   fastify.get(
     '/check/:userId',
     {
@@ -95,6 +115,13 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       preValidation: allowedFor([roles.admin, roles.moderator]),
     },
     inviteAppriceController
+  );
+  fastify.post(
+    '/finish-answer',
+    {
+      onRequest: checkAuthHook(fastify.jwt),
+    },
+    addFinishAnswerController
   );
 };
 

@@ -13,6 +13,7 @@ const {
   SMTP_TLS,
   SMTP_USER,
   SMTP_PASS,
+  SMTP_SERVICE,
 } = config.EMAIL;
 type SendEmail = {
   type: string;
@@ -35,14 +36,14 @@ export const sendEmail = async ({
   const filePath = path.join(__dirname, `../emails/${type}.html`);
   const source = fs.readFileSync(filePath, 'utf-8').toString();
 
-  if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS)
+  if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS || !SMTP_SERVICE)
     throw buildError(500, 'Email send error');
 
   const template = handlebars.compile(source);
   const htmlToSend = template(replacements);
 
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: SMTP_SERVICE,
     auth: {
       user: SMTP_USER,
       pass: SMTP_PASS,
