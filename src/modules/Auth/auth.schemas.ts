@@ -16,11 +16,20 @@ export const loginSchema = {
     response: {
       200: {
         type: 'object',
-        required: ['authToken', 'refreshToken', 'statusCode', 'message'],
+        required: ['authToken', 'refreshToken', 'user', 'statusCode', 'message'],
         properties: {
           ...commonResponse,
           authToken: { type: 'string' },
           refreshToken: { type: 'string' },
+          user: {
+            type: 'object',
+            properties: {
+              id: { type: 'string' },
+              email: { type: 'string' },
+              fullname: { type: 'string' },
+              workplace: { type: 'string' },
+              role: { type: 'string' },
+            }},
         },
       },
       400: {

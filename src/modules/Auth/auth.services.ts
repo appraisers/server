@@ -4,11 +4,12 @@ import { getCustomRepository } from 'typeorm';
 import { sendEmail } from '../../utils/mail.helper';
 import { User } from '../../entities/User';
 import { buildError } from '../../utils/error.helper';
-import { allErrors } from  '../../common/common.messages';
+import { allErrors } from '../../common/common.messages';
 import { DecodedJWT, JWT, JwtTokens } from '../../common/common.interfaces';
 import config from '../../config';
 import {
   LoginRequestBody,
+  LoginServiceResponse,
   RegisterRequestBody,
   LogoutRequestBody,
   ForgotPasswordRequestBody,
@@ -68,7 +69,7 @@ export const checkAuthService = async (
 export const loginService = async (
   data: LoginRequestBody,
   jwt: JWT
-): Promise<JwtTokens> => {
+): Promise<LoginServiceResponse> => {
   const { email, password, rememberMe } = data;
   const userRepo = getCustomRepository(UserRepository);
   const user = await userRepo.findOneWithPasswordByKey('email', email);
@@ -93,7 +94,14 @@ export const loginService = async (
   const tokenRepo = getCustomRepository(TokenRepository);
   await tokenRepo.createRefresh({ user: user, refreshToken });
 
+  const decoded: DecodedJWT = jwt.verify(authToken);
+  const decodedUser = await userRepo.findOneUserByKey('id', decoded.id);
+  if (!decodedUser) {
+    throw buildError(400, allErrors.userNotFound);
+  }
+
   return {
+    user: decodedUser,
     authToken,
     refreshToken,
   };

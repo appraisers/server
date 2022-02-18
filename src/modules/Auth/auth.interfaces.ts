@@ -6,6 +6,13 @@ export interface LoginRequestBody {
   password: string;
   rememberMe: boolean;
 }
+export interface LoginServiceResponse extends JwtTokens {
+  user: User;
+}
+export interface LoginUserResponse extends CommonResponse, JwtTokens {
+  user: User;
+}
+
 export interface LogoutRequestBody {
   refreshToken: string;
 }
@@ -13,7 +20,7 @@ export interface UpdateTokenRequestBody {
   refreshToken: string;
 }
 
-export interface LoginResponse extends CommonResponse, JwtTokens { }
+export interface LoginResponse extends CommonResponse, JwtTokens {}
 
 export interface RegisterRequestBody {
   email: string;

@@ -13,6 +13,7 @@ import {
   ChangeUserRoleRequestBody,
   DeleteUserResponse,
   DeleteUserRequestBody,
+  GetUserInfoBody,
   InviteUserRequestBody,
   UpdateUserRequestBody,
   UpdateUserResponse,
@@ -21,6 +22,7 @@ import {
   allInviteUsersService,
   allUsersService,
   checkUserService,
+  getUserInfoService,
   changeUserRoleService,
   deleteUserService,
   inviteUserService,
@@ -45,6 +47,20 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       if (error instanceof Error && error.message === allErrors.jwtExpires) {
         throw buildError(401, allErrors.jwtExpires);
       }
+      throw error;
+    }
+  };
+  const getUserInfoController = async (
+    request: FastifyRequest
+  ): Promise<CheckAuthResponse> => {
+    try {
+      const { body } = request;
+      const user = await getUserInfoService(body as GetUserInfoBody);
+      return {
+        ...commonResponse,
+        user
+      };
+    } catch (error) {
       throw error;
     }
   };
@@ -146,7 +162,9 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     },
     allInviteUsersController
   );
+  // TODO: delete it in future
   fastify.get('/check', checkUserController);
+  fastify.post('/get-info', getUserInfoController);
   fastify.post(
     '/update',
     { onRequest: checkAuthHook(fastify.jwt) },

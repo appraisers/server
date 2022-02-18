@@ -5,6 +5,7 @@ import { sendEmail } from '../../utils/mail.helper';
 import {
   LoginResponse,
   LoginRequestBody,
+  LoginUserResponse,
   RegisterRequestBody,
   RefreshTokenRequestBody,
   ForgotPasswordRequestBody,
@@ -51,13 +52,14 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
 
   const loginController = async (
     request: FastifyRequest
-  ): Promise<LoginResponse> => {
+  ): Promise<LoginUserResponse> => {
     const { body } = request;
     try {
-      const tokens = await loginService(body as LoginRequestBody, fastify.jwt);
+      const responseLogin = await loginService(body as LoginRequestBody, fastify.jwt);
+      
       return {
         ...commonResponse,
-        ...tokens,
+        ...responseLogin
       };
     } catch (error) {
       throw error;

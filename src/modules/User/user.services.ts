@@ -10,6 +10,7 @@ import {
   AllUsersServiceResponse,
   ChangeUserRoleRequestBody,
   DeleteUserRequestBody,
+  GetUserInfoBody,
   InviteUserRequestBody,
   UpdateUserRequestBody,
 } from './user.interfaces';
@@ -30,9 +31,9 @@ export const checkAdminOrModeratorService = async (
   return false;
 };
 
-export const allInviteUsersService = async (
-
-): Promise<AllInviteUsersServiceResponse[]> => {
+export const allInviteUsersService = async (): Promise<
+  AllInviteUsersServiceResponse[]
+> => {
   const userRepo = getCustomRepository(UserRepository);
   const users = await userRepo.getAllUsers();
   if (!users) throw buildError(400, allErrors.usersNotFound);
@@ -43,8 +44,7 @@ export const allInviteUsersService = async (
   return mapUser;
 };
 
-export const allUsersService = async (
-): Promise<AllUsersServiceResponse[]> => {
+export const allUsersService = async (): Promise<AllUsersServiceResponse[]> => {
   const userRepo = getCustomRepository(UserRepository);
 
   const users = await userRepo.getAllUsers();
@@ -68,8 +68,20 @@ export const checkUserService = async (
 
   return user;
 };
+
+export const getUserInfoService = async (
+  data: GetUserInfoBody
+): Promise<User> => {
+  const { userId } = data;
+  const userRepo = getCustomRepository(UserRepository);
+
+  const user = await userRepo.findOneUserByKey('id', userId);
+  if (!user) throw buildError(400, allErrors.userNotFound);
+  return user;
+};
+
 export const updateUserService = async (
-  data: UpdateUserRequestBody,
+  data: UpdateUserRequestBody
 ): Promise<User> => {
   const userRepo = getCustomRepository(UserRepository);
   const updateResult = await userRepo.updateUser({ ...data });
@@ -86,8 +98,8 @@ export const deleteUserService = async (
   const { userId } = data;
   const userRepo = getCustomRepository(UserRepository);
 
-  const deleteResult = await userRepo.deleteUser({ userId });
-  if (!deleteResult?.affected) throw buildError(400, allErrors.userNotFound);
+ const deleteResult = await userRepo.deleteUser({ userId });
+ if (!deleteResult?.affected) throw buildError(400, allErrors.userNotFound);
   const user = await userRepo.findOneUserByKey('id', userId);
   if (!user) throw buildError(400, allErrors.userNotFound);
 
@@ -95,7 +107,7 @@ export const deleteUserService = async (
 };
 
 export const changeUserRoleService = async (
-  data: ChangeUserRoleRequestBody,
+  data: ChangeUserRoleRequestBody
 ): Promise<User> => {
   const { userId, role } = data;
   const userRepo = getCustomRepository(UserRepository);

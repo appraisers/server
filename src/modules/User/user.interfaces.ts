@@ -63,3 +63,6 @@ export interface ChangeUserRoleRequestBody {
   userId: ID;
   role: Roles;
 }
+export interface GetUserInfoBody {
+  userId: ID;
+}
