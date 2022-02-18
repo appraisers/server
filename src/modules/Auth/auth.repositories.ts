@@ -43,13 +43,6 @@ export class UserRepository extends Repository<User> {
       })
       .execute();
   }
-  findOneWithPasswordByKey<T extends keyof User>(
-    key: T,
-    val: string | number
-  ): Promise<User | undefined> {
-    return this.findOne({ [key]: val }, { select: ['id', 'password', 'role'] });
-  }
-
   async findOneUserByKey<T extends keyof User>(
     key: T,
     val: string | number

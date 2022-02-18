@@ -72,7 +72,7 @@ export const loginService = async (
 ): Promise<LoginServiceResponse> => {
   const { email, password, rememberMe } = data;
   const userRepo = getCustomRepository(UserRepository);
-  const user = await userRepo.findOneWithPasswordByKey('email', email);
+  const user = await userRepo.findOneUserByKey('email', email);
   if (!user) {
     throw buildError(400, allErrors.userNotFound);
   }
@@ -94,14 +94,8 @@ export const loginService = async (
   const tokenRepo = getCustomRepository(TokenRepository);
   await tokenRepo.createRefresh({ user: user, refreshToken });
 
-  const decoded: DecodedJWT = jwt.verify(authToken);
-  const decodedUser = await userRepo.findOneUserByKey('id', decoded.id);
-  if (!decodedUser) {
-    throw buildError(400, allErrors.userNotFound);
-  }
-
   return {
-    user: decodedUser,
+    user,
     authToken,
     refreshToken,
   };
