@@ -36,6 +36,7 @@ const config = {
     SMTP_FROM: process.env.SMTP_FROM,
     SMTP_USER: process.env.SMTP_USER,
     SMTP_PASS: process.env.SMTP_PASS,
+    SMTP_SERVICE: process.env.SMTP_SERVICE,
   },
   FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:3000',
   PATH_TO_UPLOADS: process.env.PATH_TO_UPLOADS || '../public/uploads'
