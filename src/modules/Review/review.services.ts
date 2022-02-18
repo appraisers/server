@@ -190,7 +190,7 @@ export const addFinishAnswerService = async (
   const user = await userRepo.findOneUserByKey('id', userId);
   if (!user) throw buildError(400, allErrors.userNotFound);
   sendEmail({
-    type: 'successfully-evaluated',
+    type: 'successfully-appraisers',
     emailTo: user.email,
     subject: 'You have been successfully evaluated!',
   });
