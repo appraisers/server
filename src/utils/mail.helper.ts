@@ -44,6 +44,8 @@ export const sendEmail = async ({
 
   const transporter = nodemailer.createTransport({
     service: SMTP_SERVICE,
+    port: Number(SMTP_PORT) || 587,
+    secure: !!SMTP_TLS,
     auth: {
       user: SMTP_USER,
       pass: SMTP_PASS,
