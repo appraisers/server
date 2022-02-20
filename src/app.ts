@@ -10,33 +10,18 @@ import * as fastifyTypeormPlugin from 'fastify-typeorm-plugin';
 import fastifyStatic from 'fastify-static';
 
 import config from './config';
-import { CommonResponse } from './common/common.interfaces';
 
 import authRoutes from './modules/Auth/auth.routes';
 import reviewRoutes from './modules/Review/review.routes';
 import userRoutes from './modules/User/user.routes';
 import questionRoutes from './modules/Question/question.routes';
 
-import { filesMultipleUpload } from './utils/multer';
-
 let app = fastify({
   pluginTimeout: 20000, // resolve problem "Error: ERR_AVVIO_PLUGIN_TIMEOUT: plugin did not start in time ..."
 });
 
 export default function build(): FastifyInstance {
-  app.register(fastifyCors, {
-    /* put your options here */
-  });
-  // app.register(fastifyMultipart, {
-  //   attachFieldsToBody: true,
-  //   limits: {
-  //     fieldSize: 1000000, // Max field value size in bytes
-  //     fileSize: 5000,      // For multipart forms, the max file size
-  //     files: 10,           // Max number of file fields
-  //     headerPairs: 2000
-  //   }
-  // });
-
+  app.register(fastifyCors);
   app.register(fastifyFormbody, {
     bodyLimit: 104857600,
   });
@@ -70,18 +55,6 @@ export default function build(): FastifyInstance {
         { name: 'auth', description: 'Auth related end-points' },
         { name: 'user', description: 'User related end-points' },
       ],
-      definitions: {
-        // User: {
-        //   type: 'object',
-        //   required: ['id', 'email'],
-        //   properties: {
-        //     id: { type: 'string', format: 'uuid' },
-        //     firstName: { type: 'string' },
-        //     lastName: { type: 'string' },
-        //     email: { type: 'string', format: 'email' },
-        //   },
-        // },
-      },
       securityDefinitions: {
         Authorization: {
           type: 'apiKey',
@@ -121,18 +94,19 @@ export default function build(): FastifyInstance {
     };
   });
 
-// ERROR HANDLER
-// app.setErrorHandler((error: any, reply: any) => {
-//   try {
-//     if (error instanceof Error)
-//     const errObj = JSON.parse(error.message) as CommonResponse;
-
-//     reply.status(200).send(errObj);
-//   } catch (err) {
-//     reply
-//       .status(500)
-//       .send({ statusCode: 500, message: error.message || 'Unknown error' });
-//   }
-// });
+  // ERROR HANDLER
+  app.setErrorHandler((error, request, reply: any) => {
+    try {
+      if (error instanceof Error) {        
+        const errObj = JSON.parse(error.message);
+        return reply.status(400).send(errObj);
+      }
+      console.log("Error handler", error);
+    } catch (err) {
+      reply
+        .status(500)
+        .send({ statusCode: 500, message: error.message || 'Unknown error' });
+    }
+  });
   return app;
 }

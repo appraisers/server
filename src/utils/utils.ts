@@ -54,7 +54,7 @@ export const allowedFor = (roles: Array<Roles>) => async (
   if (roles.includes(role)) {
     return request.user;
   } else {
-    throw buildError(200, `Forbidden route only for ${roles.join(', ')}`);
+    throw buildError(400, `Forbidden route only for ${roles.join(', ')}`);
   }
 };
 

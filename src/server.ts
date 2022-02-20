@@ -1,21 +1,7 @@
-// import fs from 'fs';
 import { FastifyInstance } from 'fastify';
 import app from './app';
 
-// const httpsOptions = {
-//   key: fs.readFileSync('test/fixtures/keys/agent2-key.pem'),
-//   cert: fs.readFileSync('test/fixtures/keys/agent2-cert.pem'),
-// };
-const server: FastifyInstance = app(
-  // {
-  // pluginTimeout: 20000,
-  // logger: true,
-  // http2: true,
-  // https: httpsOptions
-  // level: 'info',
-  // prettyPrint: true
-  // }
-);
+const server: FastifyInstance = app();
 
 server.listen(process.env.PORT || 3001, '0.0.0.0', (err, address) => {
   if (err) {
