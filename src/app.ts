@@ -2,7 +2,6 @@ import path from 'path';
 import fastify, { FastifyInstance } from 'fastify';
 import 'reflect-metadata';
 import fastifyJWT from 'fastify-jwt';
-import fastifySwagger from 'fastify-swagger';
 import fastifyFormbody from 'fastify-formbody';
 import fastifyCors from 'fastify-cors';
 import multer from 'fastify-multer';
@@ -35,40 +34,9 @@ export default function build(): FastifyInstance {
     prefix: '/public/', // optional: default '/'
   });
   app.register(multer.contentParser);
-  app.register(fastifySwagger, {
-    routePrefix: '/documentation',
-    swagger: {
-      info: {
-        title: 'Test swagger',
-        description: 'testing the fastify swagger api',
-        version: '0.1.0',
-      },
-      externalDocs: {
-        url: 'https://swagger.io',
-        description: 'Find more info here',
-      },
-      host: 'localhost',
-      schemes: ['http', 'https'],
-      consumes: ['application/json'],
-      produces: ['application/json'],
-      tags: [
-        { name: 'auth', description: 'Auth related end-points' },
-        { name: 'user', description: 'User related end-points' },
-      ],
-      securityDefinitions: {
-        Authorization: {
-          type: 'apiKey',
-          name: 'Authorization',
-          in: 'header',
-        },
-      },
-    },
-    exposeRoute: true,
-  });
 
   app.ready((err) => {
     if (err instanceof Error) throw err;
-    app.swagger();
   });
 
   app.addSchema({
