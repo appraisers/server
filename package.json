@@ -9,12 +9,7 @@
     "prettier": "./node_modules/.bin/prettier --check \"./src/**/*.{ts,tsx}\"",
     "serve": "ts-node-dev --inspect --respawn --transpile-only ./src/server.ts",
     "serve2": "npm run build && concurrently \"tsc -w -p tsconfig.json\" \"nodemon ./build/server.js\"",
-    "start": "node --max_old_space_size=750 build/server.js",
-    "test": "tap --reporter=list --watch",
-    "copy:assets": "mkdir -p ./build/emails/ && cp -rv ./src/emails/** ./build/emails/",
-    "migration:generate": "ts-node ./node_modules/.bin/typeorm migration:generate -f ormconfig.js -n",
-    "migration:run": "ts-node ./node_modules/.bin/typeorm migration:run -f ormconfig.js",
-    "migration:revert": "ts-node ./node_modules/.bin/typeorm migration:revert -f ormconfig.js"
+    "start": "node --max_old_space_size=750 build/server.js"
   },
   "keywords": [],
   "author": "Kirill_Garnov",
@@ -35,6 +30,7 @@
     "handlebars": "^4.7.7",
     "multer-s3": "^2.9.0",
     "nodemailer": "^6.7.2",
+    "pg": "^8.7.3",
     "reflect-metadata": "^0.1.13",
     "tslib": "^1.14.1",
     "typeorm": "^0.2.28",
