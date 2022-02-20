@@ -16,7 +16,7 @@ import reviewRoutes from './modules/Review/review.routes';
 import userRoutes from './modules/User/user.routes';
 import questionRoutes from './modules/Question/question.routes';
 
-let app = fastify({
+let app: FastifyInstance = fastify({
   pluginTimeout: 20000, // resolve problem "Error: ERR_AVVIO_PLUGIN_TIMEOUT: plugin did not start in time ..."
 });
 
