@@ -34,7 +34,7 @@ export const forgotPasswordService = async (
   userRepo.save(user);
   sendEmail({
     type: 'forgot-password',
-    emailTo: String(user.email),
+    emailTo: user.email,
     subject: 'Did you forget your password?',
     replacements: {
       link: `${FRONTEND_URL}/forgot_password_2/${forgotPasswordToken}`,
@@ -47,10 +47,18 @@ export const resetPasswordService = async (
   data: ResetPasswordRequestBody
 ): Promise<null> => {
   const userRepo = getCustomRepository(UserRepository);
+  const user = await userRepo.findOneUserByKey('forgotPasswordToken', data.forgotPasswordToken)
+  if (!user) throw buildError(400, allErrors.userNotFound);
+
   const updateResult = await userRepo.resetPassword(data);
   if (!updateResult.affected) {
     throw buildError(400, allErrors.noSuchConfirmationToken);
   }
+  sendEmail({
+    type: 'successfully-change-password',
+    emailTo: user.email,
+    subject: 'Password successful changed',
+  });
   return null;
 };
 
@@ -117,6 +125,13 @@ export const registrationService = async (
     password,
   };
   const user = await userRepo.createUser(newUser);
+  if (user) {
+    sendEmail({
+      type: 'successfully-registration',
+      emailTo: email,
+      subject: 'Registration successful',
+    });
+  }
 
   return user;
 };
