@@ -1,9 +1,11 @@
 import { getCustomRepository } from 'typeorm';
+import base64 from 'base-64';
 import { allErrors } from '../../common/common.messages';
 import { DecodedJWT, JWT } from '../../common/common.interfaces';
 import { sendEmail } from '../../utils/mail.helper';
 import { buildError } from '../../utils/error.helper';
 import { roles, User } from '../../entities/User';
+import config from '../../config';
 import { UserRepository } from './user.repositories';
 import {
   AllInviteUsersServiceResponse,
@@ -14,6 +16,8 @@ import {
   InviteUserRequestBody,
   UpdateUserRequestBody,
 } from './user.interfaces';
+
+const { FRONTEND_URL } = config;
 
 export const checkAdminOrModeratorService = async (
   id: number,
@@ -129,13 +133,15 @@ export const inviteUserService = async (
   body: InviteUserRequestBody
 ): Promise<null> => {
   if (!body.email) throw buildError(400, allErrors.emailNotFound);
+  const token = base64.encode(body.email)
+  const back = base64.decode(token);
   sendEmail({
     type: 'invite-user',
     emailTo: body.email,
     subject: 'Invite in appraisers app',
-    // replacements: {
-    //   link: `${FRONTEND_URL}/invite`,
-    // }
+    replacements: {
+      link: `${FRONTEND_URL}/registration/${token}`,
+    }
   });
   return null;
 };

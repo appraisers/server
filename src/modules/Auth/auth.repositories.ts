@@ -20,11 +20,10 @@ interface CreateTokenRequest {
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
   async createUser(data: RegisterRepositoryData): Promise<User> {
-    const { email, fullname, workplace, password } = data;
+    const { email, fullname, password } = data;
     const user = new User();
     user.fullname = fullname ?? null;
     user.email = email;
-    user.workplace = workplace;
     user.password = password;
     await this.save(user);
     return user;

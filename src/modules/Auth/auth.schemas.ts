@@ -16,7 +16,13 @@ export const loginSchema = {
     response: {
       200: {
         type: 'object',
-        required: ['authToken', 'refreshToken', 'user', 'statusCode', 'message'],
+        required: [
+          'authToken',
+          'refreshToken',
+          'user',
+          'statusCode',
+          'message',
+        ],
         properties: {
           ...commonResponse,
           authToken: { type: 'string' },
@@ -29,7 +35,8 @@ export const loginSchema = {
               fullname: { type: 'string' },
               workplace: { type: 'string' },
               role: { type: 'string' },
-            }},
+            },
+          },
         },
       },
       400: {
@@ -51,11 +58,10 @@ export const registrationSchema = {
     summary: 'Route for registration in user',
     body: {
       type: 'object',
-      required: ['email', 'password', 'fullname', 'workplace'],
+      required: ['token', 'password', 'fullname'],
       properties: {
-        email: { type: 'string' },
+        token: { type: 'string' },
         fullname: { type: 'string' },
-        workplace: { type: 'string' },
         password: { type: 'string' },
       },
     },
@@ -70,8 +76,7 @@ export const registrationSchema = {
             properties: {
               email: { type: 'string' },
               fullname: { type: 'string' },
-              workplace: { type: 'string' },
-              password: { type: 'string' },
+              role: { type: 'string' },
             },
           },
         },

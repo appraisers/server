@@ -23,8 +23,7 @@ export interface UpdateTokenRequestBody {
 export interface LoginResponse extends CommonResponse, JwtTokens {}
 
 export interface RegisterRequestBody {
-  email: string;
-  workplace: string;
+  token: string;
   fullname: string;
   password: string;
 }
@@ -34,7 +33,11 @@ export interface ForgotPasswordRequestBody {
 export interface ConfirmRequestBody {
   token: string;
 }
-export type RegisterRepositoryData = RegisterRequestBody;
+export interface RegisterRepositoryData {
+  email: string;
+  fullname: string;
+  password: string;
+};
 
 export interface RegistrationResponse extends CommonResponse {
   user: User;

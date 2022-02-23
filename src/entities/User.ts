@@ -65,6 +65,7 @@ export class User {
   password!: string;
 
   @Column({
+    nullable: true,
     type: 'varchar',
     name: 'workplace',
   })

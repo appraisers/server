@@ -1,6 +1,6 @@
-import { EXPIRED } from './auth.constants';
-import { v4 as uuidv4 } from 'uuid';
 import { getCustomRepository } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
+import base64 from 'base-64';
 import { sendEmail } from '../../utils/mail.helper';
 import { User } from '../../entities/User';
 import { buildError } from '../../utils/error.helper';
@@ -15,6 +15,7 @@ import {
   ForgotPasswordRequestBody,
   ResetPasswordRequestBody,
 } from './auth.interfaces';
+import { EXPIRED } from './auth.constants';
 import { UserRepository, TokenRepository } from './auth.repositories';
 
 const { FRONTEND_URL } = config;
@@ -105,11 +106,17 @@ export const registrationService = async (
   data: RegisterRequestBody
 ): Promise<User> => {
   const userRepo = getCustomRepository(UserRepository);
-  const { email } = data;
+  const { token, fullname, password } = data;
+  const email = base64.decode(token);
   const isAlreadyUser = await userRepo.findOne({ where: { email } });
   if (isAlreadyUser) throw buildError(400, allErrors.userFound);
 
-  const user = await userRepo.createUser(data);
+  const newUser = {
+    email,
+    fullname,
+    password,
+  };
+  const user = await userRepo.createUser(newUser);
 
   return user;
 };
