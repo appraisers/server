@@ -133,8 +133,10 @@ export const inviteUserService = async (
   body: InviteUserRequestBody
 ): Promise<null> => {
   if (!body.email) throw buildError(400, allErrors.emailNotFound);
+  const userRepo = getCustomRepository(UserRepository);
+  const isAlreadyUser = await userRepo.findOne({ where: { email: body.email } });
+  if (isAlreadyUser) throw buildError(400, allErrors.userFound);
   const token = base64.encode(body.email)
-  const back = base64.decode(token);
   sendEmail({
     type: 'invite-user',
     emailTo: body.email,
