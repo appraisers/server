@@ -2,8 +2,6 @@ import { Token } from '../../entities/Token';
 import {
   EntityRepository,
   Repository,
-  getRepository,
-  getCustomRepository,
 } from 'typeorm';
 //import { genSaltSync, hashSync } from 'bcryptjs';
 import { User } from '../../entities/User';
@@ -11,6 +9,7 @@ import {
   RegisterRepositoryData,
   ConfirmRequestBody,
   ResetPasswordData,
+  UpdateUserAfterReview
 } from './auth.interfaces';
 import { EXPIRED } from './auth.constants';
 interface CreateTokenRequest {
@@ -49,6 +48,20 @@ export class UserRepository extends Repository<User> {
     return this.findOne({ where: { [key]: val } });
   }
 
+  async updateUserAfterReview(data: UpdateUserAfterReview) {
+    const { userId, rating, numberOfCompletedReviews } = data;
+    return this.createQueryBuilder('user')
+      .update(User)
+      .set({
+        rating: rating,
+        numberOfCompletedReviews: numberOfCompletedReviews,
+        updatedReviewAt: new Date(),
+      })
+      .where('id = :userId', {
+        userId,
+      })
+      .execute();
+  }
   // async getMediaForUser(userId: ID) {
   //   const userRepo = getCustomRepository(UserRepository);
   //   const query = await userRepo.createQueryBuilder('user')

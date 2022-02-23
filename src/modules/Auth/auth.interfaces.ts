@@ -1,5 +1,5 @@
 import { User } from '../../entities/User';
-import { CommonResponse, JwtTokens } from '../../common/common.interfaces';
+import { CommonResponse, ID, JwtTokens } from '../../common/common.interfaces';
 
 export interface LoginRequestBody {
   email: string;
@@ -50,5 +50,9 @@ export interface ResetPasswordRequestBody {
   forgotPasswordToken: string;
   password: string;
 }
-
+export interface UpdateUserAfterReview {
+  rating: number;
+  userId: ID;
+  numberOfCompletedReviews: number;
+}
 export type ResetPasswordData = ResetPasswordRequestBody;

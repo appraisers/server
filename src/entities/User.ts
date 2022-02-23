@@ -87,6 +87,13 @@ export class User {
   rating!: number;
 
   @Column({
+    nullable: true,
+    type: 'integer',
+    name: 'number_of_completed_reviews',
+  })
+  numberOfCompletedReviews!: number;
+
+  @Column({
     type: 'enum',
     enum: Roles,
     default: roles.user,

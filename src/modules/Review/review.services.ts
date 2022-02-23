@@ -220,9 +220,7 @@ export const createReviewService = async (
 };
 
 export const addFinishAnswerService = async (
-  data: FinishAnswerData,
-  token: string,
-  jwt: JWT
+  data: FinishAnswerData
 ): Promise<null> => {
   const { description, userId } = data;
   const userRepo = getCustomRepository(UserRepository);
@@ -243,6 +241,19 @@ export const addFinishAnswerService = async (
     description,
   };
   reviewRepo.lastUpdateTemporaryRating(dataForLastUpdate);
+
+  let userRating = user.rating;
+  let numberOfCompletedReviews = user.numberOfCompletedReviews + 1;
+  if (userRating !== 0) {
+    userRating = (userRating + review.temporaryRating) / 2;
+  } else userRating = review.temporaryRating;
+  
+  userRepo.updateUserAfterReview({
+    userId,
+    rating: userRating,
+    numberOfCompletedReviews,
+  });
+
   sendEmail({
     type: 'successfully-appraisers',
     emailTo: user.email,

@@ -86,8 +86,6 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       const { body } = request;
       await addFinishAnswerService(
         body as FinishAnswerData,
-        authorization,
-        fastify.jwt
       );
       return { ...commonResponse };
     } catch (error) {
