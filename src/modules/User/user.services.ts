@@ -54,9 +54,11 @@ export const allUsersService = async (): Promise<AllUsersServiceResponse[]> => {
   const users = await userRepo.getAllUsers();
   if (!users) throw buildError(400, allErrors.usersNotFound);
   const mapUser = users.map((user) => ({
+    id: user.id,
     fullname: user.fullname ?? '',
     updatedReviewAt: user.updatedReviewAt ?? '',
     rating: user.rating ?? null,
+    position: user.position ?? '',
   }));
   return mapUser;
 };
