@@ -5,3 +5,6 @@ export const REVIEWS_ANSWERS_IDS_COUNT = 4;
 export const REVIEWS_ANSWERS_MIN_VALUE = 1;
 export const REVIEWS_ANSWERS_MAX_VALUE = 5;
 export const DONT_KNOW_ANSWER = -1;
+export const NORMALIZATION_DIVISOR = 2;
+export const INITIAL_VALUE_COUNT_CATEGORIES = 1;
+export const ZERO = 0;

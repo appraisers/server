@@ -58,6 +58,34 @@ export class Review {
   temporaryRating!: number;
 
   @Column({
+    default: 0,
+    type: 'float',
+    name: 'effectiveness_rating'
+  })
+  effectivenessRating!: number;
+
+  @Column({
+    default: 0,
+    type: 'float',
+    name: 'interaction_rating'
+  })
+  interactionRating!: number;
+
+  @Column({
+    default: 0,
+    type: 'float',
+    name: 'assessment_of_abilities_rating'
+  })
+  assessmentOfAbilitiesRating!: number;
+
+  @Column({
+    default: 0,
+    type: 'float',
+    name: 'personal_qualities_rating'
+  })
+  personalQualitiesRating!: number;
+
+  @Column({
     nullable: true,
     type: 'float',
     name: 'answered_questions'

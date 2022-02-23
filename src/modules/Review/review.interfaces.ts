@@ -47,6 +47,10 @@ export interface UpdateTemporaryRatingData {
   reviewId: ID;
   temporaryRating: number;
   answeredQuestions: number;
+  effectivenessRating: number;
+  interactionRating: number;
+  assessmentOfAbilitiesRating: number;
+  personalQualitiesRating: number;
 }
 
 export interface LastUpdateTemporaryRatingData {
@@ -55,6 +59,7 @@ export interface LastUpdateTemporaryRatingData {
   answeredQuestions: number;
   activeSession: boolean;
   rating: number;
+  description: string;
 }
 
 export interface FinishAnswerData {

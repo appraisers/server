@@ -1,4 +1,5 @@
 import { getCustomRepository } from 'typeorm';
+import { Category } from '../../entities/Question';
 import { Review } from '../../entities/Review';
 import { buildError } from '../../utils/error.helper';
 import { UserRepository } from '../Auth/auth.repositories';
@@ -17,11 +18,12 @@ import {
   FinishAnswerData,
 } from './review.interfaces';
 import {
-  REVIEWS_ANSWERS_COUNT,
-  REVIEWS_ANSWERS_IDS_COUNT,
+  DONT_KNOW_ANSWER,
+  INITIAL_VALUE_COUNT_CATEGORIES,
+  NORMALIZATION_DIVISOR,
   REVIEWS_ANSWERS_MIN_VALUE,
   REVIEWS_ANSWERS_MAX_VALUE,
-  DONT_KNOW_ANSWER,
+  ZERO,
 } from './review.constants';
 
 const { FRONTEND_URL } = config;
@@ -78,9 +80,24 @@ export const addAnswerService = async (
 
   let temporaryRating = review.temporaryRating;
   let answeredQuestions = review.answeredQuestions;
-  let activeSession = review.activeSession;
-  let rating = review.rating;
+  let effectivenessRating = review.effectivenessRating;
+  let interactionRating = review.interactionRating;
+  let assessmentOfAbilitiesRating = review.assessmentOfAbilitiesRating;
+  let personalQualitiesRating = review.personalQualitiesRating;
   let answerDontKnowCount = 0;
+  let effectivenessCount = effectivenessRating
+    ? INITIAL_VALUE_COUNT_CATEGORIES
+    : ZERO;
+  let interactionCount = interactionRating
+    ? INITIAL_VALUE_COUNT_CATEGORIES
+    : ZERO;
+  let assessmentOfAbilitiesCount = assessmentOfAbilitiesRating
+    ? INITIAL_VALUE_COUNT_CATEGORIES
+    : ZERO;
+  let personalQualitiesCount = personalQualitiesRating
+    ? INITIAL_VALUE_COUNT_CATEGORIES
+    : ZERO;
+
   // Check temporaryRating
   if (temporaryRating !== 0 && !temporaryRating) {
     throw buildError(400, allErrors.temporaryRatingIsNotFound);
@@ -102,7 +119,43 @@ export const addAnswerService = async (
     } else {
       const weight = questions[index]?.weight;
       if (!weight) throw buildError(400, allErrors.weightNotFound);
-      temporaryRating += (value * weight) / 10;
+      const normalizeRating = (value * weight) / 10;
+      temporaryRating += normalizeRating;
+
+      switch (questions[index]?.category) {
+        case Category.EFFECTIVENESS: {
+          effectivenessRating += normalizeRating;
+          effectivenessCount++;
+          if (effectivenessCount > INITIAL_VALUE_COUNT_CATEGORIES) {
+            effectivenessRating /= NORMALIZATION_DIVISOR;
+          }
+          break;
+        }
+        case Category.INTERACTION: {
+          interactionRating += normalizeRating;
+          interactionCount++;
+          if (interactionCount > INITIAL_VALUE_COUNT_CATEGORIES) {
+            interactionRating /= NORMALIZATION_DIVISOR;
+          }
+          break;
+        }
+        case Category.ASSESSMENT_OF_ABILITIES: {
+          assessmentOfAbilitiesRating += normalizeRating;
+          assessmentOfAbilitiesCount++;
+          if (assessmentOfAbilitiesCount > INITIAL_VALUE_COUNT_CATEGORIES) {
+            assessmentOfAbilitiesRating /= NORMALIZATION_DIVISOR;
+          }
+          break;
+        }
+        case Category.PERSONAL_QUALITIES: {
+          personalQualitiesRating += normalizeRating;
+          personalQualitiesCount++;
+          if (personalQualitiesCount > INITIAL_VALUE_COUNT_CATEGORIES) {
+            personalQualitiesRating /= NORMALIZATION_DIVISOR;
+          }
+          break;
+        }
+      }
     }
   });
   // Update count of question
@@ -120,10 +173,12 @@ export const addAnswerService = async (
   const dataForUpdate = {
     answeredQuestions,
     temporaryRating,
+    effectivenessRating,
+    interactionRating,
+    assessmentOfAbilitiesRating,
+    personalQualitiesRating,
     reviewId: review.id,
   };
-  //добавить сервис который смотрит количество вопрослов - answeredQuestions
-  //если результат больше REVIEWS_ANSWERS_COUNT, то isLastAnswers - false, else true
 
   let isLastAnswers;
   let countQuestions = await questionRepo.getCountAllQuestions();
@@ -132,20 +187,6 @@ export const addAnswerService = async (
     isLastAnswers = true;
   } else isLastAnswers = false;
 
-  if (isLastAnswers) {
-    activeSession = false;
-    answeredQuestions = 0;
-    rating = temporaryRating;
-    temporaryRating = 0;
-    const dataForLastUpdate = {
-      answeredQuestions,
-      temporaryRating,
-      activeSession,
-      rating,
-      reviewId: review.id,
-    };
-    reviewRepo.lastUpdateTemporaryRating(dataForLastUpdate);
-  }
   const updateReview = await reviewRepo.updateTemporaryRating(dataForUpdate);
   if (!updateReview?.affected) {
     throw buildError(400, allErrors.reviewNotFound);
@@ -186,9 +227,22 @@ export const addFinishAnswerService = async (
   const { description, userId } = data;
   const userRepo = getCustomRepository(UserRepository);
   const reviewRepo = getCustomRepository(ReviewRepository);
-  await reviewRepo.setDescriptionReview(data);
+
   const user = await userRepo.findOneUserByKey('id', userId);
   if (!user) throw buildError(400, allErrors.userNotFound);
+
+  let review = await reviewRepo.findReviewByUserId(userId);
+  if (!review) throw buildError(400, allErrors.reviewsIsNotFound);
+
+  const dataForLastUpdate = {
+    answeredQuestions: 0,
+    temporaryRating: 0,
+    activeSession: false,
+    rating: review.temporaryRating,
+    reviewId: review.id,
+    description,
+  };
+  reviewRepo.lastUpdateTemporaryRating(dataForLastUpdate);
   sendEmail({
     type: 'successfully-appraisers',
     emailTo: user.email,

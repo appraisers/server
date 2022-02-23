@@ -46,12 +46,24 @@ export class ReviewRepository extends Repository<Review> {
   }
 
   async updateTemporaryRating(data: UpdateTemporaryRatingData) {
-    const { temporaryRating, answeredQuestions, reviewId } = data;
+    const {
+      temporaryRating,
+      effectivenessRating,
+      interactionRating,
+      assessmentOfAbilitiesRating,
+      personalQualitiesRating,
+      answeredQuestions,
+      reviewId,
+    } = data;
     return this.createQueryBuilder('review')
       .update(Review)
       .set({
         temporaryRating: temporaryRating,
         answeredQuestions: answeredQuestions,
+        effectivenessRating: effectivenessRating,
+        interactionRating: interactionRating,
+        assessmentOfAbilitiesRating: assessmentOfAbilitiesRating,
+        personalQualitiesRating: personalQualitiesRating,
         updatedAt: new Date(),
       })
       .where('id = :reviewId', {
@@ -67,6 +79,7 @@ export class ReviewRepository extends Repository<Review> {
       reviewId,
       activeSession,
       rating,
+      description,
     } = data;
     return this.createQueryBuilder('review')
       .update(Review)
@@ -75,6 +88,7 @@ export class ReviewRepository extends Repository<Review> {
         answeredQuestions: answeredQuestions,
         activeSession: activeSession,
         rating: rating,
+        description: description,
         updatedAt: new Date(),
         createdAt: new Date(),
       })
