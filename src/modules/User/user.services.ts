@@ -59,6 +59,7 @@ export const allUsersService = async (): Promise<AllUsersServiceResponse[]> => {
     updatedReviewAt: user.updatedReviewAt ?? '',
     rating: user.rating ?? null,
     position: user.position ?? '',
+    numberOfCompletedReviews: user.numberOfCompletedReviews ?? null
   }));
   return mapUser;
 };

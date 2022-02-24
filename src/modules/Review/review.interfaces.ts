@@ -14,7 +14,6 @@ export interface InviteAppriceResponse extends CommonResponse {
   user: InviteAppriceData[];
 }
 export interface InviteAppriceData {
-  userId: number;
   email: string;
 }
 

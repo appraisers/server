@@ -40,9 +40,10 @@ export const checkReviewsService = async (
 export const inviteAppriceService = async (
   data: InviteAppriceData
 ): Promise<InviteAppriceResponse[]> => {
-  const { userId, email } = data;
+  const { email } = data;
   const userRepo = getCustomRepository(UserRepository);
-  const user = await userRepo.findOneUserByKey('id', userId);
+  const user = await userRepo.findOneUserByKey('email', email);
+  
   if (!user) throw buildError(400, allErrors.userNotFound);
 
   sendEmail({
@@ -50,7 +51,7 @@ export const inviteAppriceService = async (
     emailTo: email,
     subject: 'You are invited to appraise',
     replacements: {
-      link: `${FRONTEND_URL}/invite-appraise/${userId}`,
+      link: `${FRONTEND_URL}/invite-appraise/${user.id}`,
       fullname: user.fullname,
     },
   });
@@ -247,7 +248,7 @@ export const addFinishAnswerService = async (
   if (userRating !== 0) {
     userRating = (userRating + review.temporaryRating) / 2;
   } else userRating = review.temporaryRating;
-  
+
   userRepo.updateUserAfterReview({
     userId,
     rating: userRating,
