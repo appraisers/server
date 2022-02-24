@@ -230,7 +230,7 @@ export const addFinishAnswerService = async (
   const user = await userRepo.findOneUserByKey('id', userId);
   if (!user) throw buildError(400, allErrors.userNotFound);
 
-  let review = await reviewRepo.findReviewByUserId(userId);
+  const review = await reviewRepo.findReviewByUserId(userId);
   if (!review) throw buildError(400, allErrors.reviewsIsNotFound);
 
   const dataForLastUpdate = {
@@ -244,8 +244,8 @@ export const addFinishAnswerService = async (
   reviewRepo.lastUpdateTemporaryRating(dataForLastUpdate);
 
   let userRating = user.rating;
-  let numberOfCompletedReviews = user.numberOfCompletedReviews + 1;
-  if (userRating !== 0) {
+  const numberOfCompletedReviews = user.numberOfCompletedReviews + 1;
+  if (userRating != null) {
     userRating = (userRating + review.temporaryRating) / 2;
   } else userRating = review.temporaryRating;
 
