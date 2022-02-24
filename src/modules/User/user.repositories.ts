@@ -18,7 +18,6 @@ export class UserRepository extends Repository<User> {
     return this.createQueryBuilder('user')
       .select('user')
       .where('user.role = :role', { role: Roles.USER })
-      .andWhere('user.deletedAt IS NULL')
       .getMany();
   }
   updateUser(data: UpdateRepositoryData) {
