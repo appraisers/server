@@ -5,6 +5,10 @@ export interface AddQuestionRequestBody {
   category: string;
   weight: number;
 }
+
+export interface DeleteQuestionsData {
+  ids: ID[]
+}
 export interface GetQuestionsRequestBody {
   offset: number;
   limit: number;

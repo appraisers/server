@@ -1,6 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Question } from '../../entities/Question';
 import {
+  DeleteQuestionsData,
   FindArrayQuestionsByIdData,
   GetQuestionsRequestBody,
   QuestionRepositoryData,
@@ -20,6 +21,7 @@ export class QuestionRepository extends Repository<Question> {
     const { offset, limit } = data;
     return this.createQueryBuilder('question')
       .select(['question'])
+      .where('question.deletedAt IS NULL')
       .orderBy('question.id', 'ASC')
       .offset(offset)
       .limit(limit)
@@ -33,5 +35,17 @@ export class QuestionRepository extends Repository<Question> {
   }
   async getCountAllQuestions(): Promise<number> {
     return this.count();
+  }
+  async deleteQuestions(data: DeleteQuestionsData) {
+    const { ids } = data;
+
+    return this.createQueryBuilder('question')
+      .update(Question)
+      .set({
+        deletedAt: new Date(),
+      })
+      .where('id IN (:...ids)', { ids })
+      .andWhere('deleted_at is NULL')
+      .execute();
   }
 }
