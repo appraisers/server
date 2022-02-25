@@ -11,9 +11,9 @@ import {
   AllInviteUsersServiceResponse,
   AllUsersServiceResponse,
   ChangeUserRoleRequestBody,
-  DeleteUserRequestBody,
   GetUserInfoBody,
   InviteUserRequestBody,
+  ToggleUserRepositoryData,
   UpdateUserRequestBody,
 } from './user.interfaces';
 
@@ -59,7 +59,8 @@ export const allUsersService = async (): Promise<AllUsersServiceResponse[]> => {
     updatedReviewAt: user.updatedReviewAt ?? '',
     rating: user.rating ?? null,
     position: user.position ?? '',
-    numberOfCompletedReviews: user.numberOfCompletedReviews ?? null
+    numberOfCompletedReviews: user.numberOfCompletedReviews ?? null,
+    deletedAt: user.deletedAt ?? null,
   }));
   return mapUser;
 };
@@ -99,14 +100,14 @@ export const updateUserService = async (
   return user;
 };
 
-export const deleteUserService = async (
-  data: DeleteUserRequestBody
+export const toggleUserService = async (
+  data: ToggleUserRepositoryData
 ): Promise<User> => {
   const { userId } = data;
   const userRepo = getCustomRepository(UserRepository);
 
- const deleteResult = await userRepo.deleteUser({ userId });
- if (!deleteResult?.affected) throw buildError(400, allErrors.userNotFound);
+  const deleteResult = await userRepo.toggleUser({ ...data });
+  if (!deleteResult?.affected) throw buildError(400, allErrors.userNotFound);
   const user = await userRepo.findOneUserByKey('id', userId);
   if (!user) throw buildError(400, allErrors.userNotFound);
 
@@ -137,16 +138,18 @@ export const inviteUserService = async (
 ): Promise<null> => {
   if (!body.email) throw buildError(400, allErrors.emailNotFound);
   const userRepo = getCustomRepository(UserRepository);
-  const isAlreadyUser = await userRepo.findOne({ where: { email: body.email } });
+  const isAlreadyUser = await userRepo.findOne({
+    where: { email: body.email },
+  });
   if (isAlreadyUser) throw buildError(400, allErrors.userFound);
-  const token = base64.encode(body.email)
+  const token = base64.encode(body.email);
   sendEmail({
     type: 'invite-user',
     emailTo: body.email,
     subject: 'Invite in appraisers app',
     replacements: {
       link: `${FRONTEND_URL}/registration/${token}`,
-    }
+    },
   });
   return null;
 };

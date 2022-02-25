@@ -130,12 +130,11 @@ export class User {
   updatedReviewAt!: Date;
 
   @Column('timestamp', {
-    select: false,
     nullable: true,
     default: () => 'NULL',
     name: 'deleted_at',
   })
-  deletedAt!: Date;
+  deletedAt!: Date | null;
 
   @BeforeInsert()
   beforeInsert() {

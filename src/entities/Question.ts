@@ -54,7 +54,6 @@ export class Question {
   updatedAt!: Date;
 
   @Column('timestamp', {
-    select: false,
     nullable: true,
     default: () => 'NULL',
     name: 'deleted_at',

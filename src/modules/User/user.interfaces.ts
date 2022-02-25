@@ -17,6 +17,7 @@ export interface AllUsersServiceResponse {
   fullname: string;
   updatedReviewAt: Date;
   rating: number;
+  deletedAt: Date | null;
 }
 export interface AllUsersResponse extends CommonResponse {
   users: AllUsersServiceResponse[];
@@ -50,11 +51,12 @@ export interface UpdateUserResponse extends CommonResponse {
 export interface InviteUserRequestBody {
   email: string;
 }
-export interface DeleteUserResponse extends CommonResponse {
+export interface ToggleUserResponse extends CommonResponse {
   user: User;
 }
-export interface DeleteUserRequestBody {
+export interface ToggleUserRepositoryData {
   userId: ID;
+  type: 'delete' | 'restore';
 }
 export interface ChangeUserRoleResponse extends CommonResponse {
   user: User;

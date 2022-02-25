@@ -11,8 +11,8 @@ import {
   CheckAuthResponse,
   ChangeUserRoleResponse,
   ChangeUserRoleRequestBody,
-  DeleteUserResponse,
-  DeleteUserRequestBody,
+  ToggleUserResponse,
+  ToggleUserRepositoryData,
   GetUserInfoBody,
   InviteUserRequestBody,
   UpdateUserRequestBody,
@@ -24,7 +24,7 @@ import {
   checkUserService,
   getUserInfoService,
   changeUserRoleService,
-  deleteUserService,
+  toggleUserService,
   inviteUserService,
   updateUserService,
 } from './user.services';
@@ -58,7 +58,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       const user = await getUserInfoService(body as GetUserInfoBody);
       return {
         ...commonResponse,
-        user
+        user,
       };
     } catch (error) {
       throw error;
@@ -116,12 +116,12 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       throw error;
     }
   };
-  const deleteUserController = async (
+  const toggleUserController = async (
     request: FastifyRequest
-  ): Promise<DeleteUserResponse> => {
+  ): Promise<ToggleUserResponse> => {
     try {
       const { body } = request;
-      const user = await deleteUserService(body as DeleteUserRequestBody);
+      const user = await toggleUserService(body as ToggleUserRepositoryData);
       return {
         ...commonResponse,
         user,
@@ -172,12 +172,12 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
   );
   fastify.post('/invite', inviteUserController);
   fastify.post(
-    '/delete',
+    '/toggle-user',
     {
       onRequest: checkAuthHook(fastify.jwt),
       preValidation: allowedFor([roles.admin, roles.moderator]),
     },
-    deleteUserController
+    toggleUserController
   );
   fastify.post(
     '/change-role',

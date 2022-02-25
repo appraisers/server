@@ -2,7 +2,7 @@ import { EntityRepository, Repository } from 'typeorm';
 import { Roles, User } from '../../entities/User';
 import {
   ChangeUserRoleRequestBody,
-  DeleteUserRequestBody,
+  ToggleUserRepositoryData,
   UpdateRepositoryData,
 } from './user.interfaces';
 
@@ -17,6 +17,7 @@ export class UserRepository extends Repository<User> {
   getAllUsers(): Promise<User[] | undefined> {
     return this.createQueryBuilder('user')
       .select('user')
+      .orderBy('user.id', 'ASC')
       .where('user.role = :role', { role: Roles.USER })
       .getMany();
   }
@@ -46,14 +47,12 @@ export class UserRepository extends Repository<User> {
       .where('id = :accountId', { accountId: id ?? authorId })
       .execute();
   }
-  deleteUser(data: DeleteUserRequestBody) {
-    const { userId } = data;
+  toggleUser(data: ToggleUserRepositoryData) {
+    const { userId, type } = data;
 
     return this.createQueryBuilder('user')
       .update(User)
-      .set({
-        deletedAt: new Date(),
-      })
+      .set({ deletedAt: type === 'delete' ? new Date() : null })
       .where('id = :userId', { userId })
       .execute();
   }

@@ -107,7 +107,6 @@ export class Review {
   updatedAt!: Date;
 
   @Column('timestamp', {
-    select: false,
     nullable: true,
     default: () => 'NULL',
     name: 'deleted_at',
