@@ -18,12 +18,10 @@ import {
   FinishAnswerData,
 } from './review.interfaces';
 import {
-  DONT_KNOW_ANSWER,
-  INITIAL_VALUE_COUNT_CATEGORIES,
+  NUMBER_OF_CATEGORIES,
   NORMALIZATION_DIVISOR,
   REVIEWS_ANSWERS_MIN_VALUE,
   REVIEWS_ANSWERS_MAX_VALUE,
-  ZERO,
 } from './review.constants';
 
 const { FRONTEND_URL } = config;
@@ -43,7 +41,7 @@ export const inviteAppriceService = async (
   const { email, userId } = data;
   const userRepo = getCustomRepository(UserRepository);
   const user = await userRepo.findOneUserByKey('id', userId);
-  
+
   if (!user) throw buildError(400, allErrors.userNotFound);
 
   sendEmail({
@@ -79,105 +77,64 @@ export const addAnswerService = async (
   }
   if (!review) throw buildError(400, allErrors.reviewsIsNotFound);
 
-  let temporaryRating = review.temporaryRating;
   let answeredQuestions = review.answeredQuestions;
   let effectivenessRating = review.effectivenessRating;
   let interactionRating = review.interactionRating;
   let assessmentOfAbilitiesRating = review.assessmentOfAbilitiesRating;
   let personalQualitiesRating = review.personalQualitiesRating;
-  let answerDontKnowCount = 0;
-  let effectivenessCount = effectivenessRating
-    ? INITIAL_VALUE_COUNT_CATEGORIES
-    : ZERO;
-  let interactionCount = interactionRating
-    ? INITIAL_VALUE_COUNT_CATEGORIES
-    : ZERO;
-  let assessmentOfAbilitiesCount = assessmentOfAbilitiesRating
-    ? INITIAL_VALUE_COUNT_CATEGORIES
-    : ZERO;
-  let personalQualitiesCount = personalQualitiesRating
-    ? INITIAL_VALUE_COUNT_CATEGORIES
-    : ZERO;
-
-  // Check temporaryRating
-  if (temporaryRating !== 0 && !temporaryRating) {
-    throw buildError(400, allErrors.temporaryRatingIsNotFound);
-  }
+  let effectivenessWeight = review.effectivenessWeight;
+  let interactionWeight = review.interactionWeight;
+  let assessmentOfAbilitiesWeight = review.assessmentOfAbilitiesWeight;
+  let personalQualitiesWeight = review.personalQualitiesWeight;
 
   // Get questions from params
   let questions = await questionRepo.findArrayQuestionsById({ ids });
 
   // Count sum answers
   answers.forEach((value, index) => {
-    if (
-      (value < REVIEWS_ANSWERS_MIN_VALUE && value !== DONT_KNOW_ANSWER) ||
-      value > REVIEWS_ANSWERS_MAX_VALUE
-    )
+    if (value < REVIEWS_ANSWERS_MIN_VALUE || value > REVIEWS_ANSWERS_MAX_VALUE)
       throw buildError(400, allErrors.incorectAnswer);
 
-    if (DONT_KNOW_ANSWER === value) {
-      answerDontKnowCount += 1;
-    } else {
-      const weight = questions[index]?.weight;
-      if (!weight) throw buildError(400, allErrors.weightNotFound);
-      const normalizeRating = (value * weight) / 10;
-      temporaryRating += normalizeRating;
+    const weight = questions[index]?.weight;
+    if (!weight) throw buildError(400, allErrors.weightNotFound);
+    const normalizeRating = value * weight;
 
-      switch (questions[index]?.category) {
-        case Category.EFFECTIVENESS: {
-          effectivenessRating += normalizeRating;
-          effectivenessCount++;
-          if (effectivenessCount > INITIAL_VALUE_COUNT_CATEGORIES) {
-            effectivenessRating /= NORMALIZATION_DIVISOR;
-          }
-          break;
-        }
-        case Category.INTERACTION: {
-          interactionRating += normalizeRating;
-          interactionCount++;
-          if (interactionCount > INITIAL_VALUE_COUNT_CATEGORIES) {
-            interactionRating /= NORMALIZATION_DIVISOR;
-          }
-          break;
-        }
-        case Category.ASSESSMENT_OF_ABILITIES: {
-          assessmentOfAbilitiesRating += normalizeRating;
-          assessmentOfAbilitiesCount++;
-          if (assessmentOfAbilitiesCount > INITIAL_VALUE_COUNT_CATEGORIES) {
-            assessmentOfAbilitiesRating /= NORMALIZATION_DIVISOR;
-          }
-          break;
-        }
-        case Category.PERSONAL_QUALITIES: {
-          personalQualitiesRating += normalizeRating;
-          personalQualitiesCount++;
-          if (personalQualitiesCount > INITIAL_VALUE_COUNT_CATEGORIES) {
-            personalQualitiesRating /= NORMALIZATION_DIVISOR;
-          }
-          break;
-        }
+    switch (questions[index]?.category) {
+      case Category.EFFECTIVENESS: {
+        effectivenessRating += normalizeRating;
+        effectivenessWeight += weight;
+        break;
+      }
+      case Category.INTERACTION: {
+        interactionRating += normalizeRating;
+        interactionWeight += weight;
+        break;
+      }
+      case Category.ASSESSMENT_OF_ABILITIES: {
+        assessmentOfAbilitiesRating += normalizeRating;
+        assessmentOfAbilitiesWeight += weight;
+        break;
+      }
+      case Category.PERSONAL_QUALITIES: {
+        personalQualitiesRating += normalizeRating;
+        personalQualitiesWeight += weight;
+        break;
       }
     }
   });
   // Update count of question
   answeredQuestions += answers.length;
 
-  // Count average rating (if value === -1 don't effect on temporaryRating)
-  if (answerDontKnowCount !== answers.length) {
-    temporaryRating =
-      temporaryRating /
-      (review.temporaryRating === 0
-        ? answers.length - answerDontKnowCount
-        : answers.length + 1 - answerDontKnowCount);
-  }
-
   const dataForUpdate = {
     answeredQuestions,
-    temporaryRating,
     effectivenessRating,
     interactionRating,
     assessmentOfAbilitiesRating,
     personalQualitiesRating,
+    effectivenessWeight,
+    interactionWeight,
+    assessmentOfAbilitiesWeight,
+    personalQualitiesWeight,
     reviewId: review.id,
   };
 
@@ -233,21 +190,43 @@ export const addFinishAnswerService = async (
   const review = await reviewRepo.findReviewByUserId(userId);
   if (!review) throw buildError(400, allErrors.reviewsIsNotFound);
 
+  let effectivenessRating = review.effectivenessRating;
+  let interactionRating = review.interactionRating;
+  let assessmentOfAbilitiesRating = review.assessmentOfAbilitiesRating;
+  let personalQualitiesRating = review.personalQualitiesRating;
+  const effectivenessWeight = review.effectivenessWeight;
+  const interactionWeight = review.interactionWeight;
+  const assessmentOfAbilitiesWeight = review.assessmentOfAbilitiesWeight;
+  const personalQualitiesWeight = review.personalQualitiesWeight;
+
+  effectivenessRating /= effectivenessWeight;
+  interactionRating /= interactionWeight;
+  assessmentOfAbilitiesRating /= assessmentOfAbilitiesWeight;
+  personalQualitiesRating /= personalQualitiesWeight;
+  const overallRating =
+    (effectivenessRating +
+      interactionRating +
+      assessmentOfAbilitiesRating +
+      personalQualitiesRating) /
+      NUMBER_OF_CATEGORIES;
   const dataForLastUpdate = {
     answeredQuestions: 0,
-    temporaryRating: 0,
     activeSession: false,
-    rating: review.temporaryRating,
+    rating: overallRating,
     reviewId: review.id,
     description,
+    effectivenessRating,
+    interactionRating,
+    assessmentOfAbilitiesRating,
+    personalQualitiesRating,
   };
   reviewRepo.lastUpdateTemporaryRating(dataForLastUpdate);
 
   let userRating = user.rating;
   const numberOfCompletedReviews = user.numberOfCompletedReviews + 1;
   if (userRating != null) {
-    userRating = (userRating + review.temporaryRating) / 2;
-  } else userRating = review.temporaryRating;
+    userRating = (userRating + overallRating) / NORMALIZATION_DIVISOR;
+  } else userRating = overallRating;
 
   userRepo.updateUserAfterReview({
     userId,

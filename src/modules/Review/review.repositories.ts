@@ -47,23 +47,29 @@ export class ReviewRepository extends Repository<Review> {
 
   async updateTemporaryRating(data: UpdateTemporaryRatingData) {
     const {
-      temporaryRating,
       effectivenessRating,
       interactionRating,
       assessmentOfAbilitiesRating,
       personalQualitiesRating,
       answeredQuestions,
       reviewId,
+      effectivenessWeight,
+      interactionWeight,
+      assessmentOfAbilitiesWeight,
+      personalQualitiesWeight,
     } = data;
     return this.createQueryBuilder('review')
       .update(Review)
       .set({
-        temporaryRating: temporaryRating,
         answeredQuestions: answeredQuestions,
         effectivenessRating: effectivenessRating,
         interactionRating: interactionRating,
         assessmentOfAbilitiesRating: assessmentOfAbilitiesRating,
         personalQualitiesRating: personalQualitiesRating,
+        effectivenessWeight: effectivenessWeight,
+        interactionWeight: interactionWeight,
+        assessmentOfAbilitiesWeight: assessmentOfAbilitiesWeight,
+        personalQualitiesWeight: personalQualitiesWeight,
         updatedAt: new Date(),
       })
       .where('id = :reviewId', {
@@ -74,21 +80,27 @@ export class ReviewRepository extends Repository<Review> {
 
   async lastUpdateTemporaryRating(data: LastUpdateTemporaryRatingData) {
     const {
-      temporaryRating,
       answeredQuestions,
       reviewId,
       activeSession,
       rating,
       description,
+      effectivenessRating,
+      interactionRating,
+      assessmentOfAbilitiesRating,
+      personalQualitiesRating,
     } = data;
     return this.createQueryBuilder('review')
       .update(Review)
       .set({
-        temporaryRating: temporaryRating,
         answeredQuestions: answeredQuestions,
         activeSession: activeSession,
         rating: rating,
         description: description,
+        effectivenessRating: effectivenessRating,
+        interactionRating: interactionRating,
+        assessmentOfAbilitiesRating: assessmentOfAbilitiesRating,
+        personalQualitiesRating: personalQualitiesRating,
         updatedAt: new Date(),
         createdAt: new Date(),
       })

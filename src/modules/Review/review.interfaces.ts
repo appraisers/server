@@ -45,21 +45,27 @@ export interface AddAnswerControllerResponse extends CommonResponse {
 
 export interface UpdateTemporaryRatingData {
   reviewId: ID;
-  temporaryRating: number;
   answeredQuestions: number;
   effectivenessRating: number;
   interactionRating: number;
   assessmentOfAbilitiesRating: number;
   personalQualitiesRating: number;
+  effectivenessWeight: number;
+  interactionWeight: number;
+  assessmentOfAbilitiesWeight: number;
+  personalQualitiesWeight: number;
 }
 
 export interface LastUpdateTemporaryRatingData {
   reviewId: ID;
-  temporaryRating: number;
   answeredQuestions: number;
   activeSession: boolean;
   rating: number;
   description: string;
+  effectivenessRating: number;
+  interactionRating: number;
+  assessmentOfAbilitiesRating: number;
+  personalQualitiesRating: number;
 }
 
 export interface FinishAnswerData {
