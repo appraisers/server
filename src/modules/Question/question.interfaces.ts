@@ -7,8 +7,18 @@ export interface AddQuestionRequestBody {
   position: string;
 }
 
+export interface GetCategoriesContoller extends CommonResponse {
+  categories: {
+    effectiveness: string;
+    interaction: string;
+    assessmentOfAbilities: string;
+    personalQualities: string;
+    default: string;
+  };
+}
+
 export interface DeleteQuestionsData {
-  ids: ID[]
+  ids: ID[];
 }
 export interface GetQuestionsRequestBody {
   offset: number;

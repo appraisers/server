@@ -5,16 +5,26 @@ import { buildError } from '../../utils/error.helper';
 import { CommonResponse } from '../../common/common.interfaces';
 import { allErrors } from '../../common/common.messages';
 import { roles } from '../../entities/User';
+import { category } from '../../entities/Question';
 import {
   AddQuestionRequestBody,
   GetQuestionResponse,
   QuestionResponse,
   GetQuestionsRequestBody,
   DeleteQuestionsData,
+  GetCategoriesContoller,
 } from './question.interfaces';
-import { addQuestionService, deleteQuestionsService, getQuestionsService } from './question.services';
+import {
+  addQuestionService,
+  deleteQuestionsService,
+  getQuestionsService,
+} from './question.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
+  const getCategoriesContoller = async (): Promise<GetCategoriesContoller> => {
+    const categories = category;
+    return { ...commonResponse, categories };
+  };
   const addQuestionController = async (
     request: FastifyRequest
   ): Promise<QuestionResponse> => {
@@ -39,7 +49,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
         };
         const questions = await getQuestionsService(data);
         return { ...commonResponse, questions };
-      } 
+      }
       throw buildError(400, allErrors.offsetOrLimitNotFound);
     } catch (error) {
       throw error;
@@ -64,10 +74,20 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     },
     addQuestionController
   );
+  fastify.get(
+    '/get-category',
+    { onRequest: checkAuthHook(fastify.jwt),
+      preValidation: allowedFor([roles.admin, roles.moderator]) },
+    getCategoriesContoller
+  );
   fastify.get('/questions', getQuestionsController);
-  fastify.post('/delete', {
-    onRequest: checkAuthHook(fastify.jwt),
-    preValidation: allowedFor([roles.admin, roles.moderator]),
-  }, DeleteQuestionsData);
+  fastify.post(
+    '/delete',
+    {
+      onRequest: checkAuthHook(fastify.jwt),
+      preValidation: allowedFor([roles.admin, roles.moderator]),
+    },
+    DeleteQuestionsData
+  );
 };
 export default routes;
