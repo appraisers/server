@@ -6,14 +6,7 @@ import {
   BeforeInsert,
 } from 'typeorm';
 
-export enum Position {
-  JUNIOR_DEVELOPER = 'junior developer',
-  MIDDLE_DEVELOPER = 'middle developer',
-  SENIOR_DEVELOPER = 'senior developer',
-  MANAGER = 'manager',
-  TESTER = 'tester',
-  BOSS = 'boss',
-}
+import { Position } from './User';
 
 export enum Category {
   EFFECTIVENESS = 'effectiveness',
