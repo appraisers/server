@@ -4,9 +4,10 @@ export interface AddQuestionRequestBody {
   description: string;
   category: string;
   weight: number;
+  position: string;
 }
 
-export interface GetCategoriesContoller extends CommonResponse {
+export interface GetCategoriesController extends CommonResponse {
   categories: {
     effectiveness: string;
     interaction: string;
@@ -22,6 +23,7 @@ export interface DeleteQuestionsData {
 export interface GetQuestionsRequestBody {
   offset: number;
   limit: number;
+  position: string;
 }
 export interface FindArrayQuestionsByIdData {
   ids: ID[];

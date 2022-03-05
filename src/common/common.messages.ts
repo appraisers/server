@@ -20,6 +20,6 @@ export const allErrors = {
   usersNotFound: 'Users are not found',
   weightNotFound: 'Weight is not found',
   youMustFillTheEmailOrPhoneField: 'You must fill the email or phone field',
-  offsetOrLimitNotFound: 'Offset or limit not found',
+  offsetOrLimitNotFound: 'Offset, limit, or position are missing.',
   questionNotFoundOrDeleted: 'Question not found or already deleted'
 };

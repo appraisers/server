@@ -6,6 +6,8 @@ import {
   BeforeInsert,
 } from 'typeorm';
 
+import { Position } from './User';
+
 export enum Category {
   EFFECTIVENESS = 'effectiveness',
   INTERACTION = 'interaction',
@@ -67,6 +69,14 @@ export class Question {
     name: 'deleted_at',
   })
   deletedAt!: Date;
+
+  @Column({
+    nullable: true,
+    type: 'enum',
+    enum: Position,
+    name: 'position',
+  })
+  position!: string;
 
   @BeforeInsert()
   beforeInsert() {

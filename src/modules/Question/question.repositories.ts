@@ -9,19 +9,20 @@ import {
 @EntityRepository(Question)
 export class QuestionRepository extends Repository<Question> {
   async createQuestion(data: QuestionRepositoryData): Promise<Question> {
-    const { description, category, weight } = data;
+    const { description, category, weight, position } = data;
     const question = new Question();
     question.description = description;
     question.category = category;
     question.weight = weight;
+    question.position = position;
     await this.save(question);
     return question;
   }
   async getQuestion(data: GetQuestionsRequestBody): Promise<Question[]> {
-    const { offset, limit } = data;
+    const { offset, limit, position } = data;
     return this.createQueryBuilder('question')
       .select(['question'])
-      .where('question.deletedAt IS NULL')
+      .where('question.position = :position', {position})
       .orderBy('question.id', 'ASC')
       .offset(offset)
       .limit(limit)

@@ -12,7 +12,7 @@ import {
   QuestionResponse,
   GetQuestionsRequestBody,
   DeleteQuestionsData,
-  GetCategoriesContoller,
+  GetCategoriesController,
 } from './question.interfaces';
 import {
   addQuestionService,
@@ -21,7 +21,7 @@ import {
 } from './question.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
-  const getCategoriesContoller = async (): Promise<GetCategoriesContoller> => {
+  const getCategoriesController = async (): Promise<GetCategoriesController> => {
     const categories = category;
     return { ...commonResponse, categories };
   };
@@ -40,11 +40,12 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     request: FastifyRequest
   ): Promise<GetQuestionResponse | null> => {
     try {
-      const { offset, limit } = request.query as GetQuestionsRequestBody;
-      if (offset != null && limit != null) {
+      const { offset, limit, position } = request.query as GetQuestionsRequestBody;
+      if (offset != null && limit != null && position != null) {
         const data: GetQuestionsRequestBody = {
           offset,
           limit,
+          position,
         };
         const questions = await getQuestionsService(data);
         return { ...commonResponse, questions };
@@ -77,7 +78,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     '/get-category',
     { onRequest: checkAuthHook(fastify.jwt),
       preValidation: allowedFor([roles.admin, roles.moderator]) },
-    getCategoriesContoller
+    getCategoriesController
   );
   fastify.get('/questions', getQuestionsController);
   fastify.post(
