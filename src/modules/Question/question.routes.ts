@@ -30,11 +30,12 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     request: FastifyRequest
   ): Promise<GetQuestionResponse | null> => {
     try {
-      const { offset, limit } = request.query as GetQuestionsRequestBody;
-      if (offset != null && limit != null) {
+      const { offset, limit, position } = request.query as GetQuestionsRequestBody;
+      if (offset != null && limit != null && position != null) {
         const data: GetQuestionsRequestBody = {
           offset,
           limit,
+          position,
         };
         const questions = await getQuestionsService(data);
         return { ...commonResponse, questions };

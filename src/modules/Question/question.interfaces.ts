@@ -4,6 +4,7 @@ export interface AddQuestionRequestBody {
   description: string;
   category: string;
   weight: number;
+  position: string;
 }
 
 export interface DeleteQuestionsData {
@@ -12,6 +13,7 @@ export interface DeleteQuestionsData {
 export interface GetQuestionsRequestBody {
   offset: number;
   limit: number;
+  position: string;
 }
 export interface FindArrayQuestionsByIdData {
   ids: ID[];
