@@ -14,6 +14,14 @@ export enum Category {
   DEFAULT = 'default',
 }
 
+export const category = {
+  effectiveness: Category.EFFECTIVENESS,
+  interaction: Category.INTERACTION,
+  assessmentOfAbilities: Category.ASSESSMENT_OF_ABILITIES,
+  personalQualities: Category.PERSONAL_QUALITIES,
+  default: Category.DEFAULT,
+}
+
 @Entity({ name: 'questions' })
 export class Question {
   @PrimaryGeneratedColumn()
