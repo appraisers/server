@@ -18,6 +18,7 @@ import {
   addQuestionService,
   deleteQuestionsService,
   getQuestionsService,
+  getAllQuestionsService
 } from './question.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
@@ -40,8 +41,12 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     request: FastifyRequest
   ): Promise<GetQuestionResponse | null> => {
     try {
-      const { offset, limit, position } = request.query as GetQuestionsRequestBody;
-      if (offset != null && limit != null && position != null) {
+      const { offset, limit, position, allQuestions } = request.query as GetQuestionsRequestBody;
+      
+      if (allQuestions) {
+        const questions = await getAllQuestionsService();
+        return { ...commonResponse, questions };
+      } else if (offset != null && limit != null && position != null) {
         const data: GetQuestionsRequestBody = {
           offset,
           limit,

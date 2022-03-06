@@ -24,6 +24,7 @@ export interface GetQuestionsRequestBody {
   offset: number;
   limit: number;
   position: string;
+  allQuestions?: boolean;
 }
 export interface FindArrayQuestionsByIdData {
   ids: ID[];
@@ -34,4 +35,7 @@ export interface QuestionResponse extends CommonResponse {
 }
 export interface GetQuestionResponse extends CommonResponse {
   questions: Question[];
+}
+export interface CountAllQuestionsByPosition {
+  position: string;
 }

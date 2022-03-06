@@ -16,11 +16,16 @@ export const addQuestionService = async (
   const question = await questionRepo.createQuestion(data);
   return question;
 };
+export const getAllQuestionsService = async (): Promise<Question[]> => {
+  const questionRepo = getCustomRepository(QuestionRepository);
+  const question = await questionRepo.getAllQuestions();
+  return question;
+};
 export const getQuestionsService = async (
   data: GetQuestionsRequestBody
 ): Promise<Question[]> => {
   const questionRepo = getCustomRepository(QuestionRepository);
-  const question = await questionRepo.getQuestion(data);
+  const question = await questionRepo.getQuestions(data);
   return question;
 };
 export const deleteQuestionsService = async (

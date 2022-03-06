@@ -8,7 +8,7 @@ Insert hardcoded questions
 
 INSERT INTO public.questions(
 	description, category, weight, created_at, updated_at, deleted_at, position)
-	VALUES ('Насколько точно тестируемый соблюдает дедлайны?', 'effectiveness', 5, '2022-01-29', null, null, 'junior developer');
+	VALUES ('Насколько точно тестируемый соблюдает дедлайны?', 'effectiveness', 5, '2022-01-29', null, null, 'default');
 INSERT INTO public.questions(
 	description, category, weight, created_at, updated_at, deleted_at, position)
 	VALUES ('Насколько усердно тестируемый работает?', 'effectiveness', 6, '2022-01-29', null, null, 'junior developer');
@@ -17,13 +17,13 @@ INSERT INTO public.questions(
 	VALUES ('Насколько тестируемый умеется адаптироваться к проблемам?', 'effectiveness', 6, '2022-01-29', null, null, 'junior developer');
 INSERT INTO public.questions(
 	description, category, weight, created_at, updated_at, deleted_at, position)
-	VALUES ('Насколько часто тестируемый делает перерывы?', 'effectiveness', 3, '2022-01-29', null, null, 'junior developer');
+	VALUES ('Насколько часто тестируемый делает перерывы?', 'effectiveness', 3, '2022-01-29', null, null, 'default');
 INSERT INTO public.questions(
 	description, category, weight, created_at, updated_at, deleted_at, position)
 	VALUES ('Насколько часто у тестируемого были конфликты?', 'interaction', 6, '2022-01-29', null, null, 'middle developer');
 INSERT INTO public.questions(
 	description, category, weight, created_at, updated_at, deleted_at, position)
-	VALUES ('Насколько тестируемый отзывчив?', 'interaction', 4, '2022-01-29', null, null, 'middle developer');
+	VALUES ('Насколько тестируемый отзывчив?', 'interaction', 4, '2022-01-29', null, null, 'default');
 INSERT INTO public.questions(
 	description, category, weight, created_at, updated_at, deleted_at, position)
 	VALUES ('Насколько эффективно тестируемый работает в команде?', 'interaction', 10, '2022-01-29', null, null, 'middle developer');
@@ -38,19 +38,19 @@ INSERT INTO public.questions(
 	VALUES ('Как вы считаете, можно ли уже повысить тестируемого?', 'assessment of abilities', 10, '2022-01-29', null, null, 'senior developer');
 INSERT INTO public.questions(
 	description, category, weight, created_at, updated_at, deleted_at, position)
-	VALUES ('Как вы считаете, заслужил ли тестируемый бонус?', 'assessment of abilities', 8, '2022-01-29', null, null, 'senior developer');
+	VALUES ('Как вы считаете, заслужил ли тестируемый бонус?', 'assessment of abilities', 8, '2022-01-29', null, null, 'default');
 INSERT INTO public.questions(
 	description, category, weight, created_at, updated_at, deleted_at, position)
 	VALUES ('Как вы считаете, приносит ли тестируемый вклад в компанию?', 'assessment of abilities', 5, '2022-01-29', null, null, 'senior developer');
 INSERT INTO public.questions(
 	description, category, weight, created_at, updated_at, deleted_at, position)
-	VALUES ('Насколько легко тестируемый обучается новым технологиям?', 'personal qualities', 8, '2022-01-29', null, null, 'manager');
+	VALUES ('Насколько легко тестируемый обучается новым технологиям?', 'personal qualities', 8, '2022-01-29', null, null, 'default');
 INSERT INTO public.questions(
 	description, category, weight, created_at, updated_at, deleted_at, position)
 	VALUES ('Насколько тестируемый инициативный?', 'personal qualities', 6, '2022-01-29', null, null, 'manager');
 INSERT INTO public.questions(
 	description, category, weight, created_at, updated_at, deleted_at, position)
-	VALUES ('Насколько тестируемый подходит системно к работе?', 'personal qualities', 7, '2022-01-29', null, null, 'manager');
+	VALUES ('Насколько тестируемый подходит системно к работе?', 'personal qualities', 7, '2022-01-29', null, null, 'default');
 INSERT INTO public.questions(
 	description, category, weight, created_at, updated_at, deleted_at, position)
 	VALUES ('Насколько тестируемый самостоятелен в работе?', 'personal qualities', 9, '2022-01-29', null, null, 'manager');

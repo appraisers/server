@@ -35,6 +35,7 @@ export const loginSchema = {
               fullname: { type: 'string' },
               workplace: { type: 'string' },
               role: { type: 'string' },
+              position: { type: 'string' },
             },
           },
         },

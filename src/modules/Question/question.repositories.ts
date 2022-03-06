@@ -5,6 +5,7 @@ import {
   FindArrayQuestionsByIdData,
   GetQuestionsRequestBody,
   QuestionRepositoryData,
+  CountAllQuestionsByPosition,
 } from './question.interfaces';
 @EntityRepository(Question)
 export class QuestionRepository extends Repository<Question> {
@@ -18,24 +19,37 @@ export class QuestionRepository extends Repository<Question> {
     await this.save(question);
     return question;
   }
-  async getQuestion(data: GetQuestionsRequestBody): Promise<Question[]> {
+  async getAllQuestions(): Promise<Question[]> {
+    return this.createQueryBuilder('question')
+      .select(['question'])
+      .orderBy('question.id', 'ASC')
+      .getMany();
+  }
+  async getQuestions(data: GetQuestionsRequestBody): Promise<Question[]> {
     const { offset, limit, position } = data;
     return this.createQueryBuilder('question')
       .select(['question'])
-      .where('question.position = :position', {position})
+      .where('question.position = :position', { position })
       .orderBy('question.id', 'ASC')
       .offset(offset)
       .limit(limit)
       .getMany();
   }
-  async findArrayQuestionsById(data: FindArrayQuestionsByIdData): Promise<Question[]> {
+  async findArrayQuestionsById(
+    data: FindArrayQuestionsByIdData
+  ): Promise<Question[]> {
     const { ids } = data;
     return this.createQueryBuilder('question')
       .where('question.id IN (:...ids)', { ids })
       .getMany();
   }
-  async getCountAllQuestions(): Promise<number> {
-    return this.count();
+  async getCountAllQuestions({
+    position,
+  }: CountAllQuestionsByPosition): Promise<number> {
+    return this.createQueryBuilder('question')
+      .select(['question'])
+      .where('question.position = :position', { position })
+      .getCount();
   }
   async deleteQuestions(data: DeleteQuestionsData) {
     const { ids } = data;

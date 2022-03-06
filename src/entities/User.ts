@@ -28,6 +28,7 @@ export enum Position {
   MANAGER = 'manager',
   TESTER = 'tester',
   BOSS = 'boss',
+  DEFAULT = 'default'
 }
 export const position = {
   juniorDeveloper: Position.JUNIOR_DEVELOPER,
@@ -36,6 +37,7 @@ export const position = {
   manager: Position.MANAGER,
   tester: Position.TESTER,
   boss: Position.BOSS,
+  default: Position.DEFAULT,
 };
 
 @Entity({ name: 'users' })
@@ -72,7 +74,7 @@ export class User {
   workplace!: string;
 
   @Column({
-    nullable: true,
+    default: position.default,
     type: 'enum',
     enum: Position,
     name: 'position',

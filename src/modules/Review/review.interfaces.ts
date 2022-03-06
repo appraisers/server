@@ -37,6 +37,7 @@ export interface AddAnswerData {
   userId: ID;
   ids: ID[];
   answers: number[];
+  userPosition: string;
 }
 
 export interface AddAnswerControllerResponse extends CommonResponse {

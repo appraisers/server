@@ -65,7 +65,7 @@ export const addAnswerService = async (
   const userRepo = getCustomRepository(UserRepository);
   const questionRepo = getCustomRepository(QuestionRepository);
 
-  const { userId, ids, answers } = data;
+  const { userId, ids, answers, userPosition } = data;
   // Find appraising user
   const user = await userRepo.findOne({ where: { id: userId } });
   if (!user) throw buildError(400, allErrors.userNotFound);
@@ -139,7 +139,9 @@ export const addAnswerService = async (
   };
 
   let isLastAnswers;
-  let countQuestions = await questionRepo.getCountAllQuestions();
+  let countQuestions = await questionRepo.getCountAllQuestions({
+    position: userPosition,
+  });
 
   if (countQuestions === answeredQuestions) {
     isLastAnswers = true;
@@ -208,7 +210,7 @@ export const addFinishAnswerService = async (
       interactionRating +
       assessmentOfAbilitiesRating +
       personalQualitiesRating) /
-      NUMBER_OF_CATEGORIES;
+    NUMBER_OF_CATEGORIES;
   const dataForLastUpdate = {
     answeredQuestions: 0,
     activeSession: false,
