@@ -8,7 +8,7 @@ Insert hardcoded questions
 
 INSERT INTO public.questions(
 	description, category, weight, created_at, updated_at, deleted_at, position)
-	VALUES ('Наско точно тестируемый соблюдает дедлайны?', 'effectiveness', 5, '2022-01-29', null, null, 'junior developer');
+	VALUES ('Насколько точно тестируемый соблюдает дедлайны?', 'effectiveness', 5, '2022-01-29', null, null, 'junior developer');
 INSERT INTO public.questions(
 	description, category, weight, created_at, updated_at, deleted_at, position)
 	VALUES ('Насколько усердно тестируемый работает?', 'effectiveness', 6, '2022-01-29', null, null, 'junior developer');
