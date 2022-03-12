@@ -43,30 +43,16 @@ export interface AddAnswerData {
 export interface AddAnswerControllerResponse extends CommonResponse {
   isLastAnswer: boolean;
 }
-
 export interface UpdateTemporaryRatingData {
   reviewId: ID;
   answeredQuestions: number;
-  effectivenessRating: number;
-  interactionRating: number;
-  assessmentOfAbilitiesRating: number;
-  personalQualitiesRating: number;
-  effectivenessWeight: number;
-  interactionWeight: number;
-  assessmentOfAbilitiesWeight: number;
-  personalQualitiesWeight: number;
 }
 
 export interface LastUpdateTemporaryRatingData {
   reviewId: ID;
   answeredQuestions: number;
   activeSession: boolean;
-  rating: number;
   description: string;
-  effectivenessRating: number;
-  interactionRating: number;
-  assessmentOfAbilitiesRating: number;
-  personalQualitiesRating: number;
 }
 
 export interface FinishAnswerData {

@@ -4,7 +4,6 @@ import {
   PrimaryGeneratedColumn,
   BeforeUpdate,
   BeforeInsert,
-  OneToMany,
   ManyToOne,
   JoinColumn
 } from 'typeorm';
@@ -37,74 +36,11 @@ export class Review {
   description!: string | null;
 
   @Column({
-    nullable: true,
-    type: 'float',
-    name: 'rating',
-  })
-  rating!: number;
-
-  @Column({
     default: true,
     type: 'boolean',
     name: 'active_session'
   })
   activeSession!: boolean;
-
-  @Column({
-    default: 0,
-    type: 'float',
-    name: 'effectiveness_rating'
-  })
-  effectivenessRating!: number;
-
-  @Column({
-    default: 0,
-    type: 'float',
-    name: 'interaction_rating'
-  })
-  interactionRating!: number;
-
-  @Column({
-    default: 0,
-    type: 'float',
-    name: 'assessment_of_abilities_rating'
-  })
-  assessmentOfAbilitiesRating!: number;
-
-  @Column({
-    default: 0,
-    type: 'float',
-    name: 'personal_qualities_rating'
-  })
-  personalQualitiesRating!: number;
-
-  @Column({
-    default: 0,
-    type: 'float',
-    name: 'effectiveness_weight'
-  })
-  effectivenessWeight!: number;
-
-  @Column({
-    default: 0,
-    type: 'float',
-    name: 'interaction_weight'
-  })
-  interactionWeight!: number;
-
-  @Column({
-    default: 0,
-    type: 'float',
-    name: 'assessment_of_abilities_weight'
-  })
-  assessmentOfAbilitiesWeight!: number;
-
-  @Column({
-    default: 0,
-    type: 'float',
-    name: 'personal_qualities_weight'
-  })
-  personalQualitiesWeight!: number;
 
   @Column({
     nullable: true,

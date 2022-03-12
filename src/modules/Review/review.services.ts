@@ -3,10 +3,11 @@ import { Category } from '../../entities/Question';
 import { Review } from '../../entities/Review';
 import { buildError } from '../../utils/error.helper';
 import { UserRepository } from '../Auth/auth.repositories';
+import { RatingRepository } from '../Rating/rating.repositories';
+import { QuestionRepository } from '../Question/question.repositories';
 import { allErrors } from '../../common/common.messages';
 import { DecodedJWT, JWT } from '../../common/common.interfaces';
 import { sendEmail } from '../../utils/mail.helper';
-import { QuestionRepository } from '../Question/question.repositories';
 import config from '../../config';
 import { ReviewRepository } from './review.repositories';
 import {
@@ -31,7 +32,7 @@ export const checkReviewsService = async (
 ): Promise<Review[]> => {
   const reviewRepo = getCustomRepository(ReviewRepository);
   const reviews = await reviewRepo.findReviews(data);
-  if (!reviews) throw buildError(400, allErrors.reviewsIsNotFound);
+  if (!reviews) throw buildError(400, allErrors.reviewNotFound);
   return reviews;
 };
 
@@ -64,6 +65,7 @@ export const addAnswerService = async (
   const reviewRepo = getCustomRepository(ReviewRepository);
   const userRepo = getCustomRepository(UserRepository);
   const questionRepo = getCustomRepository(QuestionRepository);
+  const ratingRepo = getCustomRepository(RatingRepository);
 
   const { userId, ids, answers, userPosition } = data;
   // Find appraising user
@@ -75,17 +77,25 @@ export const addAnswerService = async (
   if (!review) {
     review = await createReviewService(data, token, jwt);
   }
-  if (!review) throw buildError(400, allErrors.reviewsIsNotFound);
+  if (!review) throw buildError(400, allErrors.reviewNotFound);
+
+  // Find or create rating
+  let ratingRow = await ratingRepo.findRatingByReviewId(review.id);
+  if (!ratingRow) {
+    ratingRow = await ratingRepo.createRating({ review });
+  }
+  if (!ratingRow) throw buildError(400, allErrors.ratingNotFound);
 
   let answeredQuestions = review.answeredQuestions;
-  let effectivenessRating = review.effectivenessRating;
-  let interactionRating = review.interactionRating;
-  let assessmentOfAbilitiesRating = review.assessmentOfAbilitiesRating;
-  let personalQualitiesRating = review.personalQualitiesRating;
-  let effectivenessWeight = review.effectivenessWeight;
-  let interactionWeight = review.interactionWeight;
-  let assessmentOfAbilitiesWeight = review.assessmentOfAbilitiesWeight;
-  let personalQualitiesWeight = review.personalQualitiesWeight;
+
+  let effectivenessRating = ratingRow.effectivenessRating;
+  let interactionRating = ratingRow.interactionRating;
+  let assessmentOfAbilitiesRating = ratingRow.assessmentOfAbilitiesRating;
+  let personalQualitiesRating = ratingRow.personalQualitiesRating;
+  let effectivenessWeight = ratingRow.effectivenessWeight;
+  let interactionWeight = ratingRow.interactionWeight;
+  let assessmentOfAbilitiesWeight = ratingRow.assessmentOfAbilitiesWeight;
+  let personalQualitiesWeight = ratingRow.personalQualitiesWeight;
 
   // Get questions from params
   let questions = await questionRepo.findArrayQuestionsById({ ids });
@@ -127,6 +137,10 @@ export const addAnswerService = async (
 
   const dataForUpdate = {
     answeredQuestions,
+    reviewId: review.id,
+  };
+
+  const dataForUpdateRating = {
     effectivenessRating,
     interactionRating,
     assessmentOfAbilitiesRating,
@@ -135,7 +149,7 @@ export const addAnswerService = async (
     interactionWeight,
     assessmentOfAbilitiesWeight,
     personalQualitiesWeight,
-    reviewId: review.id,
+    ratingId: ratingRow.id,
   };
 
   let isLastAnswers;
@@ -150,6 +164,11 @@ export const addAnswerService = async (
   const updateReview = await reviewRepo.updateTemporaryRating(dataForUpdate);
   if (!updateReview?.affected) {
     throw buildError(400, allErrors.reviewNotFound);
+  }
+
+  const updateRating = await ratingRepo.updateRating(dataForUpdateRating);
+  if (!updateRating?.affected) {
+    throw buildError(400, allErrors.ratingNotFound);
   }
 
   return isLastAnswers;
@@ -185,21 +204,25 @@ export const addFinishAnswerService = async (
   const { description, userId } = data;
   const userRepo = getCustomRepository(UserRepository);
   const reviewRepo = getCustomRepository(ReviewRepository);
+  const ratingRepo = getCustomRepository(RatingRepository);
 
   const user = await userRepo.findOneUserByKey('id', userId);
   if (!user) throw buildError(400, allErrors.userNotFound);
 
   const review = await reviewRepo.findReviewByUserId(userId);
-  if (!review) throw buildError(400, allErrors.reviewsIsNotFound);
+  if (!review) throw buildError(400, allErrors.reviewNotFound);
 
-  let effectivenessRating = review.effectivenessRating;
-  let interactionRating = review.interactionRating;
-  let assessmentOfAbilitiesRating = review.assessmentOfAbilitiesRating;
-  let personalQualitiesRating = review.personalQualitiesRating;
-  const effectivenessWeight = review.effectivenessWeight;
-  const interactionWeight = review.interactionWeight;
-  const assessmentOfAbilitiesWeight = review.assessmentOfAbilitiesWeight;
-  const personalQualitiesWeight = review.personalQualitiesWeight;
+  const rating = await ratingRepo.findRatingByReviewId(review.id);
+  if (!rating) throw buildError(400, allErrors.ratingNotFound);
+
+  let effectivenessRating = rating.effectivenessRating;
+  let interactionRating = rating.interactionRating;
+  let assessmentOfAbilitiesRating = rating.assessmentOfAbilitiesRating;
+  let personalQualitiesRating = rating.personalQualitiesRating;
+  const effectivenessWeight = rating.effectivenessWeight;
+  const interactionWeight = rating.interactionWeight;
+  const assessmentOfAbilitiesWeight = rating.assessmentOfAbilitiesWeight;
+  const personalQualitiesWeight = rating.personalQualitiesWeight;
 
   effectivenessRating /= effectivenessWeight;
   interactionRating /= interactionWeight;
@@ -211,16 +234,23 @@ export const addFinishAnswerService = async (
       assessmentOfAbilitiesRating +
       personalQualitiesRating) /
     NUMBER_OF_CATEGORIES;
+
+  const dataForLastUpdateRating = {
+    effectivenessRating,
+    interactionRating,
+    assessmentOfAbilitiesRating,
+    personalQualitiesRating,
+    rating: overallRating,
+    ratingId: rating.id,
+  };
+  ratingRepo.lastUpdateRating(dataForLastUpdateRating);
+
   const dataForLastUpdate = {
     answeredQuestions: 0,
     activeSession: false,
     rating: overallRating,
     reviewId: review.id,
     description,
-    effectivenessRating,
-    interactionRating,
-    assessmentOfAbilitiesRating,
-    personalQualitiesRating,
   };
   reviewRepo.lastUpdateTemporaryRating(dataForLastUpdate);
 

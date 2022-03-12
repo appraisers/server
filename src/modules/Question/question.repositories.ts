@@ -22,6 +22,7 @@ export class QuestionRepository extends Repository<Question> {
   async getAllQuestions(): Promise<Question[]> {
     return this.createQueryBuilder('question')
       .select(['question'])
+      .where('question.deletedAt IS NULL')
       .orderBy('question.id', 'ASC')
       .getMany();
   }
@@ -30,6 +31,7 @@ export class QuestionRepository extends Repository<Question> {
     return this.createQueryBuilder('question')
       .select(['question'])
       .where('question.position = :position', { position })
+      .andWhere('question.deletedAt IS NULL')
       .orderBy('question.id', 'ASC')
       .offset(offset)
       .limit(limit)

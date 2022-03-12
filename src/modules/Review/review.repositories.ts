@@ -19,7 +19,8 @@ export class ReviewRepository extends Repository<Review> {
       .leftJoin('review.author', 'author')
       .select(['review', 'user', 'author'])
       .where('review.user_id = :userId', { userId })
-      .orderBy(`review.createdAt`, 'ASC')
+      .andWhere('active_session = false')
+      .orderBy(`review.updatedAt`, 'ASC')
       .offset(offset ? Number(offset) : REVIEWS_OFFSET)
       .limit(limit ? Number(limit) : REVIEWS_LIMIT)
       .getMany();
@@ -46,30 +47,11 @@ export class ReviewRepository extends Repository<Review> {
   }
 
   async updateTemporaryRating(data: UpdateTemporaryRatingData) {
-    const {
-      effectivenessRating,
-      interactionRating,
-      assessmentOfAbilitiesRating,
-      personalQualitiesRating,
-      answeredQuestions,
-      reviewId,
-      effectivenessWeight,
-      interactionWeight,
-      assessmentOfAbilitiesWeight,
-      personalQualitiesWeight,
-    } = data;
+    const { answeredQuestions, reviewId } = data;
     return this.createQueryBuilder('review')
       .update(Review)
       .set({
         answeredQuestions: answeredQuestions,
-        effectivenessRating: effectivenessRating,
-        interactionRating: interactionRating,
-        assessmentOfAbilitiesRating: assessmentOfAbilitiesRating,
-        personalQualitiesRating: personalQualitiesRating,
-        effectivenessWeight: effectivenessWeight,
-        interactionWeight: interactionWeight,
-        assessmentOfAbilitiesWeight: assessmentOfAbilitiesWeight,
-        personalQualitiesWeight: personalQualitiesWeight,
         updatedAt: new Date(),
       })
       .where('id = :reviewId', {
@@ -83,24 +65,14 @@ export class ReviewRepository extends Repository<Review> {
       answeredQuestions,
       reviewId,
       activeSession,
-      rating,
       description,
-      effectivenessRating,
-      interactionRating,
-      assessmentOfAbilitiesRating,
-      personalQualitiesRating,
     } = data;
     return this.createQueryBuilder('review')
       .update(Review)
       .set({
         answeredQuestions: answeredQuestions,
         activeSession: activeSession,
-        rating: rating,
         description: description,
-        effectivenessRating: effectivenessRating,
-        interactionRating: interactionRating,
-        assessmentOfAbilitiesRating: assessmentOfAbilitiesRating,
-        personalQualitiesRating: personalQualitiesRating,
         updatedAt: new Date(),
         createdAt: new Date(),
       })
