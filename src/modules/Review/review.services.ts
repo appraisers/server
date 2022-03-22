@@ -40,7 +40,6 @@ export const getTopService = async (): Promise<Review[]> => {
   const reviewRepo = getCustomRepository(ReviewRepository);
   const reviews = await reviewRepo.getTopReview();
   if (!reviews) throw buildError(400, allErrors.reviewNotFound);
-  console.log(reviews);
   return reviews;
 };
 
