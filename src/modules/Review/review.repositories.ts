@@ -61,11 +61,11 @@ export class ReviewRepository extends Repository<Review> {
   }
 
   async lastUpdateTemporaryRating(data: LastUpdateTemporaryRatingData) {
-    const {
+    const { 
       answeredQuestions,
       reviewId,
       activeSession,
-      description,
+      description, 
     } = data;
     return this.createQueryBuilder('review')
       .update(Review)
@@ -92,5 +92,17 @@ export class ReviewRepository extends Repository<Review> {
         userId,
       })
       .execute();
+  }
+
+  async getTopReview() {
+    let fecha = new Date();
+    const previousmonth = fecha.getMonth() - 1;
+    fecha.setMonth(previousmonth);
+    console.log(fecha);
+    return this.createQueryBuilder('review')
+      .select('review')
+      .where('review.createdAt >= :fecha', { fecha })
+      .orderBy('review.createdAt', 'DESC')
+      .getMany();
   }
 }

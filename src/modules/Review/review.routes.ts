@@ -18,6 +18,7 @@ import {
   checkReviewsService,
   inviteAppriceService,
   addFinishAnswerService,
+  getTopService,
 } from './review.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
@@ -75,6 +76,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       throw error;
     }
   };
+
   const addFinishAnswerController = async (
     request: FastifyRequest
   ): Promise<CommonResponse> => {
@@ -86,18 +88,42 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       const { body } = request;
       await addFinishAnswerService(
         body as FinishAnswerData,
-      );
+        );
       return { ...commonResponse };
     } catch (error) {
       throw error;
     }
   };
+
+  const getTopController = async (
+    request: FastifyRequest
+  ): Promise<CommonResponse> => {
+    try {
+      const {
+        headers: { authorization },
+      } = request;
+      if (!authorization) throw buildError(400, allErrors.tokenNotFound);
+      const data = await getTopService();
+      return {
+        ...commonResponse,
+        ...data,
+      };
+    } catch (error) {
+      throw error;
+    }
+  };
+
   fastify.get(
     '/check/:userId',
     {
       onRequest: checkAuthHook(fastify.jwt),
     },
     checkReviewController
+  );
+  fastify.get(
+    '/top',
+    { onRequest: checkAuthHook(fastify.jwt) },
+    getTopController
   );
   fastify.post(
     '/add_answer',
