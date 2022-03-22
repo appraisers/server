@@ -61,7 +61,12 @@ export class ReviewRepository extends Repository<Review> {
   }
 
   async lastUpdateTemporaryRating(data: LastUpdateTemporaryRatingData) {
-    const { answeredQuestions, reviewId, activeSession, description } = data;
+    const { 
+      answeredQuestions,
+      reviewId,
+      activeSession,
+      description, 
+    } = data;
     return this.createQueryBuilder('review')
       .update(Review)
       .set({
