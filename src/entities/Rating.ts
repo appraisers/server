@@ -12,8 +12,8 @@ import { Review } from './Review';
 export class Rating {
   @PrimaryGeneratedColumn()
   id!: number;
-  
-  @OneToOne(() => Review, (review) => review.id, {
+
+  @OneToOne(() => Review, (review) => review.rating, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })

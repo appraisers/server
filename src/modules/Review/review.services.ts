@@ -36,6 +36,13 @@ export const checkReviewsService = async (
   return reviews;
 };
 
+export const getTopService = async (): Promise<Review[]> => {
+  const reviewRepo = getCustomRepository(ReviewRepository);
+  const reviews = await reviewRepo.getTopReview();
+  if (!reviews) throw buildError(400, allErrors.reviewNotFound);
+  return reviews;
+};
+
 export const inviteAppriceService = async (
   data: InviteAppriceData
 ): Promise<InviteAppriceResponse[]> => {

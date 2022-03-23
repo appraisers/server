@@ -12,12 +12,14 @@ import {
   CheckReviewResponse,
   CheckReviewsData,
   FinishAnswerData,
+  TopRatingData,
 } from './review.interfaces';
 import {
   addAnswerService,
   checkReviewsService,
   inviteAppriceService,
   addFinishAnswerService,
+  getTopService,
 } from './review.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
@@ -75,6 +77,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       throw error;
     }
   };
+
   const addFinishAnswerController = async (
     request: FastifyRequest
   ): Promise<CommonResponse> => {
@@ -92,12 +95,32 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       throw error;
     }
   };
+
+  const getTopController = async (
+    request: FastifyRequest
+  ): Promise<TopRatingData> => {
+    try {
+      const data = await getTopService();
+      return {
+        ...commonResponse,
+        data,
+      };
+    } catch (error) {
+      throw error;
+    }
+  };
+
   fastify.get(
     '/check/:userId',
     {
       onRequest: checkAuthHook(fastify.jwt),
     },
     checkReviewController
+  );
+  fastify.get(
+    '/top',
+    { onRequest: checkAuthHook(fastify.jwt) },
+    getTopController
   );
   fastify.post(
     '/add_answer',
