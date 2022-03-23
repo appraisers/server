@@ -12,6 +12,7 @@ import {
   CheckReviewResponse,
   CheckReviewsData,
   FinishAnswerData,
+  TopRatingData,
 } from './review.interfaces';
 import {
   addAnswerService,
@@ -97,16 +98,12 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
 
   const getTopController = async (
     request: FastifyRequest
-  ): Promise<CommonResponse> => {
+  ): Promise<TopRatingData>=> {
     try {
-      const {
-        headers: { authorization },
-      } = request;
-      if (!authorization) throw buildError(400, allErrors.tokenNotFound);
       const data = await getTopService();
       return {
         ...commonResponse,
-        ...data,
+        data,
       };
     } catch (error) {
       throw error;

@@ -95,12 +95,12 @@ export class ReviewRepository extends Repository<Review> {
   }
 
   async getTopReview() {
-    let fecha = new Date();
-    const previousmonth = fecha.getMonth() - 1;
-    fecha.setMonth(previousmonth);
+
+    const tmpDate = new Date();
+    const firstDayMonth = new Date(tmpDate.getFullYear(), tmpDate.getMonth())
     return this.createQueryBuilder('review')
       .select('review')
-      .where('review.createdAt >= :fecha', { fecha })
+      .where('review.createdAt >= :firstDayMonth', { firstDayMonth })
       .orderBy('review.createdAt', 'DESC')
       .getMany();
   }
