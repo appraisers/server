@@ -89,7 +89,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       const { body } = request;
       await addFinishAnswerService(
         body as FinishAnswerData,
-        );
+      );
       return { ...commonResponse };
     } catch (error) {
       throw error;
@@ -98,7 +98,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
 
   const getTopController = async (
     request: FastifyRequest
-  ): Promise<TopRatingData>=> {
+  ): Promise<TopRatingData> => {
     try {
       const data = await getTopService();
       return {
