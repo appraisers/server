@@ -15,9 +15,11 @@ import {
   InviteUserRequestBody,
   ToggleUserRepositoryData,
   UpdateUserRequestBody,
+  InfoUserResponse,
 } from './user.interfaces';
 
 const { FRONTEND_URL } = config;
+
 
 export const checkAdminOrModeratorService = async (
   id: number,
@@ -78,13 +80,32 @@ export const checkUserService = async (
 };
 
 export const getUserInfoService = async (
-  data: GetUserInfoBody
-): Promise<User> => {
+  data: GetUserInfoBody,
+): Promise<InfoUserResponse | User> => {
   const { userId } = data;
   const userRepo = getCustomRepository(UserRepository);
-
-  const user = await userRepo.findOneUserByKey('id', userId);
+  let user = await userRepo.getUserById({ userId });
   if (!user) throw buildError(400, allErrors.userNotFound);
+  const ratingByCategories = user?.ratingByCategories;
+  if (ratingByCategories != null && Array.isArray(ratingByCategories)) {
+    let effectivenessRating = 0;
+    let interactionRating = 0;
+    let assessmentOfAbilitiesRating = 0;
+    let personalQualitiesRating = 0;
+    const countRatingByCategories = ratingByCategories.length;
+    ratingByCategories.forEach((rating: InfoUserResponse) => {
+      effectivenessRating += rating.effectivenessRating;
+      interactionRating += rating.interactionRating;
+      assessmentOfAbilitiesRating += rating.assessmentOfAbilitiesRating;
+      personalQualitiesRating += rating.personalQualitiesRating;
+    });
+    effectivenessRating /= countRatingByCategories;
+    interactionRating /= countRatingByCategories;
+    assessmentOfAbilitiesRating /= countRatingByCategories;
+    personalQualitiesRating /= countRatingByCategories;
+    const newUser = { ...user, effectivenessRating, interactionRating, assessmentOfAbilitiesRating, personalQualitiesRating, ratingByCategories: null };
+    return newUser;
+  }
   return user;
 };
 

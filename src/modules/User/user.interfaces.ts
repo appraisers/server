@@ -4,6 +4,13 @@ import { Position, Roles, User } from '../../entities/User';
 export interface CheckAuthResponse extends CommonResponse {
   user: User;
 }
+export interface InfoUserResponse {
+  effectivenessRating: number;
+  interactionRating: number;
+  assessmentOfAbilitiesRating: number;
+  personalQualitiesRating: number;
+  ratingByCategories: null;
+}
 
 export interface AllInviteUsersServiceResponse {
   fullname: string;
