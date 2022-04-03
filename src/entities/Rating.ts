@@ -12,7 +12,6 @@ import { User } from './User'
 
 @Entity({ name: 'ratings' })
 export class Rating {
-  [x: string]: any;
   @PrimaryGeneratedColumn()
   id!: number;
 

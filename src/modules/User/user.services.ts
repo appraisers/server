@@ -15,9 +15,11 @@ import {
   InviteUserRequestBody,
   ToggleUserRepositoryData,
   UpdateUserRequestBody,
+  Categories,
 } from './user.interfaces';
 
 const { FRONTEND_URL } = config;
+
 
 export const checkAdminOrModeratorService = async (
   id: number,
@@ -78,8 +80,8 @@ export const checkUserService = async (
 };
 
 export const getUserInfoService = async (
-  data: GetUserInfoBody
-): Promise<{}> => {
+  data: GetUserInfoBody,
+): Promise<Object> => {
   const { userId } = data;
   const userRepo = getCustomRepository(UserRepository);
   let user = await userRepo.getUserById({ userId });
@@ -89,17 +91,18 @@ export const getUserInfoService = async (
   let interactionRating = 0;
   let assessmentOfAbilitiesRating = 0;
   let personalQualitiesRating = 0;
-  ratingByCategories.forEach((rating: any) => {
+  const countRatingByCategories = ratingByCategories.length;
+  ratingByCategories.forEach((rating: ratingByCategories) => {
     effectivenessRating += rating.effectivenessRating;
     interactionRating += rating.interactionRating;
     assessmentOfAbilitiesRating += rating.assessmentOfAbilitiesRating;
     personalQualitiesRating += rating.personalQualitiesRating;
   });
-  effectivenessRating /= ratingByCategories.length;
-  interactionRating /= ratingByCategories.length;
-  assessmentOfAbilitiesRating /= ratingByCategories.length;
-  personalQualitiesRating /= ratingByCategories.length;
-  const newUser = { ...user, effectivenessRating, interactionRating, assessmentOfAbilitiesRating, personalQualitiesRating, ratingByCategories: undefined };
+  effectivenessRating /= countRatingByCategories;
+  interactionRating /= countRatingByCategories;
+  assessmentOfAbilitiesRating /= countRatingByCategories;
+  personalQualitiesRating /= countRatingByCategories;
+  const newUser = { ...user, effectivenessRating, interactionRating, assessmentOfAbilitiesRating, personalQualitiesRating, ratingByCategories: null };
   return newUser;
 };
 

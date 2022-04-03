@@ -17,6 +17,8 @@ import {
   InviteUserRequestBody,
   UpdateUserRequestBody,
   UpdateUserResponse,
+  Categories,
+  InfoUserResponse
 } from './user.interfaces';
 import {
   allInviteUsersService,
@@ -52,7 +54,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
   };
   const getUserInfoController = async (
     request: FastifyRequest
-  ): Promise<CheckAuthResponse> => {
+  ): Promise<InfoUserResponse> => {
     try {
       const { body } = request;
       const user = await getUserInfoService(body as GetUserInfoBody);
