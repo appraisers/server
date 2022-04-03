@@ -1,11 +1,16 @@
+import { Rating } from 'src/entities/Rating';
 import { CommonResponse, ID } from '../../common/common.interfaces';
 import { Position, Roles, User } from '../../entities/User';
 
 export interface CheckAuthResponse extends CommonResponse {
   user: User;
 }
-export interface InfoUserResponse extends CommonResponse {
-  user: Object;
+export interface InfoUserResponse {
+  effectivenessRating: number;
+  interactionRating: number;
+  assessmentOfAbilitiesRating: number;
+  personalQualitiesRating: number;
+  ratingByCategories: null;
 }
 
 export interface AllInviteUsersServiceResponse {
@@ -45,7 +50,6 @@ export interface UpdateUserRequestBody {
   position: Position;
   rating: number;
   role: Roles;
-
 }
 export type UpdateRepositoryData = UpdateUserRequestBody;
 export interface UpdateUserResponse extends CommonResponse {
