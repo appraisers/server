@@ -2,7 +2,7 @@ import { CommonResponse, ID } from '../../common/common.interfaces';
 import { Position, Roles, User } from '../../entities/User';
 
 export interface CheckAuthResponse extends CommonResponse {
-  user: User;
+  user: User | {};
 }
 
 export interface AllInviteUsersServiceResponse {

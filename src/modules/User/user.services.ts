@@ -79,13 +79,28 @@ export const checkUserService = async (
 
 export const getUserInfoService = async (
   data: GetUserInfoBody
-): Promise<User> => {
+): Promise<{}> => {
   const { userId } = data;
   const userRepo = getCustomRepository(UserRepository);
-
-  const user = await userRepo.findOneUserByKey('id', userId);
+  let user = await userRepo.getUserById({ userId });
   if (!user) throw buildError(400, allErrors.userNotFound);
-  return user;
+  const ratingByCategories = user?.ratingByCategories;
+  let effectivenessRating = 0;
+  let interactionRating = 0;
+  let assessmentOfAbilitiesRating = 0;
+  let personalQualitiesRating = 0;
+  ratingByCategories.forEach((rating: any) => {
+    effectivenessRating += rating.effectivenessRating;
+    interactionRating += rating.interactionRating;
+    assessmentOfAbilitiesRating += rating.assessmentOfAbilitiesRating;
+    personalQualitiesRating += rating.personalQualitiesRating;
+  });
+  effectivenessRating /= ratingByCategories.length;
+  interactionRating /= ratingByCategories.length;
+  assessmentOfAbilitiesRating /= ratingByCategories.length;
+  personalQualitiesRating /= ratingByCategories.length;
+  const newUser = { ...user, effectivenessRating, interactionRating, assessmentOfAbilitiesRating, personalQualitiesRating, ratingByCategories: undefined };
+  return newUser;
 };
 
 export const updateUserService = async (

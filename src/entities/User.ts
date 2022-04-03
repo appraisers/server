@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Review } from './Review';
 import { Token } from './Token';
+import { Rating } from './Rating'
 
 export enum Roles {
   ADMIN = 'admin',
@@ -153,6 +154,9 @@ export class User {
 
   @OneToMany(() => Review, (review) => review.user)
   user!: Review[];
+
+  @OneToMany(() => Rating, (rating) => rating.user)
+  ratingByCategories!: Rating;
 
   @OneToMany(() => Review, (review) => review.author)
   author!: Review[];
