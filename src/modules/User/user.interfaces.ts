@@ -1,4 +1,3 @@
-import { Rating } from 'src/entities/Rating';
 import { CommonResponse, ID } from '../../common/common.interfaces';
 import { Position, Roles, User } from '../../entities/User';
 
