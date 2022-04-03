@@ -87,23 +87,26 @@ export const getUserInfoService = async (
   let user = await userRepo.getUserById({ userId });
   if (!user) throw buildError(400, allErrors.userNotFound);
   const ratingByCategories = user?.ratingByCategories;
-  let effectivenessRating = 0;
-  let interactionRating = 0;
-  let assessmentOfAbilitiesRating = 0;
-  let personalQualitiesRating = 0;
-  const countRatingByCategories = ratingByCategories.length;
-  ratingByCategories.forEach((rating: ratingByCategories) => {
-    effectivenessRating += rating.effectivenessRating;
-    interactionRating += rating.interactionRating;
-    assessmentOfAbilitiesRating += rating.assessmentOfAbilitiesRating;
-    personalQualitiesRating += rating.personalQualitiesRating;
-  });
-  effectivenessRating /= countRatingByCategories;
-  interactionRating /= countRatingByCategories;
-  assessmentOfAbilitiesRating /= countRatingByCategories;
-  personalQualitiesRating /= countRatingByCategories;
-  const newUser = { ...user, effectivenessRating, interactionRating, assessmentOfAbilitiesRating, personalQualitiesRating, ratingByCategories: null };
-  return newUser;
+  if (ratingByCategories != null) {
+    let effectivenessRating = 0;
+    let interactionRating = 0;
+    let assessmentOfAbilitiesRating = 0;
+    let personalQualitiesRating = 0;
+    const countRatingByCategories = ratingByCategories.length;
+    ratingByCategories.forEach((rating: ratingByCategories) => {
+      effectivenessRating += rating.effectivenessRating;
+      interactionRating += rating.interactionRating;
+      assessmentOfAbilitiesRating += rating.assessmentOfAbilitiesRating;
+      personalQualitiesRating += rating.personalQualitiesRating;
+    });
+    effectivenessRating /= countRatingByCategories;
+    interactionRating /= countRatingByCategories;
+    assessmentOfAbilitiesRating /= countRatingByCategories;
+    personalQualitiesRating /= countRatingByCategories;
+    const newUser = { ...user, effectivenessRating, interactionRating, assessmentOfAbilitiesRating, personalQualitiesRating, ratingByCategories: null };
+    return newUser;
+  }
+  else return user;
 };
 
 export const updateUserService = async (
