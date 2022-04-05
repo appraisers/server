@@ -4,7 +4,7 @@ import { Position, Roles, User } from '../../entities/User';
 export interface CheckAuthResponse extends CommonResponse {
   user: User;
 }
-export interface InfoUserResponse {
+export interface UserWithCategoriesService {
   effectivenessRating: number;
   interactionRating: number;
   assessmentOfAbilitiesRating: number;
@@ -12,6 +12,9 @@ export interface InfoUserResponse {
   ratingByCategories: null;
 }
 
+export interface UserWithCategories extends CommonResponse {
+  user: User | UserWithCategoriesService;
+}
 export interface AllInviteUsersServiceResponse {
   fullname: string;
   email: string;

@@ -15,7 +15,7 @@ import {
   InviteUserRequestBody,
   ToggleUserRepositoryData,
   UpdateUserRequestBody,
-  InfoUserResponse,
+  UserWithCategoriesService,
 } from './user.interfaces';
 
 const { FRONTEND_URL } = config;
@@ -81,7 +81,7 @@ export const checkUserService = async (
 
 export const getUserInfoService = async (
   data: GetUserInfoBody,
-): Promise<InfoUserResponse | User> => {
+): Promise<UserWithCategoriesService | User> => {
   const { userId } = data;
   const userRepo = getCustomRepository(UserRepository);
   let user = await userRepo.getUserById({ userId });
@@ -93,7 +93,7 @@ export const getUserInfoService = async (
     let assessmentOfAbilitiesRating = 0;
     let personalQualitiesRating = 0;
     const countRatingByCategories = ratingByCategories.length;
-    ratingByCategories.forEach((rating: InfoUserResponse) => {
+    ratingByCategories.forEach((rating: UserWithCategoriesService) => {
       effectivenessRating += rating.effectivenessRating;
       interactionRating += rating.interactionRating;
       assessmentOfAbilitiesRating += rating.assessmentOfAbilitiesRating;
