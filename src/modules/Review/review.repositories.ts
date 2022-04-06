@@ -61,11 +61,11 @@ export class ReviewRepository extends Repository<Review> {
   }
 
   async lastUpdateTemporaryRating(data: LastUpdateTemporaryRatingData) {
-    const { 
+    const {
       answeredQuestions,
       reviewId,
       activeSession,
-      description, 
+      description,
     } = data;
     return this.createQueryBuilder('review')
       .update(Review)
@@ -96,11 +96,13 @@ export class ReviewRepository extends Repository<Review> {
 
   async getTopReview() {
     const tmpDate = new Date();
-    const firstDayMonth = new Date(tmpDate.getFullYear(), tmpDate.getMonth())
+    const firstDayMonth = new Date(tmpDate.getFullYear(), tmpDate.getMonth() - 1, 1);
+    const lastDayMonth = new Date(tmpDate.getFullYear(), tmpDate.getMonth(), 0);
     return this.createQueryBuilder('review')
       .select('review')
       .leftJoinAndSelect('review.rating', 'rating')
       .where('review.createdAt >= :firstDayMonth', { firstDayMonth })
+      .andWhere('review.createdAt <= :lastDayMonth', { lastDayMonth })
       .andWhere('review.active_session = false')
       .orderBy('review.createdAt', 'DESC')
       .getMany();
