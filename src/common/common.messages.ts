@@ -21,5 +21,6 @@ export const allErrors = {
   weightNotFound: 'Weight is not found',
   youMustFillTheEmailOrPhoneField: 'You must fill the email or phone field',
   offsetOrLimitNotFound: 'Offset, limit, or position are missing.',
-  questionNotFoundOrDeleted: 'Question not found or already deleted'
+  questionNotFoundOrDeleted: 'Question not found or already deleted',
+  requestedReviewError: 'The last review was less than six months ago'
 };

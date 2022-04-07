@@ -126,12 +126,10 @@ export const toggleUserService = async (
 ): Promise<User> => {
   const { userId } = data;
   const userRepo = getCustomRepository(UserRepository);
-
   const deleteResult = await userRepo.toggleUser({ ...data });
   if (!deleteResult?.affected) throw buildError(400, allErrors.userNotFound);
   const user = await userRepo.findOneUserByKey('id', userId);
   if (!user) throw buildError(400, allErrors.userNotFound);
-
   return user;
 };
 
@@ -182,18 +180,25 @@ export const selfRequestService = async (
   const userRepo = getCustomRepository(UserRepository);
   const user = await userRepo.getUserById({ userId });
   if (!user) throw buildError(400, allErrors.userNotFound);
-  const selfRequest = await userRepo.selfRequest({ ...data });
-  if (!selfRequest?.affected) throw buildError(400, allErrors.userNotFound);
-  const moderators = await userRepo.getModerators();
-  moderators?.forEach((moderator) => {
-    sendEmail({
-      type: 'pending-review',
-      emailTo: moderator.email,
-      subject: 'Pending review in appraisers',
-      replacements: {
-        link: `${FRONTEND_URL}/`
-      }
-    });
-  })
+  const dateNow = new Date();
+  const sixMonthAgo = new Date(dateNow.getFullYear(), dateNow.getMonth() - 5);
+  if (user.updatedReviewAt <= sixMonthAgo && !user.isRequested) {
+    const selfRequest = await userRepo.selfRequest({ ...data });
+    if (!selfRequest?.affected) throw buildError(400, allErrors.userNotFound);
+    const moderators = await userRepo.getModerators();
+    if (moderators) {
+      moderators?.forEach((moderator) => {
+        sendEmail({
+          type: 'Requested-review',
+          emailTo: moderator.email,
+          subject: 'Pending review in appraisers',
+          replacements: {
+            link: `${FRONTEND_URL}/users`,
+            username: moderator.fullname
+          }
+        });
+      })
+    }
+  } else throw buildError(400, allErrors.requestedReviewError)
   return null;
 };

@@ -80,12 +80,8 @@ export class UserRepository extends Repository<User> {
     const {
       userId,
     } = data;
-    const tmbDate = new Date();
-    const sixMonthAgo = new Date(tmbDate.getFullYear(), tmbDate.getMonth() - 5);
     return this.createQueryBuilder('user')
       .where('id = :userId', { userId })
-      .andWhere('updated_review_at <= :sixMonthAgo', { sixMonthAgo })
-      .andWhere('is_requested = false')
       .update(User)
       .set({
         isRequested: true,
