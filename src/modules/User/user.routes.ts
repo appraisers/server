@@ -28,6 +28,7 @@ import {
   toggleUserService,
   inviteUserService,
   updateUserService,
+  selfRequestService,
 } from './user.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
@@ -147,6 +148,21 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       throw error;
     }
   };
+  const requestUserController = async (
+    request: FastifyRequest
+  ): Promise<CommonResponse> => {
+    try {
+      const { body } = request;
+      await selfRequestService(
+        body as GetUserInfoBody
+      );
+      return {
+        ...commonResponse,
+      };
+    } catch (error) {
+      throw error;
+    }
+  };
   fastify.get(
     '/all-users',
     {
@@ -187,6 +203,13 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       preValidation: allowedFor([roles.admin]),
     },
     changeUserRoleController
+  );
+  fastify.post(
+    '/request',
+    {
+      onRequest: checkAuthHook(fastify.jwt),
+    },
+    requestUserController
   );
 };
 

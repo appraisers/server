@@ -76,4 +76,23 @@ export class UserRepository extends Repository<User> {
       .where('id = :userId', { userId })
       .execute();
   }
+  selfRequest(data: GetUserInfoBody) {
+    const {
+      userId,
+    } = data;
+    return this.createQueryBuilder('user')
+      .where('id = :userId', { userId })
+      .update(User)
+      .set({
+        isRequestedReview: true,
+      })
+      .execute();
+  }
+  getModerators(): Promise<User[] | undefined> {
+    return this.createQueryBuilder('user')
+      .select('user')
+      .orderBy('user.id', 'ASC')
+      .where('user.role = :role', { role: Roles.MODERATOR })
+      .getMany()
+  }
 }

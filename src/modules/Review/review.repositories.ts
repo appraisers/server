@@ -95,9 +95,9 @@ export class ReviewRepository extends Repository<Review> {
   }
 
   async getTopReview() {
-    const tmpDate = new Date();
-    const firstDayMonth = new Date(tmpDate.getFullYear(), tmpDate.getMonth() - 1, 1);
-    const lastDayMonth = new Date(tmpDate.getFullYear(), tmpDate.getMonth(), 0);
+    const dateNow = new Date();
+    const firstDayMonth = new Date(dateNow.getFullYear(), dateNow.getMonth() - 1, 1);
+    const lastDayMonth = new Date(dateNow.getFullYear(), dateNow.getMonth(), 0);
     return this.createQueryBuilder('review')
       .select('review')
       .leftJoinAndSelect('review.rating', 'rating')
