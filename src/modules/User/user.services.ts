@@ -174,3 +174,26 @@ export const inviteUserService = async (
   });
   return null;
 };
+
+export const selfRequestService = async (
+  data: GetUserInfoBody
+): Promise<null> => {
+  const { userId } = data;
+  const userRepo = getCustomRepository(UserRepository);
+  const user = await userRepo.getUserById({ userId });
+  if (!user) throw buildError(400, allErrors.userNotFound);
+  const selfRequest = await userRepo.selfRequest({ ...data });
+  if (!selfRequest?.affected) throw buildError(400, allErrors.userNotFound);
+  const moderators = await userRepo.getModerators();
+  moderators?.forEach((moderator) => {
+    sendEmail({
+      type: 'pending-review',
+      emailTo: moderator.email,
+      subject: 'Pending review in appraisers',
+      replacements: {
+        link: `${FRONTEND_URL}/`
+      }
+    });
+  })
+  return null;
+};

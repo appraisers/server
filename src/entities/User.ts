@@ -97,6 +97,13 @@ export class User {
   numberOfCompletedReviews!: number;
 
   @Column({
+    default: false,
+    type: 'boolean',
+    name: 'is_requested',
+  })
+  isRequested!: boolean;
+
+  @Column({
     type: 'enum',
     enum: Roles,
     default: roles.user,

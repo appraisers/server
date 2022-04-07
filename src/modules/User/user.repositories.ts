@@ -76,4 +76,27 @@ export class UserRepository extends Repository<User> {
       .where('id = :userId', { userId })
       .execute();
   }
+  selfRequest(data: GetUserInfoBody) {
+    const {
+      userId,
+    } = data;
+    const tmbDate = new Date();
+    const sixMonthAgo = new Date(tmbDate.getFullYear(), tmbDate.getMonth() - 5);
+    return this.createQueryBuilder('user')
+      .where('id = :userId', { userId })
+      .andWhere('updated_review_at <= :sixMonthAgo', { sixMonthAgo })
+      .andWhere('is_requested = false')
+      .update(User)
+      .set({
+        isRequested: true,
+      })
+      .execute();
+  }
+  getModerators(): Promise<User[] | undefined> {
+    return this.createQueryBuilder('user')
+      .select('user')
+      .orderBy('user.id', 'ASC')
+      .where('user.role = :role', { role: Roles.MODERATOR })
+      .getMany()
+  }
 }
