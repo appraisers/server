@@ -4,9 +4,11 @@ import {
   PrimaryGeneratedColumn,
   BeforeUpdate,
   OneToOne,
+  ManyToOne,
   JoinColumn,
 } from 'typeorm';
 import { Review } from './Review';
+import { User } from './User'
 
 @Entity({ name: 'ratings' })
 export class Rating {
@@ -19,6 +21,13 @@ export class Rating {
   })
   @JoinColumn({ name: 'review_id' })
   review!: Review;
+
+  @ManyToOne(() => User, (user) => user.id, {
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'user_id' })
+  user!: User;
 
   @Column({
     nullable: true,

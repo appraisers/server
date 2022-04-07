@@ -4,6 +4,7 @@ import {
   ChangeUserRoleRequestBody,
   ToggleUserRepositoryData,
   UpdateRepositoryData,
+  GetUserInfoBody
 } from './user.interfaces';
 
 @EntityRepository(User)
@@ -13,6 +14,14 @@ export class UserRepository extends Repository<User> {
     val: string | number
   ): Promise<User | undefined> {
     return this.findOne({ where: { [key]: val } });
+  }
+  getUserById(data: GetUserInfoBody): Promise<User | undefined> {
+    const { userId } = data;
+    return this.createQueryBuilder('user')
+      .select('user')
+      .leftJoinAndSelect('user.ratingByCategories', 'ratingByCategories')
+      .where('user.id = :userId', { userId })
+      .getOne()
   }
   getAllUsers(): Promise<User[] | undefined> {
     return this.createQueryBuilder('user')
