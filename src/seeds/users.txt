@@ -1,0 +1,22 @@
+INSERT INTO public.users( fullname, email, password, workplace, position, role) VALUES ('Пономарев Юрий', 'ipo@sfedy.ru', 'test123', 'iktib', 'junior developer', 'user');
+INSERT INTO public.users( fullname, email, password, workplace, position, role) VALUES ('Юлиана Костикова', 'ikostikova@sfedu.ru', 'test123', 'iktib', 'middle developer', 'user');
+INSERT INTO public.users( fullname, email, password, workplace, position, role) VALUES ('Майова Адебайо', 'adebaio@sfedu.ru', 'test123', 'iktib', 'senior developer', 'user');
+INSERT INTO public.users( fullname, email, password, workplace, position, role) VALUES ('Еррера Ромеро', 'rerrera@sfedu.ru', 'test123', 'iktib', 'manager', 'user');
+INSERT INTO public.users( fullname, email, password, workplace, position, role) VALUES ('Мария Семенеева', 'msemeneeva@sfedu.ru', 'test123', 'iktib', 'tester', 'user');
+INSERT INTO public.users( fullname, email, password, workplace, position, role) VALUES ('Полина Рожина', 'rozhina@sfedu.ru', 'test123', 'iktib', 'boss', 'user');
+INSERT INTO public.users( fullname, email, password, workplace, position, role) VALUES ('Анатолий Бродский', 'anatolibrodsky@yandex.ru', 'test123', 'iktib', 'default', 'user');
+
+INSERT INTO public.users( fullname, email, password, workplace, position, role) VALUES ('Алексей Иванов', 'ivanov@intspirit.com', 'test123', 'inspirit', 'tester', 'admin');
+INSERT INTO public.users( fullname, email, password, workplace, position, role) VALUES ('Кирилл Гарнов', 'kirill-garnov@mail.ru', 'test123', 'iktib', 'tester', 'admin');
+INSERT INTO public.users( fullname, email, password, workplace, position, role) VALUES ('Олег Стельмах', 'stelmah.oleg@ya.ru', 'test123', 'iktib', 'tester', 'admin');
+INSERT INTO public.users( fullname, email, password, workplace, position, role) VALUES ('Тестовый модератор', 'test@test.ru', 'test123', 'iktib', 'tester', 'moderator');
+INSERT INTO public.users( fullname, email, password, workplace, position, role) VALUES ('Тестовый админ', ' testAdmin@test.ru', 'test123', 'iktib', 'tester', 'admin');
+
+
+
+
+
+
+
+
+
