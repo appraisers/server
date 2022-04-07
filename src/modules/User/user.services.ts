@@ -186,7 +186,7 @@ export const selfRequestService = async (
     const selfRequest = await userRepo.selfRequest({ ...data });
     if (!selfRequest?.affected) throw buildError(400, allErrors.userNotFound);
     const moderators = await userRepo.getModerators();
-    if (moderators) {
+    if (moderators != null) {
       moderators.forEach((moderator) => {
         sendEmail({
           type: 'Requested-review',

@@ -84,7 +84,7 @@ export class UserRepository extends Repository<User> {
       .where('id = :userId', { userId })
       .update(User)
       .set({
-        isRequested: true,
+        isRequestedReview: true,
       })
       .execute();
   }

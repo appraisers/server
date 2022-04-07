@@ -101,7 +101,7 @@ export class User {
     type: 'boolean',
     name: 'is_requested',
   })
-  isRequested!: boolean;
+  isRequestedReview!: boolean;
 
   @Column({
     type: 'enum',
