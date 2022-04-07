@@ -182,7 +182,7 @@ export const selfRequestService = async (
   if (!user) throw buildError(400, allErrors.userNotFound);
   const dateNow = new Date();
   const sixMonthAgo = new Date(dateNow.getFullYear(), dateNow.getMonth() - 5);
-  if (user.updatedReviewAt <= sixMonthAgo && !user.isRequested) {
+  if (user.updatedReviewAt <= sixMonthAgo && !user.isRequestedReview) {
     const selfRequest = await userRepo.selfRequest({ ...data });
     if (!selfRequest?.affected) throw buildError(400, allErrors.userNotFound);
     const moderators = await userRepo.getModerators();
