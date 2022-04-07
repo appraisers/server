@@ -99,7 +99,7 @@ export class User {
   @Column({
     default: false,
     type: 'boolean',
-    name: 'is_requested',
+    name: 'is_requested_review',
   })
   isRequestedReview!: boolean;
 
