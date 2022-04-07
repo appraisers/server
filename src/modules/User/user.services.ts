@@ -109,6 +109,13 @@ export const getUserInfoService = async (
   return user;
 };
 
+export const getTopUsersService = async (): Promise<User[]> => {
+  const userRepo = getCustomRepository(UserRepository);
+  const users = await userRepo.getTopUsers();
+  if (!users) throw buildError(400, allErrors.reviewNotFound);
+  return users;
+};
+
 export const updateUserService = async (
   data: UpdateUserRequestBody
 ): Promise<User> => {
@@ -155,16 +162,17 @@ export const changeUserRoleService = async (
 export const inviteUserService = async (
   body: InviteUserRequestBody
 ): Promise<null> => {
-  if (!body.email) throw buildError(400, allErrors.emailNotFound);
+  const { email } = body;
+  if (!email) throw buildError(400, allErrors.emailNotFound);
   const userRepo = getCustomRepository(UserRepository);
   const isAlreadyUser = await userRepo.findOne({
-    where: { email: body.email },
+    where: { email },
   });
   if (isAlreadyUser) throw buildError(400, allErrors.userFound);
-  const token = base64.encode(body.email);
+  const token = base64.encode(email);
   sendEmail({
     type: 'invite-user',
-    emailTo: body.email,
+    emailTo: email,
     subject: 'Invite in appraisers app',
     replacements: {
       link: `${FRONTEND_URL}/registration/${token}`,

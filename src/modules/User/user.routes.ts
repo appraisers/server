@@ -18,6 +18,7 @@ import {
   UpdateUserRequestBody,
   UpdateUserResponse,
   UserWithCategories,
+  TopUsersData,
 } from './user.interfaces';
 import {
   allInviteUsersService,
@@ -29,6 +30,7 @@ import {
   inviteUserService,
   updateUserService,
   selfRequestService,
+  getTopUsersService,
 } from './user.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
@@ -153,9 +155,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
   ): Promise<CommonResponse> => {
     try {
       const { body } = request;
-      await selfRequestService(
-        body as GetUserInfoBody
-      );
+      await selfRequestService(body as GetUserInfoBody);
       return {
         ...commonResponse,
       };
@@ -163,6 +163,18 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       throw error;
     }
   };
+  const getTopUsersController = async (): Promise<TopUsersData> => {
+    try {
+      const data = await getTopUsersService();
+      return {
+        ...commonResponse,
+        data,
+      };
+    } catch (error) {
+      throw error;
+    }
+  };
+
   fastify.get(
     '/all-users',
     {
@@ -210,6 +222,11 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       onRequest: checkAuthHook(fastify.jwt),
     },
     requestUserController
+  );
+  fastify.get(
+    '/top',
+    { onRequest: checkAuthHook(fastify.jwt) },
+    getTopUsersController
   );
 };
 

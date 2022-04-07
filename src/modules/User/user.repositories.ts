@@ -1,5 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Roles, User } from '../../entities/User';
+import { LIMIT_TOP_USERS } from './user.constants';
 import {
   ChangeUserRoleRequestBody,
   ToggleUserRepositoryData,
@@ -94,5 +95,17 @@ export class UserRepository extends Repository<User> {
       .orderBy('user.id', 'ASC')
       .where('user.role = :role', { role: Roles.MODERATOR })
       .getMany()
+  }
+  async getTopUsers() {
+    const dateNow = new Date();
+    const firstDayMonth = new Date(dateNow.getFullYear(), dateNow.getMonth() - 1, 1);
+    const lastDayMonth = new Date(dateNow.getFullYear(), dateNow.getMonth(), 0);
+    return this.createQueryBuilder('user')
+      .select('user')
+      .where('user.updatedReviewAt >= :firstDayMonth', { firstDayMonth })
+      .andWhere('user.updatedReviewAt <= :lastDayMonth', { lastDayMonth })
+      .orderBy('user.rating', 'DESC')
+      .limit(LIMIT_TOP_USERS)
+      .getMany();
   }
 }

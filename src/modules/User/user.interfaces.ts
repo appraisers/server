@@ -78,3 +78,7 @@ export interface ChangeUserRoleRequestBody {
 export interface GetUserInfoBody {
   userId: ID;
 }
+
+export interface TopUsersData extends CommonResponse {
+  data: User[];
+}
