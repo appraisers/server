@@ -160,7 +160,7 @@ export class User {
   tokens!: Token[];
 
   @OneToMany(() => Review, (review) => review.user)
-  user!: Review[];
+  review!: Review[];
 
   @OneToMany(() => Rating, (rating) => rating.user)
   ratingByCategories!: Rating;

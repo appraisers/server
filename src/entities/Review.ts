@@ -38,6 +38,13 @@ export class Review {
 
   @Column({
     nullable: true,
+    type: 'float',
+    name: 'rating_summary',
+  })
+  ratingSummary!: number;
+
+  @Column({
+    nullable: true,
     type: 'text',
     name: 'description',
   })
