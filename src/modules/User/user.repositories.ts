@@ -1,5 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Roles, User } from '../../entities/User';
+import { LIMIT_TOP_USERS } from './user.constants';
 import {
   ChangeUserRoleRequestBody,
   ToggleUserRepositoryData,
@@ -21,6 +22,7 @@ export class UserRepository extends Repository<User> {
     return this.createQueryBuilder('user')
       .select('user')
       .leftJoinAndSelect('user.ratingByCategories', 'ratingByCategories')
+      .leftJoinAndSelect('user.review', 'reviewsjopas')
       .where('user.id = :userId', { userId })
       .getOne()
   }
@@ -33,7 +35,6 @@ export class UserRepository extends Repository<User> {
   }
   updateUser(data: UpdateRepositoryData) {
     const {
-      email,
       workplace,
       fullname,
       position,
@@ -46,7 +47,6 @@ export class UserRepository extends Repository<User> {
     return this.createQueryBuilder('user')
       .update(User)
       .set({
-        email: email,
         workplace: workplace ?? '',
         fullname: fullname,
         position: position,
@@ -96,6 +96,7 @@ export class UserRepository extends Repository<User> {
       .where('user.role = :role', { role: Roles.MODERATOR })
       .getMany()
   }
+<<<<<<< HEAD
   toggleShowInfo(data: toggleShowInfoData) {
     const {
       userId,
@@ -118,5 +119,18 @@ export class UserRepository extends Repository<User> {
       .addSelect('user.role')
       .where('user.id = :id', { id })
       .getOne()
+=======
+  async getTopUsers() {
+    const dateNow = new Date();
+    const firstDayMonth = new Date(dateNow.getFullYear(), dateNow.getMonth() - 1, 1);
+    const lastDayMonth = new Date(dateNow.getFullYear(), dateNow.getMonth(), 0);
+    return this.createQueryBuilder('user')
+      .select('user')
+      .where('user.updatedReviewAt >= :firstDayMonth', { firstDayMonth })
+      .andWhere('user.updatedReviewAt <= :lastDayMonth', { lastDayMonth })
+      .orderBy('user.rating', 'DESC')
+      .limit(LIMIT_TOP_USERS)
+      .getMany();
+>>>>>>> 3d864403fc6b38b68f68bb4a70e158ce9cfdec28
   }
 }

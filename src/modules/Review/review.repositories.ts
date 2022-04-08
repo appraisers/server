@@ -93,18 +93,4 @@ export class ReviewRepository extends Repository<Review> {
       })
       .execute();
   }
-
-  async getTopReview() {
-    const dateNow = new Date();
-    const firstDayMonth = new Date(dateNow.getFullYear(), dateNow.getMonth() - 1, 1);
-    const lastDayMonth = new Date(dateNow.getFullYear(), dateNow.getMonth(), 0);
-    return this.createQueryBuilder('review')
-      .select('review')
-      .leftJoinAndSelect('review.rating', 'rating')
-      .where('review.createdAt >= :firstDayMonth', { firstDayMonth })
-      .andWhere('review.createdAt <= :lastDayMonth', { lastDayMonth })
-      .andWhere('review.active_session = false')
-      .orderBy('review.createdAt', 'DESC')
-      .getMany();
-  }
 }

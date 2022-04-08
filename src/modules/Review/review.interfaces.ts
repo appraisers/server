@@ -59,7 +59,3 @@ export interface FinishAnswerData {
   userId: ID;
   description: string;
 }
-
-export interface TopRatingData extends CommonResponse {
-  data: Review[];
-}
