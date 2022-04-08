@@ -101,14 +101,12 @@ export const loginService = async (
   const tokenRepo = getCustomRepository(TokenRepository);
   await tokenRepo.createRefresh({ user: userCheck, refreshToken });
   if (userCheck.showInfo === false) {
-    const user = await userRepo.userFewFieldsLogin(userCheck.id);
+    const user = await userRepo.userFewFields(userCheck.id, 'showInfo');
     if (!user) throw buildError(400, allErrors.userNotFound);
     return { user, authToken, refreshToken }
   }
-  const user = userCheck;
-  if (!user) throw buildError(400, allErrors.userNotFound);
   return {
-    user,
+    user: userCheck,
     authToken,
     refreshToken,
   };
@@ -127,8 +125,8 @@ export const registrationService = async (
     fullname,
     password,
   };
-  const newuser = await userRepo.createUser(newUser);
-  const user = await userRepo.userFewFieldsRegistration(newuser.id);
+  const userRegistered = await userRepo.createUser(newUser);
+  const user = await userRepo.userFewFields(userRegistered.id, 'role');
   if (!user) throw buildError(400, allErrors.userFound);
   if (user) {
     sendEmail({

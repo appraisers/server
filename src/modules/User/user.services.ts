@@ -107,7 +107,7 @@ export const getUserInfoService = async (
     assessmentOfAbilitiesRating /= countRatingByCategories;
     personalQualitiesRating /= countRatingByCategories;
     if (checkUser.showInfo === false) {
-      const newUser = await userRepo.userFewFieldsCategories(checkUser.id);
+      const newUser = await userRepo.userFewFields(checkUser.id, 'role');
       const user = { ...newUser, effectivenessRating, interactionRating, assessmentOfAbilitiesRating, personalQualitiesRating, ratingByCategories: null };
       return user;
     } else {
@@ -228,8 +228,7 @@ export const toggleShowInfoService = async (
   const userRepo = getCustomRepository(UserRepository);
   const user = await userRepo.getUserById({ userId });
   if (!user) throw buildError(400, allErrors.userNotFound);
-  let showInfo = false;
-  user.showInfo === false ? showInfo = true : showInfo = false;
+  const showInfo = !user.showInfo;
   await userRepo.toggleShowInfo({ userId, showInfo });
   return null;
 };

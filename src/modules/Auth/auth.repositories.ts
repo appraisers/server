@@ -48,24 +48,13 @@ export class UserRepository extends Repository<User> {
     return this.findOne({ where: { [key]: val } });
   }
 
-  async userFewFieldsLogin(
-    id: number
+  async userFewFields(
+    id: number, field: string
   ): Promise<User | undefined> {
     return this.createQueryBuilder('user')
       .select('user.id')
       .addSelect('user.email')
-      .addSelect('user.showInfo')
-      .where('user.id = :id', { id })
-      .getOne()
-  }
-
-  async userFewFieldsRegistration(
-    id: number
-  ): Promise<User | undefined> {
-    return this.createQueryBuilder('user')
-      .select('user.id')
-      .addSelect('user.email')
-      .addSelect('user.role')
+      .addSelect(`user.${field}`)
       .where('user.id = :id', { id })
       .getOne()
   }

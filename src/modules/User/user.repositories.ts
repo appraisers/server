@@ -109,13 +109,13 @@ export class UserRepository extends Repository<User> {
       })
       .execute();
   }
-  async userFewFieldsCategories(
-    id: number
+  async userFewFields(
+    id: number, field: string
   ): Promise<User | undefined> {
     return this.createQueryBuilder('user')
       .select('user.id')
       .addSelect('user.email')
-      .addSelect('user.role')
+      .addSelect(`user.${field}`)
       .where('user.id = :id', { id })
       .getOne()
   }
