@@ -78,3 +78,7 @@ export interface ChangeUserRoleRequestBody {
 export interface GetUserInfoBody {
   userId: ID;
 }
+export interface toggleShowInfoData {
+  userId: ID;
+  showInfo: boolean;
+}

@@ -48,6 +48,28 @@ export class UserRepository extends Repository<User> {
     return this.findOne({ where: { [key]: val } });
   }
 
+  async userFewFieldsLogin(
+    id: number
+  ): Promise<User | undefined> {
+    return this.createQueryBuilder('user')
+      .select('user.id')
+      .addSelect('user.email')
+      .addSelect('user.showInfo')
+      .where('user.id = :id', { id })
+      .getOne()
+  }
+
+  async userFewFieldsRegistration(
+    id: number
+  ): Promise<User | undefined> {
+    return this.createQueryBuilder('user')
+      .select('user.id')
+      .addSelect('user.email')
+      .addSelect('user.role')
+      .where('user.id = :id', { id })
+      .getOne()
+  }
+
   async updateUserAfterReview(data: UpdateUserAfterReview) {
     const { userId, rating, numberOfCompletedReviews } = data;
     return this.createQueryBuilder('user')

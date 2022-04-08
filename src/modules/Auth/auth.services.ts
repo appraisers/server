@@ -81,28 +81,32 @@ export const loginService = async (
 ): Promise<LoginServiceResponse> => {
   const { email, password, rememberMe } = data;
   const userRepo = getCustomRepository(UserRepository);
-  const user = await userRepo.findOneUserByKey('email', email);
-  if (!user) {
+  const userCheck = await userRepo.findOneUserByKey('email', email);
+  if (!userCheck) {
     throw buildError(400, allErrors.userNotFound);
   }
-  if (user.password !== password) {
+  if (userCheck.password !== password) {
     throw buildError(400, allErrors.userNotFound);
   }
   // const compare = bcrypt.compareSync(password, user.password);
   // if (!compare) throw buildError(400, allErrors.userNotFound);
-
   const authToken = jwt.sign(
-    { id: user.id },
+    { id: userCheck.id },
     { expiresIn: rememberMe ? EXPIRED.WITH_REMEMBER : EXPIRED.ACCESS }
   );
   const refreshToken = jwt.sign(
-    { id: user.id, isRefresh: true },
+    { id: userCheck.id, isRefresh: true },
     { expiresIn: rememberMe ? EXPIRED.WITH_REMEMBER : EXPIRED.REFRESH }
-  );
-
+  )
   const tokenRepo = getCustomRepository(TokenRepository);
-  await tokenRepo.createRefresh({ user: user, refreshToken });
-
+  await tokenRepo.createRefresh({ user: userCheck, refreshToken });
+  if (userCheck.showInfo === false) {
+    const user = await userRepo.userFewFieldsLogin(userCheck.id);
+    if (!user) throw buildError(400, allErrors.userNotFound);
+    return { user, authToken, refreshToken }
+  }
+  const user = userCheck;
+  if (!user) throw buildError(400, allErrors.userNotFound);
   return {
     user,
     authToken,
@@ -118,13 +122,14 @@ export const registrationService = async (
   const email = base64.decode(token);
   const isAlreadyUser = await userRepo.findOne({ where: { email } });
   if (isAlreadyUser) throw buildError(400, allErrors.userFound);
-
   const newUser = {
     email,
     fullname,
     password,
   };
-  const user = await userRepo.createUser(newUser);
+  const newuser = await userRepo.createUser(newUser);
+  const user = await userRepo.userFewFieldsRegistration(newuser.id);
+  if (!user) throw buildError(400, allErrors.userFound);
   if (user) {
     sendEmail({
       type: 'successfully-registration',

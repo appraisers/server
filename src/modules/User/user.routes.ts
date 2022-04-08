@@ -29,6 +29,7 @@ import {
   inviteUserService,
   updateUserService,
   selfRequestService,
+  toggleShowInfoService
 } from './user.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
@@ -163,6 +164,22 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       throw error;
     }
   };
+  const toggleShowInfoController = async (
+    request: FastifyRequest
+  ): Promise<CommonResponse> => {
+    try {
+      const { body } = request;
+      await toggleShowInfoService(
+        body as GetUserInfoBody
+      );
+      return {
+        ...commonResponse,
+      };
+    } catch (error) {
+      throw error;
+    }
+  };
+
   fastify.get(
     '/all-users',
     {
@@ -210,6 +227,14 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       onRequest: checkAuthHook(fastify.jwt),
     },
     requestUserController
+  );
+  fastify.post(
+    '/toggle-show-info',
+    {
+      onRequest: checkAuthHook(fastify.jwt),
+      preValidation: allowedFor([roles.admin, roles.moderator]),
+    },
+    toggleShowInfoController
   );
 };
 
