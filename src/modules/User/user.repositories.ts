@@ -34,7 +34,6 @@ export class UserRepository extends Repository<User> {
   }
   updateUser(data: UpdateRepositoryData) {
     const {
-      email,
       workplace,
       fullname,
       position,
@@ -47,7 +46,6 @@ export class UserRepository extends Repository<User> {
     return this.createQueryBuilder('user')
       .update(User)
       .set({
-        email: email,
         workplace: workplace ?? '',
         fullname: fullname,
         position: position,

@@ -4,7 +4,7 @@ import { allErrors } from '../../common/common.messages';
 import { DecodedJWT, JWT } from '../../common/common.interfaces';
 import { sendEmail } from '../../utils/mail.helper';
 import { buildError } from '../../utils/error.helper';
-import { roles, User } from '../../entities/User';
+import { Roles, roles, User } from '../../entities/User';
 import config from '../../config';
 import { UserRepository } from './user.repositories';
 import {
@@ -63,6 +63,9 @@ export const allUsersService = async (): Promise<AllUsersServiceResponse[]> => {
     position: user.position ?? '',
     numberOfCompletedReviews: user.numberOfCompletedReviews ?? null,
     deletedAt: user.deletedAt ?? null,
+    workplace: user.workplace ?? null,
+    email: user.email ?? '',
+    role: user.role ?? Roles.USER
   }));
   return mapUser;
 };
