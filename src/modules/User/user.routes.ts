@@ -18,6 +18,7 @@ import {
   UpdateUserRequestBody,
   UpdateUserResponse,
   UserWithCategories,
+  TopUsersData
 } from './user.interfaces';
 import {
   allInviteUsersService,
@@ -29,7 +30,8 @@ import {
   inviteUserService,
   updateUserService,
   selfRequestService,
-  toggleShowInfoService
+  toggleShowInfoService,
+  getTopUsersService
 } from './user.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
@@ -174,6 +176,17 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       );
       return {
         ...commonResponse,
+      };
+    } catch (error) {
+      throw error;
+    }
+  };
+  const getTopUsersController = async (): Promise<TopUsersData> => {
+    try {
+      const data = await getTopUsersService();
+      return {
+        ...commonResponse,
+        data,
       };
     } catch (error) {
       throw error;

@@ -96,7 +96,6 @@ export class UserRepository extends Repository<User> {
       .where('user.role = :role', { role: Roles.MODERATOR })
       .getMany()
   }
-<<<<<<< HEAD
   toggleShowInfo(data: toggleShowInfoData) {
     const {
       userId,
@@ -119,7 +118,7 @@ export class UserRepository extends Repository<User> {
       .addSelect('user.role')
       .where('user.id = :id', { id })
       .getOne()
-=======
+  }
   async getTopUsers() {
     const dateNow = new Date();
     const firstDayMonth = new Date(dateNow.getFullYear(), dateNow.getMonth() - 1, 1);
@@ -131,6 +130,5 @@ export class UserRepository extends Repository<User> {
       .orderBy('user.rating', 'DESC')
       .limit(LIMIT_TOP_USERS)
       .getMany();
->>>>>>> 3d864403fc6b38b68f68bb4a70e158ce9cfdec28
   }
 }

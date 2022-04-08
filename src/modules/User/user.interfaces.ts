@@ -78,13 +78,10 @@ export interface ChangeUserRoleRequestBody {
 export interface GetUserInfoBody {
   userId: ID;
 }
-<<<<<<< HEAD
 export interface toggleShowInfoData {
   userId: ID;
   showInfo: boolean;
-=======
-
+}
 export interface TopUsersData extends CommonResponse {
   data: User[];
->>>>>>> 3d864403fc6b38b68f68bb4a70e158ce9cfdec28
 }
