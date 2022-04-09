@@ -49,7 +49,8 @@ export class UserRepository extends Repository<User> {
   }
 
   async userFewFields(
-    id: number, field: string
+    id: number,
+    field: string
   ): Promise<User | undefined> {
     return this.createQueryBuilder('user')
       .select('user.id')

@@ -6,7 +6,7 @@ import {
   ToggleUserRepositoryData,
   UpdateRepositoryData,
   GetUserInfoBody,
-  toggleShowInfoData
+  ToggleShowInfoData
 } from './user.interfaces';
 
 @EntityRepository(User)
@@ -96,7 +96,7 @@ export class UserRepository extends Repository<User> {
       .where('user.role = :role', { role: Roles.MODERATOR })
       .getMany()
   }
-  toggleShowInfo(data: toggleShowInfoData) {
+  toggleShowInfo(data: ToggleShowInfoData) {
     const {
       userId,
       showInfo,

@@ -89,7 +89,7 @@ export const getUserInfoService = async (
   const userRepo = getCustomRepository(UserRepository);
   let checkUser = await userRepo.getUserById({ userId });
   if (!checkUser) throw buildError(400, allErrors.userNotFound);
-  const ratingByCategories = checkUser?.ratingByCategories;
+  const ratingByCategories = checkUser.ratingByCategories;
   if (ratingByCategories != null && Array.isArray(ratingByCategories)) {
     let effectivenessRating = 0;
     let interactionRating = 0;
@@ -107,16 +107,15 @@ export const getUserInfoService = async (
     assessmentOfAbilitiesRating /= countRatingByCategories;
     personalQualitiesRating /= countRatingByCategories;
     if (checkUser.showInfo === false) {
-      const newUser = await userRepo.userFewFields(checkUser.id, 'role');
-      const user = { ...newUser, effectivenessRating, interactionRating, assessmentOfAbilitiesRating, personalQualitiesRating, ratingByCategories: null };
+      const smallUserInfo = await userRepo.userFewFields(checkUser.id, 'role');
+      const user = { ...smallUserInfo, effectivenessRating, interactionRating, assessmentOfAbilitiesRating, personalQualitiesRating, ratingByCategories: null };
       return user;
     } else {
       const user = { ...checkUser, effectivenessRating, interactionRating, assessmentOfAbilitiesRating, personalQualitiesRating, ratingByCategories: null };
       return user;
     }
   }
-  const user = checkUser;
-  return user;
+  return checkUser;
 };
 
 export const getTopUsersService = async (): Promise<User[]> => {
