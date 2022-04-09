@@ -13,13 +13,6 @@ import {
   RegistrationResponse,
 } from './auth.interfaces';
 import {
-  loginSchema,
-  registrationSchema,
-  forgotPasswordSchema,
-  resetPasswordSchema,
-  refreshTokensSchema,
-} from './auth.schemas';
-import {
   loginService,
   registrationService,
   refreshTokenService,
@@ -56,7 +49,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     const { body } = request;
     try {
       const responseLogin = await loginService(body as LoginRequestBody, fastify.jwt);
-      
+
       return {
         ...commonResponse,
         ...responseLogin
@@ -102,16 +95,15 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     };
   };
 
-  fastify.post('/login', loginSchema, loginController);
-  fastify.post('/registration', registrationSchema, registrationController);
+  fastify.post('/login', loginController);
+  fastify.post('/registration', registrationController);
   fastify.post(
     '/forgot_password',
-    forgotPasswordSchema,
     forgotPasswordController
   );
   fastify.get('/email', emailController);
-  fastify.post('/refresh_tokens', refreshTokensSchema, refreshTokenController);
-  fastify.post('/reset_password', resetPasswordSchema, resetPasswordController);
+  fastify.post('/refresh_tokens', refreshTokenController);
+  fastify.post('/reset_password', resetPasswordController);
 };
 
 export default routes;
