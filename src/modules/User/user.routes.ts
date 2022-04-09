@@ -18,7 +18,7 @@ import {
   UpdateUserRequestBody,
   UpdateUserResponse,
   UserWithCategories,
-  TopUsersData,
+  TopUsersData
 } from './user.interfaces';
 import {
   allInviteUsersService,
@@ -30,7 +30,8 @@ import {
   inviteUserService,
   updateUserService,
   selfRequestService,
-  getTopUsersService,
+  toggleShowInfoService,
+  getTopUsersService
 } from './user.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
@@ -155,7 +156,24 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
   ): Promise<CommonResponse> => {
     try {
       const { body } = request;
-      await selfRequestService(body as GetUserInfoBody);
+      await selfRequestService(
+        body as GetUserInfoBody
+      );
+      return {
+        ...commonResponse,
+      };
+    } catch (error) {
+      throw error;
+    }
+  };
+  const toggleShowInfoController = async (
+    request: FastifyRequest
+  ): Promise<CommonResponse> => {
+    try {
+      const { body } = request;
+      await toggleShowInfoService(
+        body as GetUserInfoBody
+      );
       return {
         ...commonResponse,
       };
@@ -223,10 +241,13 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     },
     requestUserController
   );
-  fastify.get(
-    '/top',
-    { onRequest: checkAuthHook(fastify.jwt) },
-    getTopUsersController
+  fastify.post(
+    '/toggle-show-info',
+    {
+      onRequest: checkAuthHook(fastify.jwt),
+      preValidation: allowedFor([roles.admin, roles.moderator]),
+    },
+    toggleShowInfoController
   );
 };
 

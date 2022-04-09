@@ -5,7 +5,8 @@ import {
   ChangeUserRoleRequestBody,
   ToggleUserRepositoryData,
   UpdateRepositoryData,
-  GetUserInfoBody
+  GetUserInfoBody,
+  ToggleShowInfoData
 } from './user.interfaces';
 
 @EntityRepository(User)
@@ -94,6 +95,29 @@ export class UserRepository extends Repository<User> {
       .orderBy('user.id', 'ASC')
       .where('user.role = :role', { role: Roles.MODERATOR })
       .getMany()
+  }
+  toggleShowInfo(data: ToggleShowInfoData) {
+    const {
+      userId,
+      showInfo,
+    } = data;
+    return this.createQueryBuilder('user')
+      .where('id = :userId', { userId })
+      .update(User)
+      .set({
+        showInfo: showInfo,
+      })
+      .execute();
+  }
+  async userFewFields(
+    id: number, field: string
+  ): Promise<User | undefined> {
+    return this.createQueryBuilder('user')
+      .select('user.id')
+      .addSelect('user.email')
+      .addSelect(`user.${field}`)
+      .where('user.id = :id', { id })
+      .getOne()
   }
   async getTopUsers() {
     const dateNow = new Date();

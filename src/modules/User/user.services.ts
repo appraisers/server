@@ -87,9 +87,9 @@ export const getUserInfoService = async (
 ): Promise<UserWithCategoriesService | User> => {
   const { userId } = data;
   const userRepo = getCustomRepository(UserRepository);
-  let user = await userRepo.getUserById({ userId });
-  if (!user) throw buildError(400, allErrors.userNotFound);
-  const ratingByCategories = user?.ratingByCategories;
+  let checkUser = await userRepo.getUserById({ userId });
+  if (!checkUser) throw buildError(400, allErrors.userNotFound);
+  const ratingByCategories = checkUser.ratingByCategories;
   if (ratingByCategories != null && Array.isArray(ratingByCategories)) {
     let effectivenessRating = 0;
     let interactionRating = 0;
@@ -106,10 +106,16 @@ export const getUserInfoService = async (
     interactionRating /= countRatingByCategories;
     assessmentOfAbilitiesRating /= countRatingByCategories;
     personalQualitiesRating /= countRatingByCategories;
-    const newUser = { ...user, effectivenessRating, interactionRating, assessmentOfAbilitiesRating, personalQualitiesRating, ratingByCategories: null };
-    return newUser;
+    if (checkUser.showInfo === false) {
+      const smallUserInfo = await userRepo.userFewFields(checkUser.id, 'role');
+      const user = { ...smallUserInfo, effectivenessRating, interactionRating, assessmentOfAbilitiesRating, personalQualitiesRating, ratingByCategories: null };
+      return user;
+    } else {
+      const user = { ...checkUser, effectivenessRating, interactionRating, assessmentOfAbilitiesRating, personalQualitiesRating, ratingByCategories: null };
+      return user;
+    }
   }
-  return user;
+  return checkUser;
 };
 
 export const getTopUsersService = async (): Promise<User[]> => {
@@ -211,5 +217,17 @@ export const selfRequestService = async (
       })
     }
   } else throw buildError(400, allErrors.requestedReviewError)
+  return null;
+};
+
+export const toggleShowInfoService = async (
+  data: GetUserInfoBody
+): Promise<null> => {
+  const { userId } = data;
+  const userRepo = getCustomRepository(UserRepository);
+  const user = await userRepo.getUserById({ userId });
+  if (!user) throw buildError(400, allErrors.userNotFound);
+  const showInfo = !user.showInfo;
+  await userRepo.toggleShowInfo({ userId, showInfo });
   return null;
 };
