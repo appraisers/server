@@ -249,6 +249,13 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     },
     toggleShowInfoController
   );
+  fastify.get(
+    '/top',
+    {
+      onRequest: checkAuthHook(fastify.jwt)
+    },
+    getTopUsersController
+  );
 };
 
 export default routes;
