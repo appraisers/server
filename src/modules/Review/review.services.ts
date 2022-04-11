@@ -23,6 +23,7 @@ import {
   NORMALIZATION_DIVISOR,
   REVIEWS_ANSWERS_MIN_VALUE,
   REVIEWS_ANSWERS_MAX_VALUE,
+  DEFAULT_RATING,
 } from './review.constants';
 
 const { FRONTEND_URL } = config;
@@ -222,10 +223,10 @@ export const addFinishAnswerService = async (
   const assessmentOfAbilitiesWeight = rating.assessmentOfAbilitiesWeight;
   const personalQualitiesWeight = rating.personalQualitiesWeight;
   //in order to don't have NaN or null.
-  if (effectivenessRating != effectivenessWeight) effectivenessRating /= effectivenessWeight;
-  if (interactionRating != interactionWeight) interactionRating /= interactionWeight;
-  if (assessmentOfAbilitiesRating != assessmentOfAbilitiesWeight) assessmentOfAbilitiesRating /= assessmentOfAbilitiesWeight;
-  if (personalQualitiesRating != personalQualitiesWeight) personalQualitiesRating /= personalQualitiesWeight;
+  if (effectivenessWeight !== DEFAULT_RATING) effectivenessRating /= effectivenessWeight;
+  if (interactionWeight !== DEFAULT_RATING) interactionRating /= interactionWeight;
+  if (assessmentOfAbilitiesWeight !== DEFAULT_RATING) assessmentOfAbilitiesRating /= assessmentOfAbilitiesWeight;
+  if (personalQualitiesWeight !== DEFAULT_RATING) personalQualitiesRating /= personalQualitiesWeight;
   //The overall rating of review.
   const overallRating =
     (effectivenessRating +
