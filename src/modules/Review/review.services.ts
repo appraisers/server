@@ -23,6 +23,7 @@ import {
   NORMALIZATION_DIVISOR,
   REVIEWS_ANSWERS_MIN_VALUE,
   REVIEWS_ANSWERS_MAX_VALUE,
+  DEFAULT_RATING,
 } from './review.constants';
 
 const { FRONTEND_URL } = config;
@@ -91,6 +92,7 @@ export const addAnswerService = async (
   let effectivenessRating = ratingRow.effectivenessRating;
   let interactionRating = ratingRow.interactionRating;
   let assessmentOfAbilitiesRating = ratingRow.assessmentOfAbilitiesRating;
+
   let personalQualitiesRating = ratingRow.personalQualitiesRating;
   let effectivenessWeight = ratingRow.effectivenessWeight;
   let interactionWeight = ratingRow.interactionWeight;
@@ -108,7 +110,7 @@ export const addAnswerService = async (
     const weight = questions[index]?.weight;
     if (!weight) throw buildError(400, allErrors.weightNotFound);
     const normalizeRating = value * weight;
-
+    //Searching the corresponding category in order to sum rating and weight.
     switch (questions[index]?.category) {
       case Category.EFFECTIVENESS: {
         effectivenessRating += normalizeRating;
@@ -205,36 +207,33 @@ export const addFinishAnswerService = async (
   const userRepo = getCustomRepository(UserRepository);
   const reviewRepo = getCustomRepository(ReviewRepository);
   const ratingRepo = getCustomRepository(RatingRepository);
-
   const user = await userRepo.findOneUserByKey('id', userId);
   if (!user) throw buildError(400, allErrors.userNotFound);
-
   const review = await reviewRepo.findReviewByUserId(userId);
   if (!review) throw buildError(400, allErrors.reviewNotFound);
-
   const rating = await ratingRepo.findRatingByReviewId(review.id);
   if (!rating) throw buildError(400, allErrors.ratingNotFound);
-
   let effectivenessRating = rating.effectivenessRating;
   let interactionRating = rating.interactionRating;
   let assessmentOfAbilitiesRating = rating.assessmentOfAbilitiesRating;
   let personalQualitiesRating = rating.personalQualitiesRating;
+  //Getting the total weight of the review.
   const effectivenessWeight = rating.effectivenessWeight;
   const interactionWeight = rating.interactionWeight;
   const assessmentOfAbilitiesWeight = rating.assessmentOfAbilitiesWeight;
   const personalQualitiesWeight = rating.personalQualitiesWeight;
-
-  effectivenessRating /= effectivenessWeight;
-  interactionRating /= interactionWeight;
-  assessmentOfAbilitiesRating /= assessmentOfAbilitiesWeight;
-  personalQualitiesRating /= personalQualitiesWeight;
+  //in order to don't have NaN or null.
+  if (effectivenessWeight !== DEFAULT_RATING) effectivenessRating /= effectivenessWeight;
+  if (interactionWeight !== DEFAULT_RATING) interactionRating /= interactionWeight;
+  if (assessmentOfAbilitiesWeight !== DEFAULT_RATING) assessmentOfAbilitiesRating /= assessmentOfAbilitiesWeight;
+  if (personalQualitiesWeight !== DEFAULT_RATING) personalQualitiesRating /= personalQualitiesWeight;
+  //The overall rating of review.
   const overallRating =
     (effectivenessRating +
       interactionRating +
       assessmentOfAbilitiesRating +
       personalQualitiesRating) /
     NUMBER_OF_CATEGORIES;
-
   const dataForLastUpdateRating = {
     effectivenessRating,
     interactionRating,
@@ -244,7 +243,6 @@ export const addFinishAnswerService = async (
     ratingId: rating.id,
   };
   ratingRepo.lastUpdateRating(dataForLastUpdateRating);
-
   const dataForLastUpdate = {
     answeredQuestions: 0,
     activeSession: false,
@@ -253,19 +251,16 @@ export const addFinishAnswerService = async (
     description,
   };
   reviewRepo.lastUpdateTemporaryRating(dataForLastUpdate);
-
   let userRating = user.rating;
   const numberOfCompletedReviews = user.numberOfCompletedReviews + 1;
   if (userRating != null) {
     userRating = (userRating + overallRating) / NORMALIZATION_DIVISOR;
   } else userRating = overallRating;
-
   userRepo.updateUserAfterReview({
     userId,
     rating: userRating,
     numberOfCompletedReviews,
   });
-
   sendEmail({
     type: 'successfully-appraisers',
     emailTo: user.email,

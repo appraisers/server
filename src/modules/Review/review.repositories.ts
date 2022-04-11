@@ -66,6 +66,7 @@ export class ReviewRepository extends Repository<Review> {
       reviewId,
       activeSession,
       description,
+      rating,
     } = data;
     return this.createQueryBuilder('review')
       .update(Review)
@@ -75,6 +76,7 @@ export class ReviewRepository extends Repository<Review> {
         description: description,
         updatedAt: new Date(),
         createdAt: new Date(),
+        ratingSummary: rating,
       })
       .where('id = :reviewId', {
         reviewId,
