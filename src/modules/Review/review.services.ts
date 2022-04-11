@@ -66,37 +66,46 @@ export const addAnswerService = async (
   const userRepo = getCustomRepository(UserRepository);
   const questionRepo = getCustomRepository(QuestionRepository);
   const ratingRepo = getCustomRepository(RatingRepository);
+
   const { userId, ids, answers, userPosition } = data;
   // Find appraising user
   const user = await userRepo.findOne({ where: { id: userId } });
   if (!user) throw buildError(400, allErrors.userNotFound);
+
   // Find or create review
   let review = await reviewRepo.findReviewByUserId(userId);
   if (!review) {
     review = await createReviewService(data, token, jwt);
   }
   if (!review) throw buildError(400, allErrors.reviewNotFound);
+
   // Find or create rating
   let ratingRow = await ratingRepo.findRatingByReviewId(review.id);
   if (!ratingRow) {
     ratingRow = await ratingRepo.createRating({ review });
   }
   if (!ratingRow) throw buildError(400, allErrors.ratingNotFound);
+
   let answeredQuestions = review.answeredQuestions;
+
   let effectivenessRating = ratingRow.effectivenessRating;
   let interactionRating = ratingRow.interactionRating;
   let assessmentOfAbilitiesRating = ratingRow.assessmentOfAbilitiesRating;
+
   let personalQualitiesRating = ratingRow.personalQualitiesRating;
   let effectivenessWeight = ratingRow.effectivenessWeight;
   let interactionWeight = ratingRow.interactionWeight;
   let assessmentOfAbilitiesWeight = ratingRow.assessmentOfAbilitiesWeight;
   let personalQualitiesWeight = ratingRow.personalQualitiesWeight;
+
   // Get questions from params
   let questions = await questionRepo.findArrayQuestionsById({ ids });
+
   // Count sum answers
   answers.forEach((value, index) => {
     if (value < REVIEWS_ANSWERS_MIN_VALUE || value > REVIEWS_ANSWERS_MAX_VALUE)
       throw buildError(400, allErrors.incorectAnswer);
+
     const weight = questions[index]?.weight;
     if (!weight) throw buildError(400, allErrors.weightNotFound);
     const normalizeRating = value * weight;
@@ -126,10 +135,12 @@ export const addAnswerService = async (
   });
   // Update count of question
   answeredQuestions += answers.length;
+
   const dataForUpdate = {
     answeredQuestions,
     reviewId: review.id,
   };
+
   const dataForUpdateRating = {
     effectivenessRating,
     interactionRating,
@@ -141,21 +152,26 @@ export const addAnswerService = async (
     personalQualitiesWeight,
     ratingId: ratingRow.id,
   };
+
   let isLastAnswers;
   let countQuestions = await questionRepo.getCountAllQuestions({
     position: userPosition,
   });
+
   if (countQuestions === answeredQuestions) {
     isLastAnswers = true;
   } else isLastAnswers = false;
+
   const updateReview = await reviewRepo.updateTemporaryRating(dataForUpdate);
   if (!updateReview?.affected) {
     throw buildError(400, allErrors.reviewNotFound);
   }
+
   const updateRating = await ratingRepo.updateRating(dataForUpdateRating);
   if (!updateRating?.affected) {
     throw buildError(400, allErrors.ratingNotFound);
   }
+
   return isLastAnswers;
 };
 
@@ -173,11 +189,13 @@ export const createReviewService = async (
   if (!user) throw buildError(400, allErrors.userNotFound);
   const author = await userRepo.findOne({ where: { id: decoded.id } });
   if (!author) throw buildError(400, allErrors.authorNotFound);
+
   const review = await reviewRepo.createReview({
     ...data,
     author,
     user,
   });
+
   return review;
 };
 
@@ -204,10 +222,10 @@ export const addFinishAnswerService = async (
   const assessmentOfAbilitiesWeight = rating.assessmentOfAbilitiesWeight;
   const personalQualitiesWeight = rating.personalQualitiesWeight;
   //in order to don't have NaN or null.
-  effectivenessWeight != 0 ? effectivenessRating /= effectivenessWeight : effectivenessRating = 0;
-  interactionWeight != 0 ? interactionRating /= interactionWeight : interactionRating = 0;
-  assessmentOfAbilitiesWeight != 0 ? assessmentOfAbilitiesRating /= assessmentOfAbilitiesWeight : assessmentOfAbilitiesRating = 0;
-  personalQualitiesWeight != 0 ? personalQualitiesRating /= personalQualitiesWeight : personalQualitiesRating = 0;
+  if (effectivenessRating != effectivenessWeight) effectivenessRating /= effectivenessWeight;
+  if (interactionRating != interactionWeight) interactionRating /= interactionWeight;
+  if (assessmentOfAbilitiesRating != assessmentOfAbilitiesWeight) assessmentOfAbilitiesRating /= assessmentOfAbilitiesWeight;
+  if (personalQualitiesRating != personalQualitiesWeight) personalQualitiesRating /= personalQualitiesWeight;
   //The overall rating of review.
   const overallRating =
     (effectivenessRating +
