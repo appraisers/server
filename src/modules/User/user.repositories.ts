@@ -1,6 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Roles, User } from '../../entities/User';
-import { Review } from '../../entities/Review';
 import { LIMIT_TOP_USERS } from './user.constants';
 import {
   ChangeUserRoleRequestBody,
