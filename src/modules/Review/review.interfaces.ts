@@ -53,6 +53,7 @@ export interface LastUpdateTemporaryRatingData {
   answeredQuestions: number;
   activeSession: boolean;
   description: string;
+  rating: number;
 }
 
 export interface FinishAnswerData {

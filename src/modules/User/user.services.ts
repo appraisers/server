@@ -88,6 +88,7 @@ export const getUserInfoService = async (
   const { userId } = data;
   const userRepo = getCustomRepository(UserRepository);
   let checkUser = await userRepo.getUserById({ userId });
+  if (!checkUser) checkUser = await userRepo.findOneUserByKey('id', userId);
   if (!checkUser) throw buildError(400, allErrors.userNotFound);
   const ratingByCategories = checkUser.ratingByCategories;
   if (ratingByCategories != null && Array.isArray(ratingByCategories)) {
