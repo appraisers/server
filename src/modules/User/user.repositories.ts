@@ -22,7 +22,9 @@ export class UserRepository extends Repository<User> {
     return this.createQueryBuilder('user')
       .select('user')
       .leftJoinAndSelect('user.ratingByCategories', 'ratingByCategories')
-      .leftJoinAndSelect('user.review', 'review')
+      .innerJoinAndSelect('user.review', 'review')
+      .innerJoin('review.author', 'author')
+      .addSelect(['author.id', 'author.fullname'])
       .where('user.id = :userId', { userId })
       .getOne()
   }
