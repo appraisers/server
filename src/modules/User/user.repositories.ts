@@ -1,5 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Roles, User } from '../../entities/User';
+import { Review } from '../../entities/Review';
 import { LIMIT_TOP_USERS } from './user.constants';
 import {
   ChangeUserRoleRequestBody,
@@ -22,7 +23,9 @@ export class UserRepository extends Repository<User> {
     return this.createQueryBuilder('user')
       .select('user')
       .leftJoinAndSelect('user.ratingByCategories', 'ratingByCategories')
-      .leftJoinAndSelect('user.review', 'review')
+      .innerJoinAndSelect('user.review', 'review')
+      .innerJoin('review.author', 'author')
+      .addSelect(['author.id', 'author.fullname'])
       .where('user.id = :userId', { userId })
       .getOne()
   }
