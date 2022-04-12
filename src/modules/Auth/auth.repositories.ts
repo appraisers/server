@@ -55,6 +55,7 @@ export class UserRepository extends Repository<User> {
     return this.createQueryBuilder('user')
       .select('user.id')
       .addSelect('user.email')
+      .addSelect('user.position')
       .addSelect(`user.${field}`)
       .where('user.id = :id', { id })
       .getOne()
