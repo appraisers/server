@@ -9,6 +9,7 @@ export interface UserWithCategoriesService {
   interactionRating: number;
   assessmentOfAbilitiesRating: number;
   personalQualitiesRating: number;
+  defaultRating: number;
   ratingByCategories: null;
 }
 

@@ -67,6 +67,13 @@ export class Rating {
   @Column({
     default: 0,
     type: 'float',
+    name: 'default_rating',
+  })
+  defaultRating!: number;
+
+  @Column({
+    default: 0,
+    type: 'float',
     name: 'effectiveness_weight',
   })
   effectivenessWeight!: number;
@@ -91,6 +98,13 @@ export class Rating {
     name: 'personal_qualities_weight',
   })
   personalQualitiesWeight!: number;
+
+  @Column({
+    default: 0,
+    type: 'float',
+    name: 'default_weight',
+  })
+  defaultWeight!: number;
 
   @Column('timestamp', {
     nullable: true,
