@@ -49,7 +49,7 @@ export class QuestionRepository extends Repository<Question> {
   async getCountAllQuestions({
     position,
   }: CountAllQuestionsByPosition): Promise<number> {
-    ; return this.createQueryBuilder('question')
+    return this.createQueryBuilder('question')
       .select(['question'])
       .where('question.position = :position', { position })
       .orWhere(`question.position = 'default'`)
