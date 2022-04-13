@@ -28,11 +28,10 @@ export class QuestionRepository extends Repository<Question> {
   }
   async getQuestions(data: GetQuestionsRequestBody): Promise<Question[]> {
     const { offset, limit, position } = data;
-    const defaultPosition = 'default';
     return this.createQueryBuilder('question')
       .select(['question'])
       .where('question.position = :position', { position })
-      .orWhere('question.position = :defaultPosition', { defaultPosition })
+      .orWhere(`question.position = 'default'`)
       .andWhere('question.deletedAt IS NULL')
       .orderBy('question.id', 'ASC')
       .offset(offset)
@@ -50,11 +49,10 @@ export class QuestionRepository extends Repository<Question> {
   async getCountAllQuestions({
     position,
   }: CountAllQuestionsByPosition): Promise<number> {
-    const defaultPosition = 'default';
     ; return this.createQueryBuilder('question')
       .select(['question'])
       .where('question.position = :position', { position })
-      .orWhere('question.position = :defaultPosition', { defaultPosition })
+      .orWhere(`question.position = 'default'`)
       .getCount();
   }
   async deleteQuestions(data: DeleteQuestionsData) {
