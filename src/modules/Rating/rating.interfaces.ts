@@ -10,10 +10,12 @@ export interface UpdateRating {
   interactionRating: number;
   assessmentOfAbilitiesRating: number;
   personalQualitiesRating: number;
+  defaultRating: number;
   effectivenessWeight: number;
   interactionWeight: number;
   assessmentOfAbilitiesWeight: number;
   personalQualitiesWeight: number;
+  defaultWeight: number
   ratingId: ID;
 }
 
@@ -24,4 +26,5 @@ export interface LastUpdateRating {
   interactionRating: number;
   assessmentOfAbilitiesRating: number;
   personalQualitiesRating: number;
+  defaultRating: number;
 }
