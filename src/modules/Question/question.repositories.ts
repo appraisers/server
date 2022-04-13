@@ -31,6 +31,7 @@ export class QuestionRepository extends Repository<Question> {
     return this.createQueryBuilder('question')
       .select(['question'])
       .where('question.position = :position', { position })
+      .orWhere("question.position = 'default'")
       .andWhere('question.deletedAt IS NULL')
       .orderBy('question.id', 'ASC')
       .offset(offset)
@@ -51,6 +52,7 @@ export class QuestionRepository extends Repository<Question> {
     return this.createQueryBuilder('question')
       .select(['question'])
       .where('question.position = :position', { position })
+      .orWhere("question.position = 'default'")
       .getCount();
   }
   async deleteQuestions(data: DeleteQuestionsData) {
