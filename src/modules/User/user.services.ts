@@ -232,3 +232,12 @@ export const toggleShowInfoService = async (
   await userRepo.toggleShowInfo({ userId, showInfo });
   return null;
 };
+export const getUserService = async (
+  data: GetUserInfoBody,
+): Promise<User> => {
+  const { userId } = data;
+  const userRepo = getCustomRepository(UserRepository);
+  let user = await userRepo.getUserById({ userId });
+  if (!user) throw buildError(400, allErrors.userNotFound);
+  return user;
+};

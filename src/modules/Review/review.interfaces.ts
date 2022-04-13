@@ -15,7 +15,7 @@ export interface InviteAppriceResponse extends CommonResponse {
 }
 export interface InviteAppriceData {
   userId: ID;
-  email: string;
+  emails: string[];
 }
 
 export interface CheckReviewsData {
@@ -37,7 +37,6 @@ export interface AddAnswerData {
   userId: ID;
   ids: ID[];
   answers: number[];
-  userPosition: string;
 }
 
 export interface AddAnswerControllerResponse extends CommonResponse {

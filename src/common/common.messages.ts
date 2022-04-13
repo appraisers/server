@@ -23,5 +23,6 @@ export const allErrors = {
   offsetOrLimitNotFound: 'Offset, limit, or position are missing.',
   questionNotFoundOrDeleted: 'Question not found or already deleted',
   requestedReviewError: 'The last review was less than six months ago',
-  unknownCategory: 'Unknown category'
+  unknownCategory: 'Unknown category',
+  emptyEmails: 'Emails is empty'
 };
