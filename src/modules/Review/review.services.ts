@@ -92,13 +92,14 @@ export const addAnswerService = async (
   let effectivenessRating = ratingRow.effectivenessRating;
   let interactionRating = ratingRow.interactionRating;
   let assessmentOfAbilitiesRating = ratingRow.assessmentOfAbilitiesRating;
-
   let personalQualitiesRating = ratingRow.personalQualitiesRating;
+  let defaultRating = ratingRow.defaultRating;
+
   let effectivenessWeight = ratingRow.effectivenessWeight;
   let interactionWeight = ratingRow.interactionWeight;
   let assessmentOfAbilitiesWeight = ratingRow.assessmentOfAbilitiesWeight;
   let personalQualitiesWeight = ratingRow.personalQualitiesWeight;
-
+  let defaultWeight = ratingRow.defaultWeight;
   // Get questions from params
   let questions = await questionRepo.findArrayQuestionsById({ ids });
 
@@ -132,6 +133,11 @@ export const addAnswerService = async (
         personalQualitiesWeight += weight;
         break;
       }
+      case Category.DEFAULT: {
+        defaultRating += normalizeRating;
+        defaultWeight += weight;
+        break;
+      }
     }
   });
   // Update count of question
@@ -147,10 +153,12 @@ export const addAnswerService = async (
     interactionRating,
     assessmentOfAbilitiesRating,
     personalQualitiesRating,
+    defaultRating,
     effectivenessWeight,
     interactionWeight,
     assessmentOfAbilitiesWeight,
     personalQualitiesWeight,
+    defaultWeight,
     ratingId: ratingRow.id,
   };
 
@@ -217,28 +225,33 @@ export const addFinishAnswerService = async (
   let interactionRating = rating.interactionRating;
   let assessmentOfAbilitiesRating = rating.assessmentOfAbilitiesRating;
   let personalQualitiesRating = rating.personalQualitiesRating;
+  let defaultRating = rating.defaultRating;
   //Getting the total weight of the review.
   const effectivenessWeight = rating.effectivenessWeight;
   const interactionWeight = rating.interactionWeight;
   const assessmentOfAbilitiesWeight = rating.assessmentOfAbilitiesWeight;
   const personalQualitiesWeight = rating.personalQualitiesWeight;
+  const defaultWeight = rating.defaultWeight;
   //in order to don't have NaN or null.
   if (effectivenessWeight !== DEFAULT_RATING) effectivenessRating /= effectivenessWeight;
   if (interactionWeight !== DEFAULT_RATING) interactionRating /= interactionWeight;
   if (assessmentOfAbilitiesWeight !== DEFAULT_RATING) assessmentOfAbilitiesRating /= assessmentOfAbilitiesWeight;
   if (personalQualitiesWeight !== DEFAULT_RATING) personalQualitiesRating /= personalQualitiesWeight;
+  if (defaultWeight !== DEFAULT_RATING) defaultRating /= defaultWeight;
   //The overall rating of review.
   const overallRating =
     (effectivenessRating +
       interactionRating +
       assessmentOfAbilitiesRating +
-      personalQualitiesRating) /
+      personalQualitiesRating +
+      defaultRating) /
     NUMBER_OF_CATEGORIES;
   const dataForLastUpdateRating = {
     effectivenessRating,
     interactionRating,
     assessmentOfAbilitiesRating,
     personalQualitiesRating,
+    defaultRating,
     rating: overallRating,
     ratingId: rating.id,
   };

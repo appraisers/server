@@ -14,11 +14,11 @@ export class RatingRepository extends Repository<Rating> {
     const rating = new Rating();
     rating.review = review;
     await this.save(rating);
-    
+
     return rating;
   }
 
-  async findRatingByReviewId(reviewId: ID): Promise<Rating | undefined> { 
+  async findRatingByReviewId(reviewId: ID): Promise<Rating | undefined> {
     return this.createQueryBuilder('rating')
       .select('rating')
       .where('rating.review_id = :reviewId', { reviewId })
@@ -34,10 +34,12 @@ export class RatingRepository extends Repository<Rating> {
         interactionRating: data.interactionRating,
         assessmentOfAbilitiesRating: data.assessmentOfAbilitiesRating,
         personalQualitiesRating: data.personalQualitiesRating,
+        defaultRating: data.defaultRating,
         effectivenessWeight: data.effectivenessWeight,
         interactionWeight: data.interactionWeight,
         assessmentOfAbilitiesWeight: data.assessmentOfAbilitiesWeight,
         personalQualitiesWeight: data.personalQualitiesWeight,
+        defaultWeight: data.defaultWeight,
       })
       .where('id = :ratingId', { ratingId: data.ratingId })
       .execute();
@@ -51,6 +53,7 @@ export class RatingRepository extends Repository<Rating> {
         interactionRating: data.interactionRating,
         assessmentOfAbilitiesRating: data.assessmentOfAbilitiesRating,
         personalQualitiesRating: data.personalQualitiesRating,
+        defaultRating: data.defaultRating,
         rating: data.rating,
         updatedAt: new Date(),
       })
