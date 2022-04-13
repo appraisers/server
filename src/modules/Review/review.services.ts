@@ -138,6 +138,9 @@ export const addAnswerService = async (
         defaultWeight += weight;
         break;
       }
+      default: {
+        throw buildError(400, allErrors.unknownCategory);
+      }
     }
   });
   // Update count of question

@@ -22,5 +22,6 @@ export const allErrors = {
   youMustFillTheEmailOrPhoneField: 'You must fill the email or phone field',
   offsetOrLimitNotFound: 'Offset, limit, or position are missing.',
   questionNotFoundOrDeleted: 'Question not found or already deleted',
-  requestedReviewError: 'The last review was less than six months ago'
+  requestedReviewError: 'The last review was less than six months ago',
+  unknownCategory: 'Unknown category'
 };
