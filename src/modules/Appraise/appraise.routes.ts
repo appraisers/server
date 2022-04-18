@@ -8,8 +8,6 @@ import { AppraiseResponse, getAppraiseResponse } from './appraise.interfaces';
 import { roles } from '../../entities/User';
 import { getAppraisesService } from './appraise.services';
 const routes = async (fastify: FastifyInstance): Promise<void> => {
-
-
     const getAppraisersController = async (
         request: FastifyRequest
     ): Promise<AppraiseResponse | null> => {

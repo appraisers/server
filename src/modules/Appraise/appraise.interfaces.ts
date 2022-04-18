@@ -1,5 +1,5 @@
 import { User } from '../../entities/User';
-import { Appraise } from 'src/entities/Appraise';
+import { Appraise } from '../../entities/Appraise';
 import { ID } from '../../common/common.interfaces';
 
 export interface AppraiseResponse {

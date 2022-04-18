@@ -35,16 +35,17 @@ export class AppraiseRepository extends Repository<Appraise> {
         dateTimeWithLastYear.setMonth(0);
         dateTimeWithLastYear.setDate(1);
 
-        return this.createQueryBuilder('appraise')
+        const query = this.createQueryBuilder('appraise')
             .select('')
-            .where(userId ? 'user_id = :userId' : '1=1', { userId })
-            .andWhere(authorId ? 'author_id = :authorId' : '1=1', { authorId })
-            .andWhere(createdAtAfter ? 'created_at >= :createdAtAfter' : '1=1', { createdAtAfter })
-            .andWhere(lastMonth ? 'created_at >= :dateTimeWithLastMonth' : '1=1', { dateTimeWithLastMonth })
-            .andWhere(lastYear ? 'created_at >= :dateTimeWithLastYear' : '1=1', { dateTimeWithLastYear })
+        if (userId !== undefined) query.where('user_id = :userId', { userId })
+        if (authorId !== undefined) query.where('author_id = :authorId', { authorId })
+        if (createdAtAfter !== undefined) query.where('created_at >= :createdAtAfter', { createdAtAfter })
+        if (lastMonth !== undefined) query.where('created_at >= :dateTimeWithLastMonth', { dateTimeWithLastMonth })
+        if (lastYear !== undefined) query.where('created_at >= :dateTimeWithLastYear', { dateTimeWithLastYear })
             .orderBy('appraise.createdAt', 'ASC')
             .limit(limit)
             .offset(offset)
-            .getMany()
+        const appraises = query.getMany()
+        return appraises;
     }
 }
