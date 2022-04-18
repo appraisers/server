@@ -40,6 +40,7 @@ export class ReviewRepository extends Repository<Review> {
   async findReviewByUserId(userId: ID): Promise<Review | undefined> {
     return this.createQueryBuilder('review')
       .select('review')
+      .innerJoinAndSelect('review.author', 'author')
       .where('user_id = :userId', { userId })
       .andWhere('active_session = true')
       .orderBy('review.createdAt', 'DESC')
