@@ -9,7 +9,7 @@ export const getAppraisesService = async (
     data: getAppraiseResponse
 ): Promise<Appraise[]> => {
     const appraiseRepo = getCustomRepository(AppraiseRepository);
-    const appraise = await appraiseRepo.findAppraiseByUserAndAuthor(data);
+    const appraise = await appraiseRepo.findAppraises(data);
     if (!appraise) throw buildError(400, allErrors.appraiseNotFound);
     return appraise;
 };

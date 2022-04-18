@@ -23,7 +23,7 @@ export class AppraiseRepository extends Repository<Appraise> {
             .andWhere('author_id = :authorId', { authorId })
             .execute();
     }
-    async findAppraiseByUserAndAuthor(data: getAppraiseResponse): Promise<Appraise[]> {
+    async findAppraises(data: getAppraiseResponse): Promise<Appraise[]> {
         const { userId, authorId, limit, offset, createdAtAfter, lastMonth, lastYear } = data;
 
         //Setting the datetime with the last month from the first day.
