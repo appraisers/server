@@ -51,8 +51,8 @@ export class AppraiseRepository extends Repository<Appraise> {
         if (lastMonth != null) query.andWhere('created_at >= :lastMonthDate', { lastMonthDate });
         if (lastYear != null) query.andWhere('created_at >= :lastYearDate', { lastYearDate })
         query.orderBy('appraise.createdAt', 'ASC')
-        query.limit(limit)
-        query.offset(offset);
+            .limit(limit)
+            .offset(offset);
         return await query.getMany();
     }
 }
