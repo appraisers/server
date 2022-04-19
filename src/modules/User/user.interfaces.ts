@@ -85,3 +85,9 @@ export interface ToggleShowInfoData {
 export interface TopUsersData extends CommonResponse {
   data: User[];
 }
+export interface GetUserBody {
+  userId: ID;
+}
+export interface GetUserResponse extends CommonResponse {
+  user: User;
+}

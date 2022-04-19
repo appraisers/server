@@ -39,23 +39,28 @@ export const checkReviewsService = async (
 
 export const inviteAppriceService = async (
   data: InviteAppriceData
-): Promise<InviteAppriceResponse[]> => {
-  const { email, userId } = data;
+): Promise<null> => {
+  const { emails, userId } = data;
   const userRepo = getCustomRepository(UserRepository);
   const user = await userRepo.findOneUserByKey('id', userId);
-
   if (!user) throw buildError(400, allErrors.userNotFound);
+  if (emails.length > 0) {
+    emails.forEach((email) => {
+      sendEmail({
+        type: 'invite-appraise',
+        emailTo: email,
+        subject: 'You are invited to appraise',
+        replacements: {
+          link: `${FRONTEND_URL}/invite-appraise/${userId}`,
+          fullname: user.fullname,
+        },
+      });
+    });
+  } else {
+    throw buildError(400, allErrors.emptyEmails);
+  }
 
-  sendEmail({
-    type: 'invite-appraise',
-    emailTo: email,
-    subject: 'You are invited to appraise',
-    replacements: {
-      link: `${FRONTEND_URL}/invite-appraise/${userId}`,
-      fullname: user.fullname,
-    },
-  });
-  return [];
+  return null;
 };
 
 export const addAnswerService = async (
@@ -68,7 +73,7 @@ export const addAnswerService = async (
   const questionRepo = getCustomRepository(QuestionRepository);
   const ratingRepo = getCustomRepository(RatingRepository);
 
-  const { userId, ids, answers, userPosition } = data;
+  const { userId, ids, answers } = data;
   // Find appraising user
   const user = await userRepo.findOne({ where: { id: userId } });
   if (!user) throw buildError(400, allErrors.userNotFound);
@@ -167,7 +172,7 @@ export const addAnswerService = async (
 
   let isLastAnswers;
   let countQuestions = await questionRepo.getCountAllQuestions({
-    position: userPosition,
+    position: user.position!,
   });
 
   if (countQuestions === answeredQuestions) {
@@ -236,10 +241,14 @@ export const addFinishAnswerService = async (
   const personalQualitiesWeight = rating.personalQualitiesWeight;
   const defaultWeight = rating.defaultWeight;
   //in order to don't have NaN or null.
-  if (effectivenessWeight !== DEFAULT_RATING) effectivenessRating /= effectivenessWeight;
-  if (interactionWeight !== DEFAULT_RATING) interactionRating /= interactionWeight;
-  if (assessmentOfAbilitiesWeight !== DEFAULT_RATING) assessmentOfAbilitiesRating /= assessmentOfAbilitiesWeight;
-  if (personalQualitiesWeight !== DEFAULT_RATING) personalQualitiesRating /= personalQualitiesWeight;
+  if (effectivenessWeight !== DEFAULT_RATING)
+    effectivenessRating /= effectivenessWeight;
+  if (interactionWeight !== DEFAULT_RATING)
+    interactionRating /= interactionWeight;
+  if (assessmentOfAbilitiesWeight !== DEFAULT_RATING)
+    assessmentOfAbilitiesRating /= assessmentOfAbilitiesWeight;
+  if (personalQualitiesWeight !== DEFAULT_RATING)
+    personalQualitiesRating /= personalQualitiesWeight;
   if (defaultWeight !== DEFAULT_RATING) defaultRating /= defaultWeight;
   //The overall rating of review.
   const overallRating =
