@@ -37,7 +37,7 @@ export class AppraiseRepository extends Repository<Appraise> {
         } = data;
 
         //Setting the datetime with the last month from the first day.
-        let lastMonthDate = new Date();
+        const lastMonthDate = new Date();
         lastMonthDate.setDate(1);
 
         //Setting the datetime with the last year from the first month and the first day (example: 2022-01-01).
