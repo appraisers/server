@@ -88,7 +88,7 @@ export const addAnswerService = async (
   // Find or create review
   let review = await reviewRepo.findReviewByUserId(userId);
   if (!review) {
-    review = await createReviewService(data, token, jwt);
+    review = await createReviewService(data, authorId, token, jwt);
     await appraiseRepo.createAppraise({ user, author });
   }
   if (!review) throw buildError(400, allErrors.reviewNotFound);
@@ -202,17 +202,16 @@ export const addAnswerService = async (
 
 export const createReviewService = async (
   data: CreateReviewData,
+  authorId: ID,
   token: string,
   jwt: JWT
 ): Promise<Review> => {
   const reviewRepo = getCustomRepository(ReviewRepository);
   const userRepo = getCustomRepository(UserRepository);
-  const decoded: DecodedJWT = jwt.verify(token);
-  if (decoded.isRefresh) throw buildError(400, allErrors.incorectToken);
   const { userId } = data;
   const user = await userRepo.findOne({ where: { id: userId } });
   if (!user) throw buildError(400, allErrors.userNotFound);
-  const author = await userRepo.findOne({ where: { id: decoded.id } });
+  const author = await userRepo.findOne({ where: { id: authorId } });
   if (!author) throw buildError(400, allErrors.authorNotFound);
 
   const review = await reviewRepo.createReview({

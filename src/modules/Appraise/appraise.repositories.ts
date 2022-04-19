@@ -37,22 +37,22 @@ export class AppraiseRepository extends Repository<Appraise> {
         } = data;
 
         //Setting the datetime with the last month from the first day.
-        let dateTimeWithLastMonth = new Date();
-        dateTimeWithLastMonth.setDate(1);
+        let lastMonthDate = new Date();
+        lastMonthDate.setDate(1);
 
         //Setting the datetime with the last year from the first month and the first day (example: 2022-01-01).
-        let dateTimeWithLastYear = new Date();
-        dateTimeWithLastYear.setMonth(0);
-        dateTimeWithLastYear.setDate(1);
+        const lastYearDate = new Date();
+        lastYearDate.setMonth(0);
+        lastYearDate.setDate(1);
         const query = this.createQueryBuilder('appraise').select(['appraise']);
         if (userId != null) query.andWhere('user_id = :userId', { userId });
         if (authorId != null) query.andWhere('author_id = :authorId', { authorId });
         if (createdAtAfter != null) query.andWhere('created_at >= :createdAtAfter', { createdAtAfter });
-        if (lastMonth != null) query.andWhere('created_at >= :dateTimeWithLastMonth', { dateTimeWithLastMonth });
-        if (lastYear != null) query.andWhere('created_at >= :dateTimeWithLastYear', { dateTimeWithLastYear })
-            .orderBy('appraise.createdAt', 'ASC')
-            .limit(limit)
-            .offset(offset);
+        if (lastMonth != null) query.andWhere('created_at >= :lastMonthDate', { lastMonthDate });
+        if (lastYear != null) query.andWhere('created_at >= :lastYearDate', { lastYearDate })
+        query.orderBy('appraise.createdAt', 'ASC')
+        query.limit(limit)
+        query.offset(offset);
         return await query.getMany();
     }
 }
