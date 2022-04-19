@@ -7,12 +7,21 @@ import { checkAuthHook, allowedFor } from '../../utils/utils';
 import { AppraiseResponse, getAppraiseResponse } from './appraise.interfaces';
 import { roles } from '../../entities/User';
 import { getAppraisesService } from './appraise.services';
+
 const routes = async (fastify: FastifyInstance): Promise<void> => {
     const getAppraisersController = async (
         request: FastifyRequest
     ): Promise<AppraiseResponse | null> => {
         try {
-            const { userId, limit, offset, authorId, createdAtAfter, lastMonth, lastYear } = request.query as getAppraiseResponse;
+            const {
+                userId,
+                limit,
+                offset,
+                authorId,
+                createdAtAfter,
+                lastMonth,
+                lastYear,
+            } = request.query as getAppraiseResponse;
             const data: getAppraiseResponse = {
                 userId,
                 authorId,
@@ -22,9 +31,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
                 lastMonth,
                 lastYear,
             };
-            const appraises = await getAppraisesService(
-                data as getAppraiseResponse,
-            );
+            const appraises = await getAppraisesService(data as getAppraiseResponse);
             return { ...commonResponse, appraises };
         } catch (error) {
             throw error;

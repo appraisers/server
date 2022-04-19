@@ -7,7 +7,7 @@ import { RatingRepository } from '../Rating/rating.repositories';
 import { QuestionRepository } from '../Question/question.repositories';
 import { AppraiseRepository } from '../Appraise/appraise.repositories';
 import { allErrors } from '../../common/common.messages';
-import { DecodedJWT, JWT } from '../../common/common.interfaces';
+import { DecodedJWT, ID, JWT } from '../../common/common.interfaces';
 import { sendEmail } from '../../utils/mail.helper';
 import config from '../../config';
 import { ReviewRepository } from './review.repositories';
@@ -66,6 +66,7 @@ export const inviteAppriceService = async (
 
 export const addAnswerService = async (
   data: AddAnswerData,
+  authorId: ID,
   token: string,
   jwt: JWT
 ): Promise<boolean> => {
@@ -76,22 +77,19 @@ export const addAnswerService = async (
   const appraiseRepo = getCustomRepository(AppraiseRepository);
   const { userId, ids, answers } = data;
 
-  const decoded: DecodedJWT = jwt.verify(token);
-  if (decoded.isRefresh) throw buildError(400, allErrors.incorectToken);
   //Finding author
-  const author = await userRepo.findOne({ where: { id: decoded.id } });
+  const author = await userRepo.findOne({ where: { id: authorId } });
   if (!author) throw buildError(400, allErrors.authorNotFound);
 
   // Find appraising user
   const user = await userRepo.findOne({ where: { id: userId } });
   if (!user) throw buildError(400, allErrors.userNotFound);
 
-  let appraise;
   // Find or create review
   let review = await reviewRepo.findReviewByUserId(userId);
   if (!review) {
     review = await createReviewService(data, token, jwt);
-    appraise = await appraiseRepo.createAppraise({ user, author });
+    await appraiseRepo.createAppraise({ user, author });
   }
   if (!review) throw buildError(400, allErrors.reviewNotFound);
 
@@ -298,7 +296,7 @@ export const addFinishAnswerService = async (
     rating: userRating,
     numberOfCompletedReviews,
   });
-  appraiseRepo.setStatusTrue({ userId, authorId });
+  appraiseRepo.setAppraiseStatus({ userId, authorId });
   sendEmail({
     type: 'successfully-appraisers',
     emailTo: user.email,

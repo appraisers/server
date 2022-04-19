@@ -11,7 +11,7 @@ export interface CreateAppraiseResponse {
     author: User;
 }
 
-export interface SetStatusResponse {
+export interface SetAppraiseStatusResponse {
     userId: ID;
     authorId: ID;
 }
