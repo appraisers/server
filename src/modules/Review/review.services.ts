@@ -5,8 +5,9 @@ import { buildError } from '../../utils/error.helper';
 import { UserRepository } from '../Auth/auth.repositories';
 import { RatingRepository } from '../Rating/rating.repositories';
 import { QuestionRepository } from '../Question/question.repositories';
+import { AppraiseRepository } from '../Appraise/appraise.repositories';
 import { allErrors } from '../../common/common.messages';
-import { DecodedJWT, JWT } from '../../common/common.interfaces';
+import { DecodedJWT, ID, JWT } from '../../common/common.interfaces';
 import { sendEmail } from '../../utils/mail.helper';
 import config from '../../config';
 import { ReviewRepository } from './review.repositories';
@@ -65,6 +66,7 @@ export const inviteAppriceService = async (
 
 export const addAnswerService = async (
   data: AddAnswerData,
+  authorId: ID,
   token: string,
   jwt: JWT
 ): Promise<boolean> => {
@@ -72,8 +74,13 @@ export const addAnswerService = async (
   const userRepo = getCustomRepository(UserRepository);
   const questionRepo = getCustomRepository(QuestionRepository);
   const ratingRepo = getCustomRepository(RatingRepository);
-
+  const appraiseRepo = getCustomRepository(AppraiseRepository);
   const { userId, ids, answers } = data;
+
+  //Finding author
+  const author = await userRepo.findOne({ where: { id: authorId } });
+  if (!author) throw buildError(400, allErrors.authorNotFound);
+
   // Find appraising user
   const user = await userRepo.findOne({ where: { id: userId } });
   if (!user) throw buildError(400, allErrors.userNotFound);
@@ -81,7 +88,8 @@ export const addAnswerService = async (
   // Find or create review
   let review = await reviewRepo.findReviewByUserId(userId);
   if (!review) {
-    review = await createReviewService(data, token, jwt);
+    review = await createReviewService(data, authorId, token, jwt);
+    await appraiseRepo.createAppraise({ user, author });
   }
   if (!review) throw buildError(400, allErrors.reviewNotFound);
 
@@ -194,17 +202,16 @@ export const addAnswerService = async (
 
 export const createReviewService = async (
   data: CreateReviewData,
+  authorId: ID,
   token: string,
   jwt: JWT
 ): Promise<Review> => {
   const reviewRepo = getCustomRepository(ReviewRepository);
   const userRepo = getCustomRepository(UserRepository);
-  const decoded: DecodedJWT = jwt.verify(token);
-  if (decoded.isRefresh) throw buildError(400, allErrors.incorectToken);
   const { userId } = data;
   const user = await userRepo.findOne({ where: { id: userId } });
   if (!user) throw buildError(400, allErrors.userNotFound);
-  const author = await userRepo.findOne({ where: { id: decoded.id } });
+  const author = await userRepo.findOne({ where: { id: authorId } });
   if (!author) throw buildError(400, allErrors.authorNotFound);
 
   const review = await reviewRepo.createReview({
@@ -223,10 +230,12 @@ export const addFinishAnswerService = async (
   const userRepo = getCustomRepository(UserRepository);
   const reviewRepo = getCustomRepository(ReviewRepository);
   const ratingRepo = getCustomRepository(RatingRepository);
+  const appraiseRepo = getCustomRepository(AppraiseRepository);
   const user = await userRepo.findOneUserByKey('id', userId);
   if (!user) throw buildError(400, allErrors.userNotFound);
   const review = await reviewRepo.findReviewByUserId(userId);
   if (!review) throw buildError(400, allErrors.reviewNotFound);
+  const authorId = review.author.id;
   const rating = await ratingRepo.findRatingByReviewId(review.id);
   if (!rating) throw buildError(400, allErrors.ratingNotFound);
   let effectivenessRating = rating.effectivenessRating;
@@ -286,6 +295,7 @@ export const addFinishAnswerService = async (
     rating: userRating,
     numberOfCompletedReviews,
   });
+  appraiseRepo.setAppraiseStatus({ userId, authorId });
   sendEmail({
     type: 'successfully-appraisers',
     emailTo: user.email,

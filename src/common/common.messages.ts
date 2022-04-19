@@ -10,6 +10,7 @@ export const allErrors = {
   questionIdNotFound: `Question doesn't exist`,
   ratingNotFound: 'Rating is not found',
   reviewNotFound: 'Review is not found',
+  appraiseNotFound: 'Appraise is not found',
   roleNotFound: 'Role is not found',
   temporaryRatingIsNotFound: 'Temporary rating is not found',
   tokenNotFound: 'Token is not found',
