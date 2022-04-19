@@ -34,14 +34,13 @@ export class AppraiseRepository extends Repository<Appraise> {
         let dateTimeWithLastYear = new Date;
         dateTimeWithLastYear.setMonth(0);
         dateTimeWithLastYear.setDate(1);
-
         const query = this.createQueryBuilder('appraise')
             .select('')
-        if (userId !== undefined) query.where('user_id = :userId', { userId })
-        if (authorId !== undefined) query.where('author_id = :authorId', { authorId })
-        if (createdAtAfter !== undefined) query.where('created_at >= :createdAtAfter', { createdAtAfter })
-        if (lastMonth !== undefined) query.where('created_at >= :dateTimeWithLastMonth', { dateTimeWithLastMonth })
-        if (lastYear !== undefined) query.where('created_at >= :dateTimeWithLastYear', { dateTimeWithLastYear })
+        if (userId != null) query.andWhere('user_id = :userId', { userId })
+        if (authorId != null) query.andWhere('author_id = :authorId', { authorId })
+        if (createdAtAfter != null) query.andWhere('created_at >= :createdAtAfter', { createdAtAfter })
+        if (lastMonth != null) query.andWhere('created_at >= :dateTimeWithLastMonth', { dateTimeWithLastMonth })
+        if (lastYear != null) query.andWhere('created_at >= :dateTimeWithLastYear', { dateTimeWithLastYear })
             .orderBy('appraise.createdAt', 'ASC')
             .limit(limit)
             .offset(offset)
