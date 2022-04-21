@@ -6,7 +6,8 @@ import {
   ToggleUserRepositoryData,
   UpdateRepositoryData,
   GetUserInfoBody,
-  ToggleShowInfoData
+  ToggleShowInfoData,
+  GetAllUsersResponse
 } from './user.interfaces';
 
 @EntityRepository(User)
@@ -28,12 +29,24 @@ export class UserRepository extends Repository<User> {
       .where('user.id = :userId', { userId })
       .getOne()
   }
-  getAllUsers(): Promise<User[] | undefined> {
-    return this.createQueryBuilder('user')
+  getAllUsers(data: GetAllUsersResponse): Promise<User[] | undefined> {
+    let { alphabet, rating, createdAt, position } = data;
+    const query = this.createQueryBuilder('user')
       .select('user')
-      .orderBy('user.id', 'ASC')
-      .where('user.role = :role', { role: Roles.USER })
-      .getMany();
+    if (alphabet != null) {
+      query.orderBy('user.fullname', alphabet.toUpperCase() === 'ASC' ? 'ASC' : 'DESC')
+    }
+    if (rating != null) {
+      query.orderBy('user.rating', rating.toUpperCase() === 'ASC' ? 'ASC' : 'DESC')
+    }
+    if (createdAt != null) {
+      query.orderBy('user.createdAt', createdAt.toUpperCase() === 'ASC' ? 'ASC' : 'DESC')
+    }
+    if (position != null) {
+      query.orderBy('user.position', position.toUpperCase() === 'ASC' ? 'ASC' : 'DESC')
+    }
+    query.where('user.role = :role', { role: Roles.USER })
+    return query.getMany();
   }
   updateUser(data: UpdateRepositoryData) {
     const {

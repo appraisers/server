@@ -91,3 +91,7 @@ export interface GetUserBody {
 export interface GetUserResponse extends CommonResponse {
   user: User;
 }
+
+export interface GetAllUsersResponse {
+  sort: string;
+}

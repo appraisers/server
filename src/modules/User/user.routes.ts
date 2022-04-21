@@ -20,7 +20,8 @@ import {
   UserWithCategories,
   TopUsersData,
   GetUserResponse,
-  GetUserBody
+  GetUserBody,
+  GetAllUsersResponse
 } from './user.interfaces';
 import {
   allInviteUsersService,
@@ -98,11 +99,19 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       throw error;
     }
   };
-  const allInviteUsersController = async (): Promise<
+  const allInviteUsersController = async (
+    request: FastifyRequest
+  ): Promise<
     AllInviteUsersResponse
   > => {
     try {
-      const users = await allInviteUsersService();
+      const {
+        alphabet,
+        rating,
+        createdAt,
+        position
+      } = request.query as GetAllUsersResponse;
+      const users = await allInviteUsersService({ alphabet, rating, createdAt, position });
 
       return {
         ...commonResponse,
@@ -112,9 +121,18 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       throw error;
     }
   };
-  const allUsersController = async (): Promise<AllUsersResponse> => {
+  const allUsersController = async (
+    request: FastifyRequest
+  ): Promise<AllUsersResponse> => {
     try {
-      const users = await allUsersService();
+      const {
+        alphabet,
+        rating,
+        createdAt,
+        position
+      } = request.query as GetAllUsersResponse;
+      const users = await allUsersService({ alphabet, rating, createdAt, position });
+
 
       return {
         ...commonResponse,

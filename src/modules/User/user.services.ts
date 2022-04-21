@@ -11,6 +11,7 @@ import {
   AllInviteUsersServiceResponse,
   AllUsersServiceResponse,
   ChangeUserRoleRequestBody,
+  GetAllUsersResponse,
   GetUserInfoBody,
   InviteUserRequestBody,
   ToggleUserRepositoryData,
@@ -37,11 +38,11 @@ export const checkAdminOrModeratorService = async (
   return false;
 };
 
-export const allInviteUsersService = async (): Promise<
+export const allInviteUsersService = async (data: GetAllUsersResponse): Promise<
   AllInviteUsersServiceResponse[]
 > => {
   const userRepo = getCustomRepository(UserRepository);
-  const users = await userRepo.getAllUsers();
+  const users = await userRepo.getAllUsers(data);
   if (!users) throw buildError(400, allErrors.usersNotFound);
   const mapUser = users.map((user) => ({
     email: user.email ?? '',
@@ -50,10 +51,9 @@ export const allInviteUsersService = async (): Promise<
   return mapUser;
 };
 
-export const allUsersService = async (): Promise<AllUsersServiceResponse[]> => {
+export const allUsersService = async (data: GetAllUsersResponse): Promise<AllUsersServiceResponse[]> => {
   const userRepo = getCustomRepository(UserRepository);
-
-  const users = await userRepo.getAllUsers();
+  const users = await userRepo.getAllUsers(data);
   if (!users) throw buildError(400, allErrors.usersNotFound);
   const mapUser = users.map((user) => ({
     id: user.id,
