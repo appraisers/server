@@ -7,7 +7,7 @@ import {
   UpdateRepositoryData,
   GetUserInfoBody,
   ToggleShowInfoData,
-  GetAllUsersResponse
+  GetAllUsersBody
 } from './user.interfaces';
 
 @EntityRepository(User)
@@ -29,23 +29,29 @@ export class UserRepository extends Repository<User> {
       .where('user.id = :userId', { userId })
       .getOne()
   }
-  getAllUsers(data: GetAllUsersResponse): Promise<User[] | undefined> {
+  getAllUsers(data: GetAllUsersBody | null): Promise<User[] | undefined> {
+    if (data === null) {
+      return this.createQueryBuilder('user')
+        .select('user')
+        .where('user.role = :role', { role: Roles.USER })
+        .getMany();
+    }
     let { alphabet, rating, createdAt, position } = data;
-    const query = this.createQueryBuilder('user')
-      .select('user')
+    const query = this.createQueryBuilder('user');
+    query.select('user')
+      .where('user.role = :role', { role: Roles.USER })
     if (alphabet != null) {
-      query.orderBy('user.fullname', alphabet.toUpperCase() === 'ASC' ? 'ASC' : 'DESC')
+      query.orderBy('user.fullname', alphabet === 'asc' ? 'ASC' : 'DESC')
     }
     if (rating != null) {
-      query.orderBy('user.rating', rating.toUpperCase() === 'ASC' ? 'ASC' : 'DESC')
+      query.orderBy('user.rating', rating === 'asc' ? 'ASC' : 'DESC')
     }
     if (createdAt != null) {
-      query.orderBy('user.createdAt', createdAt.toUpperCase() === 'ASC' ? 'ASC' : 'DESC')
+      query.orderBy('user.createdAt', createdAt === 'asc' ? 'ASC' : 'DESC')
     }
     if (position != null) {
-      query.orderBy('user.position', position.toUpperCase() === 'ASC' ? 'ASC' : 'DESC')
+      query.orderBy('user.position', position === 'asc' ? 'ASC' : 'DESC')
     }
-    query.where('user.role = :role', { role: Roles.USER })
     return query.getMany();
   }
   updateUser(data: UpdateRepositoryData) {
