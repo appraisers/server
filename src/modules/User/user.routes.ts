@@ -100,7 +100,6 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     }
   };
   const allInviteUsersController = async (
-    request: FastifyRequest
   ): Promise<
     AllInviteUsersResponse
   > => {
@@ -121,10 +120,10 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       const {
         alphabet,
         rating,
-        createdAt,
+        updatedAt,
         position
       } = request.query as GetAllUsersBody;
-      const users = await allUsersService({ alphabet, rating, createdAt, position });
+      const users = await allUsersService({ alphabet, rating, updatedAt, position });
 
 
       return {

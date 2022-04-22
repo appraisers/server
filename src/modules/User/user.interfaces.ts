@@ -95,6 +95,6 @@ export interface GetUserResponse extends CommonResponse {
 export interface GetAllUsersBody {
   alphabet: string;
   rating: string;
-  createdAt: string;
+  updatedAt: string;
   position: string;
 }

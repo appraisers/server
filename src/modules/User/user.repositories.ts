@@ -30,13 +30,13 @@ export class UserRepository extends Repository<User> {
       .getOne()
   }
   getAllUsers(data: GetAllUsersBody | null): Promise<User[] | undefined> {
-    if (data === null) {
+    if (data == null) {
       return this.createQueryBuilder('user')
         .select('user')
         .where('user.role = :role', { role: Roles.USER })
         .getMany();
     }
-    let { alphabet, rating, createdAt, position } = data;
+    const { alphabet, rating, updatedAt, position } = data;
     const query = this.createQueryBuilder('user');
     query.select('user')
       .where('user.role = :role', { role: Roles.USER })
@@ -46,8 +46,8 @@ export class UserRepository extends Repository<User> {
     if (rating != null) {
       query.orderBy('user.rating', rating === 'asc' ? 'ASC' : 'DESC')
     }
-    if (createdAt != null) {
-      query.orderBy('user.createdAt', createdAt === 'asc' ? 'ASC' : 'DESC')
+    if (updatedAt != null) {
+      query.orderBy('user.updatedReviewAt', updatedAt === 'asc' ? 'ASC' : 'DESC')
     }
     if (position != null) {
       query.orderBy('user.position', position === 'asc' ? 'ASC' : 'DESC')
