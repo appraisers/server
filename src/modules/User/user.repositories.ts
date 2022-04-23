@@ -6,7 +6,8 @@ import {
   ToggleUserRepositoryData,
   UpdateRepositoryData,
   GetUserInfoBody,
-  ToggleShowInfoData
+  ToggleShowInfoData,
+  GetAllUsersBody
 } from './user.interfaces';
 
 @EntityRepository(User)
@@ -28,12 +29,30 @@ export class UserRepository extends Repository<User> {
       .where('user.id = :userId', { userId })
       .getOne()
   }
-  getAllUsers(): Promise<User[] | undefined> {
-    return this.createQueryBuilder('user')
-      .select('user')
-      .orderBy('user.id', 'ASC')
+  getAllUsers(data: GetAllUsersBody | null): Promise<User[] | undefined> {
+    if (data == null) {
+      return this.createQueryBuilder('user')
+        .select('user')
+        .where('user.role = :role', { role: Roles.USER })
+        .getMany();
+    }
+    const { alphabet, rating, updatedAt, position } = data;
+    const query = this.createQueryBuilder('user');
+    query.select('user')
       .where('user.role = :role', { role: Roles.USER })
-      .getMany();
+    if (alphabet != null) {
+      query.orderBy('user.fullname', alphabet === 'asc' ? 'ASC' : 'DESC')
+    }
+    if (rating != null) {
+      query.orderBy('user.rating', rating === 'asc' ? 'ASC' : 'DESC')
+    }
+    if (updatedAt != null) {
+      query.orderBy('user.updatedReviewAt', updatedAt === 'asc' ? 'ASC' : 'DESC')
+    }
+    if (position != null) {
+      query.orderBy('user.position', position === 'asc' ? 'ASC' : 'DESC')
+    }
+    return query.getMany();
   }
   updateUser(data: UpdateRepositoryData) {
     const {
