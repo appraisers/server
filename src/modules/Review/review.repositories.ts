@@ -96,4 +96,12 @@ export class ReviewRepository extends Repository<Review> {
       })
       .execute();
   }
+  async findReviewByUserAndAuthor(userId: ID, author: ID): Promise<Review | undefined> {
+    return this.createQueryBuilder('review')
+      .select('review')
+      .where('user_id = :userId', { userId })
+      .andWhere('author_id = :author', { author })
+      .orderBy('review.updatedAt', 'DESC')
+      .getOne();
+  }
 }
