@@ -12,7 +12,7 @@ import { sendEmail } from '../../utils/mail.helper';
 import config from '../../config';
 import { ReviewRepository } from './review.repositories';
 import {
-  AddAnswerDate,
+  AddAnswerData,
   CheckReviewsData,
   CreateReviewData,
   InviteAppriceResponse,
@@ -66,7 +66,7 @@ export const inviteAppriceService = async (
 };
 
 export const checkDateRequestedService = async (
-  data: AddAnswerDate
+  data: AddAnswerData
 ): Promise<boolean> => {
   const { userId } = data;
   const userRepo = getCustomRepository(UserRepository);
@@ -79,7 +79,7 @@ export const checkDateRequestedService = async (
 };
 
 export const addAnswerService = async (
-  data: AddAnswerDate,
+  data: AddAnswerData,
   authorId: ID,
   token: string,
   jwt: JWT
