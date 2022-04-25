@@ -75,6 +75,17 @@ export class UserRepository extends Repository<User> {
       })
       .execute();
   }
+
+  async setDateInvitation(userId: number) {
+    return this.createQueryBuilder('user')
+      .where('id = :userId', { userId })
+      .update(User)
+      .set({
+        requestedReviewDate: new Date(),
+      })
+      .execute();
+  }
+
   // async getMediaForUser(userId: ID) {
   //   const userRepo = getCustomRepository(UserRepository);
   //   const query = await userRepo.createQueryBuilder('user')

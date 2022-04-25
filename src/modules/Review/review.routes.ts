@@ -18,6 +18,7 @@ import {
   checkReviewsService,
   inviteAppriceService,
   addFinishAnswerService,
+  checkDateRequestedService,
 } from './review.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
@@ -66,6 +67,8 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       if (!authorization) throw buildError(400, allErrors.tokenNotFound);
       const { body } = request;
       const { id: authorId } = request.user as User;
+      const isValidRequestedDate = await checkDateRequestedService(body as AddAnswerData);
+      if (isValidRequestedDate === false) throw buildError(400, allErrors.requestedDateError);
 
       const isLastAnswer = await addAnswerService(
         body as AddAnswerData,

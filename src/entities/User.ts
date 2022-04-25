@@ -110,6 +110,13 @@ export class User {
   })
   isRequestedReview!: boolean;
 
+  @Column('timestamp', {
+    nullable: true,
+    default: () => 'NULL',
+    name: 'requested_review_date',
+  })
+  requestedReviewDate!: Date;
+
   @Column({
     type: 'enum',
     enum: Roles,
