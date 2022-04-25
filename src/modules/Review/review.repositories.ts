@@ -99,7 +99,6 @@ export class ReviewRepository extends Repository<Review> {
   async findReviewByUserAndAuthor(userId: ID, author: ID): Promise<Review | undefined> {
     return this.createQueryBuilder('review')
       .select('review')
-      .innerJoinAndSelect('review.author', 'author')
       .where('user_id = :userId', { userId })
       .andWhere('author_id = :author', { author })
       .orderBy('review.updatedAt', 'DESC')
