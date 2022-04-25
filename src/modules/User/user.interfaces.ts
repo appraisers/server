@@ -91,3 +91,10 @@ export interface GetUserBody {
 export interface GetUserResponse extends CommonResponse {
   user: User;
 }
+
+export interface GetAllUsersBody {
+  alphabet: string;
+  rating: string;
+  updatedAt: string;
+  position: string;
+}

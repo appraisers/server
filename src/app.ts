@@ -14,6 +14,7 @@ import authRoutes from './modules/Auth/auth.routes';
 import reviewRoutes from './modules/Review/review.routes';
 import userRoutes from './modules/User/user.routes';
 import questionRoutes from './modules/Question/question.routes';
+import appraiseRoutes from './modules/Appraise/appraise.routes';
 
 let app: FastifyInstance = fastify({
   pluginTimeout: 20000, // resolve problem "Error: ERR_AVVIO_PLUGIN_TIMEOUT: plugin did not start in time ..."
@@ -55,6 +56,7 @@ export default function build(): FastifyInstance {
   app.register(reviewRoutes, { prefix: '/api/review' });
   app.register(userRoutes, { prefix: '/api/user' });
   app.register(questionRoutes, { prefix: '/api/question' });
+  app.register(appraiseRoutes, { prefix: '/api/appraise' });
 
   app.get('/', async () => {
     return {
@@ -65,7 +67,7 @@ export default function build(): FastifyInstance {
   // ERROR HANDLER
   app.setErrorHandler((error, request, reply: any) => {
     try {
-      if (error instanceof Error) {        
+      if (error instanceof Error) {
         const errObj = JSON.parse(error.message);
         return reply.status(400).send(errObj);
       }

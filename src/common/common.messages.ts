@@ -10,6 +10,7 @@ export const allErrors = {
   questionIdNotFound: `Question doesn't exist`,
   ratingNotFound: 'Rating is not found',
   reviewNotFound: 'Review is not found',
+  appraiseNotFound: 'Appraise is not found',
   roleNotFound: 'Role is not found',
   temporaryRatingIsNotFound: 'Temporary rating is not found',
   tokenNotFound: 'Token is not found',
@@ -23,6 +24,7 @@ export const allErrors = {
   offsetOrLimitNotFound: 'Offset, limit, or position are missing.',
   questionNotFoundOrDeleted: 'Question not found or already deleted',
   requestedReviewError: 'The last review was less than six months ago',
+  requestedDateError: 'The request to rate should be less than two weeks ago',
   unknownCategory: 'Unknown category',
   emptyEmails: 'Emails is empty'
 };
