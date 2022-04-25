@@ -113,9 +113,9 @@ export class User {
   @Column('timestamp', {
     nullable: true,
     default: () => 'NULL',
-    name: 'requested_review_data',
+    name: 'requested_review_date',
   })
-  requestedReviewData!: Date;
+  requestedReviewDate!: Date;
 
   @Column({
     type: 'enum',

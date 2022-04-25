@@ -44,6 +44,8 @@ export const inviteAppriceService = async (
   const { emails, userId } = data;
   const userRepo = getCustomRepository(UserRepository);
   const user = await userRepo.findOneUserByKey('id', userId);
+  const hola = await userRepo.setDateInvitation(userId)
+  console.log(hola)
   if (!user) throw buildError(400, allErrors.userNotFound);
   if (emails.length > 0) {
     emails.forEach((email) => {
@@ -64,18 +66,17 @@ export const inviteAppriceService = async (
   return null;
 };
 
-export const checkDataRequestedService = async (
+export const checkDateRequestedService = async (
   data: AddAnswerData
 ): Promise<boolean> => {
   const { userId } = data;
   const userRepo = getCustomRepository(UserRepository);
   const user = await userRepo.findOneUserByKey('id', userId);
   if (!user) throw buildError(400, allErrors.userNotFound);
-  //Setting time with two weeks ago.
   const twoWeeksAgoDate = new Date();
   twoWeeksAgoDate.setDate(twoWeeksAgoDate.getDate() - 15);
-  if (user.requestedReviewData >= twoWeeksAgoDate) return true;
-  else return false;
+  if (user.requestedReviewDate <= twoWeeksAgoDate || user.requestedReviewDate === null) return false;
+  else return true;
 };
 
 export const addAnswerService = async (
