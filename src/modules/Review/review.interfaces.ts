@@ -33,7 +33,7 @@ export interface CreateReviewRepositoryData extends CreateReviewData {
   user: User;
 }
 
-export interface AddAnswerData {
+export interface AddAnswerDate {
   userId: ID;
   ids: ID[];
   answers: number[];

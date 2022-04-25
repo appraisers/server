@@ -12,7 +12,7 @@ import { sendEmail } from '../../utils/mail.helper';
 import config from '../../config';
 import { ReviewRepository } from './review.repositories';
 import {
-  AddAnswerData,
+  AddAnswerDate,
   CheckReviewsData,
   CreateReviewData,
   InviteAppriceResponse,
@@ -44,8 +44,7 @@ export const inviteAppriceService = async (
   const { emails, userId } = data;
   const userRepo = getCustomRepository(UserRepository);
   const user = await userRepo.findOneUserByKey('id', userId);
-  const hola = await userRepo.setDateInvitation(userId)
-  console.log(hola)
+  await userRepo.setDateInvitation(userId)
   if (!user) throw buildError(400, allErrors.userNotFound);
   if (emails.length > 0) {
     emails.forEach((email) => {
@@ -67,7 +66,7 @@ export const inviteAppriceService = async (
 };
 
 export const checkDateRequestedService = async (
-  data: AddAnswerData
+  data: AddAnswerDate
 ): Promise<boolean> => {
   const { userId } = data;
   const userRepo = getCustomRepository(UserRepository);
@@ -80,7 +79,7 @@ export const checkDateRequestedService = async (
 };
 
 export const addAnswerService = async (
-  data: AddAnswerData,
+  data: AddAnswerDate,
   authorId: ID,
   token: string,
   jwt: JWT
