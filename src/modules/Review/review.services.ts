@@ -64,6 +64,20 @@ export const inviteAppriceService = async (
   return null;
 };
 
+export const checkDataRequestedService = async (
+  data: AddAnswerData
+): Promise<boolean> => {
+  const { userId } = data;
+  const userRepo = getCustomRepository(UserRepository);
+  const user = await userRepo.findOneUserByKey('id', userId);
+  if (!user) throw buildError(400, allErrors.userNotFound);
+  //Setting time with two weeks ago.
+  const twoWeeksAgoDate = new Date();
+  twoWeeksAgoDate.setDate(twoWeeksAgoDate.getDate() - 15);
+  if (user.requestedReviewData >= twoWeeksAgoDate) return true;
+  else return false;
+};
+
 export const addAnswerService = async (
   data: AddAnswerData,
   authorId: ID,

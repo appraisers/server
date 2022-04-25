@@ -107,6 +107,7 @@ export class UserRepository extends Repository<User> {
       .update(User)
       .set({
         isRequestedReview: true,
+        requestedReviewData: new Date(),
       })
       .execute();
   }
