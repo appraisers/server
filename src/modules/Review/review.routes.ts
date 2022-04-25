@@ -6,7 +6,7 @@ import { buildError } from '../../utils/error.helper';
 import { roles, User } from '../../entities/User';
 import { checkAuthHook, allowedFor } from '../../utils/utils';
 import {
-  AddAnswerDate,
+  AddAnswerData,
   AddAnswerControllerResponse,
   InviteAppriceData,
   CheckReviewResponse,
@@ -67,11 +67,11 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       if (!authorization) throw buildError(400, allErrors.tokenNotFound);
       const { body } = request;
       const { id: authorId } = request.user as User;
-      const isValidRequestedDate = await checkDateRequestedService(body as AddAnswerDate);
+      const isValidRequestedDate = await checkDateRequestedService(body as AddAnswerData);
       if (isValidRequestedDate === false) throw buildError(400, allErrors.requestedDateError);
 
       const isLastAnswer = await addAnswerService(
-        body as AddAnswerDate,
+        body as AddAnswerData,
         authorId,
         authorization,
         fastify.jwt
