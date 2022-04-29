@@ -74,7 +74,7 @@ export const checkDateRequestedService = async (
   if (!user) throw buildError(400, allErrors.userNotFound);
   const twoWeeksAgoDate = new Date();
   twoWeeksAgoDate.setDate(twoWeeksAgoDate.getDate() - 15);
-  if (user.requestedReviewDate <= twoWeeksAgoDate || user.requestedReviewDate === null) return false;
+  if (user.requestedReviewDate != null && user.requestedReviewDate <= twoWeeksAgoDate) return false;
   else return true;
 };
 
