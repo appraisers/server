@@ -102,6 +102,12 @@ export const addAnswerService = async (
   // Find or create review
   let review = await reviewRepo.findReviewByUserId(userId);
   if (!review) {
+    const lastReview = await reviewRepo.findReviewByUserAndAuthor(userId, author.id);
+    if (lastReview != null) {
+      const sixMonthsAgo = new Date();
+      sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6)
+      if (lastReview.updatedAt >= sixMonthsAgo) throw buildError(400, allErrors.requestedReviewError);
+    }
     review = await createReviewService(data, authorId, token, jwt);
     await appraiseRepo.createAppraise({ user, author });
   }
