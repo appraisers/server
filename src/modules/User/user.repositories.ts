@@ -59,7 +59,6 @@ export class UserRepository extends Repository<User> {
       workplace,
       fullname,
       position,
-      rating,
       role,
       id,
       authorId,
@@ -71,7 +70,6 @@ export class UserRepository extends Repository<User> {
         workplace: workplace ?? '',
         fullname: fullname,
         position: position,
-        rating: rating,
         role: role ?? Roles.USER,
         updatedAt: new Date(),
       })
