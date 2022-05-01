@@ -198,7 +198,7 @@ export const selfRequestService = async (
 ): Promise<null> => {
   const { userId } = data;
   const userRepo = getCustomRepository(UserRepository);
-  const user = await userRepo.getUserById({ userId });
+  const user = await userRepo.findOneUserByKey('id', userId);
   if (!user) throw buildError(400, allErrors.userNotFound);
   const dateNow = new Date();
   const sixMonthAgo = new Date(dateNow.getFullYear(), dateNow.getMonth() - 5);
