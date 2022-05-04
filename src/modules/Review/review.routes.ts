@@ -12,13 +12,14 @@ import {
   CheckReviewResponse,
   CheckReviewsData,
   FinishAnswerData,
+  CreateReviewData,
 } from './review.interfaces';
 import {
   addAnswerService,
   checkReviewsService,
   inviteAppriceService,
   addFinishAnswerService,
-  checkDateRequestedService,
+  rateableService,
 } from './review.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
@@ -67,9 +68,6 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       if (!authorization) throw buildError(400, allErrors.tokenNotFound);
       const { body } = request;
       const { id: authorId } = request.user as User;
-      const isValidRequestedDate = await checkDateRequestedService(body as AddAnswerData);
-      if (isValidRequestedDate === false) throw buildError(400, allErrors.requestedDateError);
-
       const isLastAnswer = await addAnswerService(
         body as AddAnswerData,
         authorId,
@@ -91,15 +89,30 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       } = request;
       if (!authorization) throw buildError(400, allErrors.tokenNotFound);
       const { body } = request;
-      await addFinishAnswerService(
-        body as FinishAnswerData,
-      );
+      await addFinishAnswerService(body as FinishAnswerData);
       return { ...commonResponse };
     } catch (error) {
       throw error;
     }
   };
 
+  const rateableController = async (
+    request: FastifyRequest
+  ): Promise<boolean> => {
+    try {
+      const {
+        headers: { authorization },
+      } = request;
+      const { userId } = request.query as CreateReviewData;
+      if (!userId) throw buildError(400, allErrors.userIdNotFound);
+      if (!authorization) throw buildError(400, allErrors.tokenNotFound);
+      const { id: authorId } = request.user as User;
+      const rateable = await rateableService(userId, authorId);
+      return rateable;
+    } catch (error) {
+      throw error;
+    }
+  };
 
   fastify.get(
     '/check/:userId',
@@ -129,6 +142,13 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
       onRequest: checkAuthHook(fastify.jwt),
     },
     addFinishAnswerController
+  );
+  fastify.get(
+    '/rateable',
+    {
+      onRequest: checkAuthHook(fastify.jwt),
+    },
+    rateableController
   );
 };
 

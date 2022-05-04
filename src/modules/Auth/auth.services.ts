@@ -47,7 +47,10 @@ export const resetPasswordService = async (
   data: ResetPasswordRequestBody
 ): Promise<null> => {
   const userRepo = getCustomRepository(UserRepository);
-  const user = await userRepo.findOneUserByKey('forgotPasswordToken', data.forgotPasswordToken)
+  const user = await userRepo.findOneUserByKey(
+    'forgotPasswordToken',
+    data.forgotPasswordToken
+  );
   if (!user) throw buildError(400, allErrors.userNotFound);
 
   const updateResult = await userRepo.resetPassword(data);
@@ -82,10 +85,11 @@ export const loginService = async (
   const { email, password, rememberMe } = data;
   const userRepo = getCustomRepository(UserRepository);
   const userCheck = await userRepo.findOneUserByKey('email', email);
-  if (!userCheck) {
-    throw buildError(400, allErrors.userNotFound);
-  }
-  if (userCheck.password !== password) {
+  if (
+    !userCheck ||
+    userCheck.password !== password ||
+    userCheck.deletedAt != null
+  ) {
     throw buildError(400, allErrors.userNotFound);
   }
   // const compare = bcrypt.compareSync(password, user.password);
@@ -97,13 +101,13 @@ export const loginService = async (
   const refreshToken = jwt.sign(
     { id: userCheck.id, isRefresh: true },
     { expiresIn: rememberMe ? EXPIRED.WITH_REMEMBER : EXPIRED.REFRESH }
-  )
+  );
   const tokenRepo = getCustomRepository(TokenRepository);
   await tokenRepo.createRefresh({ user: userCheck, refreshToken });
   if (userCheck.showInfo === false) {
     const user = await userRepo.userFewFields(userCheck.id, 'showInfo');
     if (!user) throw buildError(400, allErrors.userNotFound);
-    return { user, authToken, refreshToken }
+    return { user, authToken, refreshToken };
   }
   return {
     user: userCheck,
