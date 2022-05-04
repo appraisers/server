@@ -100,12 +100,8 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     request: FastifyRequest
   ): Promise<boolean> => {
     try {
-      const {
-        headers: { authorization },
-      } = request;
       const { userId } = request.query as CreateReviewData;
       if (!userId) throw buildError(400, allErrors.userIdNotFound);
-      if (!authorization) throw buildError(400, allErrors.tokenNotFound);
       const { id: authorId } = request.user as User;
       const rateable = await rateableService(userId, authorId);
       return rateable;
