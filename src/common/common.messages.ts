@@ -18,6 +18,7 @@ export const allErrors = {
   userIdNotFound: 'User ID is not found',
   userNotConfirmed: 'User is not confirmed',
   userNotFound: 'User is not found',
+  userDeleted: 'User is deleted',
   usersNotFound: 'Users are not found',
   weightNotFound: 'Weight is not found',
   youMustFillTheEmailOrPhoneField: 'You must fill the email or phone field',

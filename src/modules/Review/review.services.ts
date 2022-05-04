@@ -65,19 +65,6 @@ export const inviteAppriceService = async (
   return null;
 };
 
-export const checkDateRequestedService = async (
-  data: AddAnswerData
-): Promise<boolean> => {
-  const { userId } = data;
-  const userRepo = getCustomRepository(UserRepository);
-  const user = await userRepo.findOneUserByKey('id', userId);
-  if (!user) throw buildError(400, allErrors.userNotFound);
-  const twoWeeksAgoDate = new Date();
-  twoWeeksAgoDate.setDate(twoWeeksAgoDate.getDate() - 15);
-  if (user.requestedReviewDate != null && user.requestedReviewDate <= twoWeeksAgoDate) return false;
-  else return true;
-};
-
 export const addAnswerService = async (
   data: AddAnswerData,
   authorId: ID,
@@ -100,14 +87,8 @@ export const addAnswerService = async (
   if (!user) throw buildError(400, allErrors.userNotFound);
 
   // Find or create review
-  let review = await reviewRepo.findReviewByUserId(userId);
+  let review = await reviewRepo.findReviewByUserAndAuthor(userId, authorId);
   if (!review) {
-    const lastReview = await reviewRepo.findReviewByUserAndAuthor(userId, author.id);
-    if (lastReview != null) {
-      const sixMonthsAgo = new Date();
-      sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6)
-      if (lastReview.updatedAt >= sixMonthsAgo) throw buildError(400, allErrors.requestedReviewError);
-    }
     review = await createReviewService(data, authorId, token, jwt);
     await appraiseRepo.createAppraise({ user, author });
   }
@@ -322,4 +303,30 @@ export const addFinishAnswerService = async (
     subject: 'You have been successfully evaluated!',
   });
   return null;
+};
+
+export const rateableService = async (
+  userId: ID,
+  authorId: ID
+): Promise<boolean> => {
+  const userRepo = getCustomRepository(UserRepository);
+  const reviewRepo = getCustomRepository(ReviewRepository);
+  const user = await userRepo.findOneUserByKey('id', userId);
+  const author = await userRepo.findOne({ where: { id: authorId } });
+  if (!author) throw buildError(400, allErrors.authorNotFound);
+  if (!user) throw buildError(400, allErrors.userNotFound);
+  if (user.deletedAt != null) throw buildError(400, allErrors.userDeleted);
+
+  const lastReview = await reviewRepo.findReviewByUserAndAuthor(userId, author.id);
+    if (lastReview != null) {
+      const sixMonthsAgo = new Date();
+      sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6)
+      if (lastReview.updatedAt >= sixMonthsAgo) throw buildError(400, allErrors.requestedReviewError);
+    }
+
+  const twoWeeksAgoDate = new Date();
+  twoWeeksAgoDate.setDate(twoWeeksAgoDate.getDate() - 15);
+  if (user.requestedReviewDate != null && user.requestedReviewDate <= twoWeeksAgoDate) throw buildError(400, allErrors.requestedDateError);
+
+  return true;
 };
