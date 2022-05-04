@@ -85,7 +85,6 @@ export const addAnswerService = async (
   // Find appraising user
   const user = await userRepo.findOne({ where: { id: userId } });
   if (!user) throw buildError(400, allErrors.userNotFound);
-  if (user.deletedAt != null) buildError(400, allErrors.userDeleted);
 
   // Find or create review
   let review = await reviewRepo.findReviewByUserAndAuthor(userId, authorId);
