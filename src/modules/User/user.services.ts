@@ -67,7 +67,8 @@ export const allUsersService = async (
     deletedAt: user.deletedAt ?? null,
     workplace: user.workplace ?? null,
     email: user.email ?? '',
-    role: user.role ?? Roles.USER
+    role: user.role ?? Roles.USER,
+    showInfo: user.showInfo,
   }));
   return mapUser;
 };
