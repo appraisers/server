@@ -41,16 +41,16 @@ export class UserRepository extends Repository<User> {
     query.select('user')
       .where('user.role = :role', { role: Roles.USER })
     if (alphabet != null) {
-      query.orderBy('user.fullname', alphabet === 'asc' ? 'ASC' : 'DESC')
+      query.orderBy('user.fullname', alphabet === 'asc' ? 'ASC' : 'DESC', "NULLS LAST")
     }
     if (rating != null) {
-      query.orderBy('user.rating', rating === 'asc' ? 'ASC' : 'DESC')
+      query.orderBy('user.rating', rating === 'asc' ? 'ASC' : 'DESC', "NULLS LAST")
     }
     if (updatedAt != null) {
-      query.orderBy('user.updatedReviewAt', updatedAt === 'asc' ? 'ASC' : 'DESC')
+      query.orderBy('user.updatedReviewAt', updatedAt === 'asc' ? 'ASC' : 'DESC', "NULLS LAST")
     }
     if (position != null) {
-      query.orderBy('user.position', position === 'asc' ? 'ASC' : 'DESC')
+      query.orderBy('user.position', position === 'asc' ? 'ASC' : 'DESC', "NULLS LAST")
     }
     return query.getMany();
   }
