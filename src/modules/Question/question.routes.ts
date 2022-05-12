@@ -18,11 +18,13 @@ import {
   addQuestionService,
   deleteQuestionsService,
   getQuestionsService,
-  getAllQuestionsService
+  getAllQuestionsService,
 } from './question.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
-  const getCategoriesController = async (): Promise<GetCategoriesController> => {
+  const getCategoriesController = async (): Promise<
+    GetCategoriesController
+  > => {
     const categories = category;
     return { ...commonResponse, categories };
   };
@@ -41,8 +43,13 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     request: FastifyRequest
   ): Promise<GetQuestionResponse | null> => {
     try {
-      const { offset, limit, position, allQuestions } = request.query as GetQuestionsRequestBody;
-      
+      const {
+        offset,
+        limit,
+        position,
+        allQuestions,
+      } = request.query as GetQuestionsRequestBody;
+
       if (allQuestions) {
         const questions = await getAllQuestionsService();
         return { ...commonResponse, questions };
@@ -81,8 +88,10 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
   );
   fastify.get(
     '/get-category',
-    { onRequest: checkAuthHook(fastify.jwt),
-      preValidation: allowedFor([roles.admin, roles.moderator]) },
+    {
+      onRequest: checkAuthHook(fastify.jwt),
+      preValidation: allowedFor([roles.admin, roles.moderator]),
+    },
     getCategoriesController
   );
   fastify.get('/questions', getQuestionsController);
