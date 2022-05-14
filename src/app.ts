@@ -2,7 +2,7 @@ import path from 'path';
 import fastify, { FastifyInstance } from 'fastify';
 import 'reflect-metadata';
 import fastifyJWT from 'fastify-jwt';
-import fastifyFormbody from 'fastify-formbody';
+import fastifyFormbody from '@fastify/formbody';
 import fastifyCors from 'fastify-cors';
 import multer from 'fastify-multer';
 import * as fastifyTypeormPlugin from 'fastify-typeorm-plugin';
