@@ -6,7 +6,7 @@ import fastifyFormbody from '@fastify/formbody';
 import fastifyCors from 'fastify-cors';
 import multer from 'fastify-multer';
 import * as fastifyTypeormPlugin from 'fastify-typeorm-plugin';
-import fastifyStatic from 'fastify-static';
+import fastifyStatic from '@fastify/static';
 
 import config from './config';
 
