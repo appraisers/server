@@ -1,11 +1,12 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Appraise } from '../../entities/Appraise';
+import { APPRAISE_LIMIT, APPRAISE_OFFSET } from './appraise.constants';
 import {
     CreateAppraiseResponse,
-    getAppraisesUsersData,
+    GetAppraisesUsersData,
     SetAppraiseStatusResponse,
 } from './appraise.interfaces';
-import { getAppraiseResponse } from './appraise.interfaces';
+import { GetAppraiseResponse } from './appraise.interfaces';
 
 @EntityRepository(Appraise)
 export class AppraiseRepository extends Repository<Appraise> {
@@ -26,7 +27,7 @@ export class AppraiseRepository extends Repository<Appraise> {
             .andWhere('author_id = :authorId', { authorId })
             .execute();
     }
-    async findAppraises(data: getAppraiseResponse): Promise<Appraise[]> {
+    async findAppraises(data: GetAppraiseResponse): Promise<Appraise[]> {
         const {
             userId,
             authorId,
@@ -56,7 +57,7 @@ export class AppraiseRepository extends Repository<Appraise> {
             .offset(offset);
         return await query.getMany();
     }
-    async findAppraisesUsers(data: getAppraisesUsersData): Promise<Appraise[]> {
+    async findAppraisesUsers(data: GetAppraisesUsersData): Promise<Appraise[]> {
         const {
             userId,
             authorId,
@@ -75,8 +76,8 @@ export class AppraiseRepository extends Repository<Appraise> {
             query.innerJoinAndSelect('appraise.user', 'user');
         }
         query.orderBy('appraise.createdAt', 'ASC')
-            .limit(limit)
-            .offset(offset);
+            .offset(offset ? Number(offset) : APPRAISE_OFFSET)
+            .limit(limit ? Number(limit) : APPRAISE_LIMIT)
         return await query.getMany();
     }
 }

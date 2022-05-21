@@ -16,7 +16,7 @@ export interface SetAppraiseStatusResponse {
     authorId: ID;
 }
 
-export interface getAppraiseResponse {
+export interface GetAppraiseResponse {
     userId: ID;
     authorId: ID;
     limit: number;
@@ -26,13 +26,13 @@ export interface getAppraiseResponse {
     lastYear: boolean;
 }
 
-export interface getAppraisesUsersData {
+export interface GetAppraisesUsersData {
     userId: ID;
     authorId: ID;
     limit: number;
     offset: number;
 }
 
-export interface getAppraisesUsersResponse {
+export interface GetAppraisesUsersResponse {
     users: string[];
 }

@@ -3,10 +3,10 @@ import { Appraise } from '../../entities/Appraise';
 import { buildError } from '../../utils/error.helper';
 import { allErrors } from '../../common/common.messages';
 import { AppraiseRepository } from './appraise.repositories';
-import { getAppraiseResponse, getAppraisesUsersData } from './appraise.interfaces';
+import { GetAppraiseResponse, GetAppraisesUsersData } from './appraise.interfaces';
 
 export const getAppraisesService = async (
-    data: getAppraiseResponse
+    data: GetAppraiseResponse
 ): Promise<Appraise[]> => {
     const appraiseRepo = getCustomRepository(AppraiseRepository);
     const appraise = await appraiseRepo.findAppraises(data);
@@ -15,24 +15,25 @@ export const getAppraisesService = async (
 };
 
 export const getAppraisesUsersService = async (
-    data: getAppraisesUsersData
+    data: GetAppraisesUsersData
 ): Promise<string[]> => {
     const appraiseRepo = getCustomRepository(AppraiseRepository);
     const appraises = await appraiseRepo.findAppraisesUsers(data);
     if (!appraises) throw buildError(400, allErrors.appraiseNotFound);
-    let users: string[] = [];
+    const names = new Set<string>();
     appraises.forEach(appraise => {
         if (appraise.author != null) {
             const name = appraise.author.fullname;
             if (name != null) {
-                if (users.includes(name) === false) users.push(name);
+                names.add(name);
             };
         } else {
             const name = appraise.user.fullname;
             if (name != null) {
-                if (users.includes(name) === false) users.push(name);
+                names.add(name);
             };
         }
     });
+    const users = Array.from(names);
     return users;
 };
