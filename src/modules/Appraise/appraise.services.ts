@@ -20,7 +20,7 @@ export const getAppraisesUsersService = async (
     const appraiseRepo = getCustomRepository(AppraiseRepository);
     const appraises = await appraiseRepo.findAppraisesUsers(data);
     if (!appraises) throw buildError(400, allErrors.appraiseNotFound);
-    const names = new Set<string>();
+    const names = new Set<string>([]);
     appraises.forEach(appraise => {
         if (appraise.author != null) {
             const name = appraise.author.fullname;
@@ -34,6 +34,5 @@ export const getAppraisesUsersService = async (
             };
         }
     });
-    const users = Array.from(names);
-    return users;
+    return Array.from(names);
 };
