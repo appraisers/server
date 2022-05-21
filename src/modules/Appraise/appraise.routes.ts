@@ -4,9 +4,9 @@ import { commonResponse } from '../../common/common.constants';
 import { allErrors } from '../../common/common.messages';
 import { buildError } from '../../utils/error.helper';
 import { checkAuthHook, allowedFor } from '../../utils/utils';
-import { AppraiseResponse, getAppraiseResponse } from './appraise.interfaces';
+import { AppraiseResponse, getAppraiseResponse, getAppraisesUsersResponse, getAppraisesUsersData } from './appraise.interfaces';
 import { roles } from '../../entities/User';
-import { getAppraisesService } from './appraise.services';
+import { getAppraisesService, getAppraisesUsersService } from './appraise.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
     const getAppraisersController = async (
@@ -38,6 +38,29 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
         }
     };
 
+    const getAppraisesUsersController = async (
+        request: FastifyRequest
+    ): Promise<getAppraisesUsersResponse | null> => {
+        try {
+            const {
+                userId,
+                limit,
+                offset,
+                authorId,
+            } = request.query as getAppraisesUsersData;
+            const data: getAppraisesUsersData = {
+                userId,
+                authorId,
+                offset,
+                limit,
+            };
+            const users = await getAppraisesUsersService(data as getAppraisesUsersData);
+            return { ...commonResponse, users };
+        } catch (error) {
+            throw error;
+        }
+    };
+
     fastify.get(
         '/get-appraises',
         {
@@ -45,6 +68,15 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
             preValidation: allowedFor([roles.admin, roles.moderator]),
         },
         getAppraisersController
+    );
+
+    fastify.get(
+        '/getappraisesusers',
+        {
+            onRequest: checkAuthHook(fastify.jwt),
+            preValidation: allowedFor([roles.admin, roles.moderator]),
+        },
+        getAppraisesUsersController
     );
 };
 

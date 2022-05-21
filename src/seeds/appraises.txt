@@ -1,0 +1,183 @@
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2010-05-12', 1, 2);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2012-05-12', 2, 1);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2014-05-12', 3, 4);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2016-05-12', 4, 3);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2018-08-15', 5, 4);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2020-01-10', 4, 5);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2022-04-05', 6, 5);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2022-04-20', 5, 6);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2022-05-10', 7, 8);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2022-05-19', 8, 7);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2010-05-12', 9, 8);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2012-05-12', 8, 9);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2014-05-12', 10, 9);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2016-05-12', 9, 10);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2018-08-15', 11, 10);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2020-01-10', 11, 12);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2022-04-05', 12, 1);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2022-04-20',11, 2);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2022-05-10', 10, 3);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2022-05-19', 9, 4);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2022-05-10', 8, 5);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2022-05-19', 7, 6);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2010-05-12', 6, 7);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2012-05-12', 5, 8);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2014-05-12', 4, 9);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2016-05-12', 3, 10);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2018-08-15', 2, 11);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2018-08-15', 1, 12);
+	INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2020-01-15', 12, 3);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2021-07-19', 11, 5);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2022-05-12', 5, 12);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( false, '2023-09-21', 7, 1);
+    
+     
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2010-05-21', 11, 2);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2012-05-20', 10, 1);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2014-05-19', 9, 4);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2016-05-18', 8, 3);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2018-08-17', 7, 4);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2020-01-16', 6, 5);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2022-04-15', 5, 5);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2022-04-14', 4, 6);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2022-05-13', 3, 8);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2022-05-12', 2, 7);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2010-05-11', 1, 8);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2012-05-10', 12, 9);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2014-05-09', 11, 9);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2016-05-08', 1, 10);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2018-08-07', 2, 10);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2020-01-06', 3, 12);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2022-04-05', 4, 1);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2022-04-04',5, 2);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2022-05-03', 6, 3);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2022-05-02',7, 4);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2022-05-01', 10, 5);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2022-05-12', 9, 6);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2010-05-11', 11, 7);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2012-05-10', 2, 8);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2014-05-12', 3, 9);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2016-09-12', 1, 10);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2018-10-15', 11, 11);
+    INSERT INTO public.appraisers(
+	status, created_at, user_id, author_id)
+	VALUES ( true, '2018-09-11', 10, 12);
+    

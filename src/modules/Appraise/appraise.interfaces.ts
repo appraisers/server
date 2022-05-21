@@ -25,3 +25,14 @@ export interface getAppraiseResponse {
     lastMonth: boolean;
     lastYear: boolean;
 }
+
+export interface getAppraisesUsersData {
+    userId: ID;
+    authorId: ID;
+    limit: number;
+    offset: number;
+}
+
+export interface getAppraisesUsersResponse {
+    users: string[];
+}

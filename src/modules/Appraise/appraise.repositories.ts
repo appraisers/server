@@ -2,6 +2,7 @@ import { EntityRepository, Repository } from 'typeorm';
 import { Appraise } from '../../entities/Appraise';
 import {
     CreateAppraiseResponse,
+    getAppraisesUsersData,
     SetAppraiseStatusResponse,
 } from './appraise.interfaces';
 import { getAppraiseResponse } from './appraise.interfaces';
@@ -50,6 +51,29 @@ export class AppraiseRepository extends Repository<Appraise> {
         if (createdAtAfter != null) query.andWhere('created_at >= :createdAtAfter', { createdAtAfter });
         if (lastMonth != null) query.andWhere('created_at >= :lastMonthDate', { lastMonthDate });
         if (lastYear != null) query.andWhere('created_at >= :lastYearDate', { lastYearDate })
+        query.orderBy('appraise.createdAt', 'ASC')
+            .limit(limit)
+            .offset(offset);
+        return await query.getMany();
+    }
+    async findAppraisesUsers(data: getAppraisesUsersData): Promise<Appraise[]> {
+        const {
+            userId,
+            authorId,
+            limit,
+            offset,
+        } = data;
+
+        const query = this.createQueryBuilder('appraise').select(['appraise']);
+        if (userId != null) {
+            query.andWhere('user_id = :userId', { userId });
+            query.innerJoinAndSelect('appraise.author', 'author');
+        } else if (authorId != null) {
+            query.andWhere('author_id = :authorId', { authorId });
+            query.innerJoinAndSelect('appraise.user', 'user');
+        } else {
+            query.innerJoinAndSelect('appraise.user', 'user');
+        }
         query.orderBy('appraise.createdAt', 'ASC')
             .limit(limit)
             .offset(offset);
