@@ -77,6 +77,10 @@ export interface ChangeUserRoleRequestBody {
 }
 export interface GetUserInfoBody {
   userId: ID;
+  isAdminOrModerator: boolean;
+}
+export interface RequestUserBody {
+  userId: ID;
 }
 export interface ToggleShowInfoData {
   userId: ID;

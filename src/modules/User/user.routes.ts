@@ -21,7 +21,8 @@ import {
   TopUsersData,
   GetUserResponse,
   GetUserBody,
-  GetAllUsersBody
+  GetAllUsersBody,
+  RequestUserBody
 } from './user.interfaces';
 import {
   allInviteUsersService,
@@ -210,7 +211,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
   ): Promise<GetUserResponse> => {
     try {
       const { body } = request;
-      const user = await getUserService(body as GetUserBody);
+      const user = await getUserService(body as RequestUserBody);
       return {
         ...commonResponse,
         user,

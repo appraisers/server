@@ -14,6 +14,7 @@ import {
   GetAllUsersBody,
   GetUserInfoBody,
   InviteUserRequestBody,
+  RequestUserBody,
   ToggleUserRepositoryData,
   UpdateUserRequestBody,
   UserWithCategoriesService,
@@ -109,7 +110,7 @@ export const getUserInfoService = async (
     interactionRating /= countRatingByCategories;
     assessmentOfAbilitiesRating /= countRatingByCategories;
     personalQualitiesRating /= countRatingByCategories;
-    if (checkUser.showInfo === false) {
+    if (checkUser.showInfo === false && data.isAdminOrModerator === false) {
       const smallUserInfo = await userRepo.userFewFields(checkUser.id, 'role');
       const user = { ...smallUserInfo, effectivenessRating, interactionRating, assessmentOfAbilitiesRating, personalQualitiesRating, ratingByCategories: null };
       return user;
@@ -235,7 +236,7 @@ export const toggleShowInfoService = async (
   return null;
 };
 export const getUserService = async (
-  data: GetUserInfoBody,
+  data: RequestUserBody,
 ): Promise<User> => {
   const { userId } = data;
   const userRepo = getCustomRepository(UserRepository);

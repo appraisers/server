@@ -7,7 +7,8 @@ import {
   UpdateRepositoryData,
   GetUserInfoBody,
   ToggleShowInfoData,
-  GetAllUsersBody
+  GetAllUsersBody,
+  RequestUserBody
 } from './user.interfaces';
 
 @EntityRepository(User)
@@ -18,7 +19,7 @@ export class UserRepository extends Repository<User> {
   ): Promise<User | undefined> {
     return this.findOne({ where: { [key]: val } });
   }
-  getUserById(data: GetUserInfoBody): Promise<User | undefined> {
+  getUserById(data: RequestUserBody): Promise<User | undefined> {
     const { userId } = data;
     return this.createQueryBuilder('user')
       .select('user')
