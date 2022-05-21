@@ -6,8 +6,8 @@ import { AppraiseRepository } from './appraise.repositories';
 import {
   GetAppraiseResponse,
   GetAppraisesUsersData,
+  GetAppraisesUsersResponseItem,
 } from './appraise.interfaces';
-import { UserRepository } from '../Auth/auth.repositories';
 
 export const getAppraisesService = async (
   data: GetAppraiseResponse
@@ -20,18 +20,18 @@ export const getAppraisesService = async (
 
 export const getAppraisesUsersService = async (
   data: GetAppraisesUsersData
-): Promise<string[]> => {
+): Promise<GetAppraisesUsersResponseItem[]> => {
   const appraiseRepo = getCustomRepository(AppraiseRepository);
   const appraises = await appraiseRepo.findAppraisesUsers(data);
   if (!appraises) throw buildError(400, allErrors.appraiseNotFound);
-  const users = [];
+  const users: GetAppraisesUsersResponseItem[] = [];
   appraises.forEach((appraise) => {
     if (data.authorId != null && appraise.author != null) {
       const isAlreadyUser =
         users.findIndex((user) => user.id === appraise.author.id) >= 0;
       if (!isAlreadyUser) {
         users.push({
-          fullname: appraise.author?.fullname,
+          fullname: appraise.author?.fullname!,
           id: appraise.author.id,
         });
       }
@@ -39,7 +39,10 @@ export const getAppraisesUsersService = async (
       const isAlreadyUser =
         users.findIndex((user) => user.id === appraise.user.id) >= 0;
       if (!isAlreadyUser) {
-        users.push({ fullname: appraise.user?.fullname, id: appraise.user.id });
+        users.push({
+          fullname: appraise.user?.fullname!,
+          id: appraise.user.id,
+        });
       }
     }
   });
