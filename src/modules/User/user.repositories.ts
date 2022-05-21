@@ -135,7 +135,7 @@ export class UserRepository extends Repository<User> {
       .select('user.id')
       .addSelect('user.email')
       .addSelect(`user.${field}`)
-      .addSelect(`user.showInfo`)
+      .addSelect('user.showInfo')
       .where('user.id = :id', { id })
       .getOne()
   }

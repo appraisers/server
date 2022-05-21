@@ -4,9 +4,9 @@ import { commonResponse } from '../../common/common.constants';
 import { allErrors } from '../../common/common.messages';
 import { buildError } from '../../utils/error.helper';
 import { checkAuthHook, allowedFor } from '../../utils/utils';
-import { AppraiseResponse, getAppraiseResponse } from './appraise.interfaces';
+import { AppraiseResponse, GetAppraiseResponse, GetAppraisesUsersResponse, GetAppraisesUsersData } from './appraise.interfaces';
 import { roles } from '../../entities/User';
-import { getAppraisesService } from './appraise.services';
+import { getAppraisesService, getAppraisesUsersService } from './appraise.services';
 
 const routes = async (fastify: FastifyInstance): Promise<void> => {
     const getAppraisersController = async (
@@ -21,8 +21,8 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
                 createdAtAfter,
                 lastMonth,
                 lastYear,
-            } = request.query as getAppraiseResponse;
-            const data: getAppraiseResponse = {
+            } = request.query as GetAppraiseResponse;
+            const data: GetAppraiseResponse = {
                 userId,
                 authorId,
                 offset,
@@ -31,8 +31,31 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
                 lastMonth,
                 lastYear,
             };
-            const appraises = await getAppraisesService(data as getAppraiseResponse);
+            const appraises = await getAppraisesService(data as GetAppraiseResponse);
             return { ...commonResponse, appraises };
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    const getAppraisesUsersController = async (
+        request: FastifyRequest
+    ): Promise<GetAppraisesUsersResponse | null> => {
+        try {
+            const {
+                userId,
+                limit,
+                offset,
+                authorId,
+            } = request.query as GetAppraisesUsersData;
+            const data: GetAppraisesUsersData = {
+                userId,
+                authorId,
+                offset,
+                limit,
+            };
+            const users = await getAppraisesUsersService(data as GetAppraisesUsersData);
+            return { ...commonResponse, users };
         } catch (error) {
             throw error;
         }
@@ -45,6 +68,15 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
             preValidation: allowedFor([roles.admin, roles.moderator]),
         },
         getAppraisersController
+    );
+
+    fastify.get(
+        '/get-appraises-users',
+        {
+            onRequest: checkAuthHook(fastify.jwt),
+            preValidation: allowedFor([roles.admin, roles.moderator]),
+        },
+        getAppraisesUsersController
     );
 };
 
