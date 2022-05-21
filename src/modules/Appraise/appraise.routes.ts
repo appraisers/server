@@ -71,7 +71,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
     );
 
     fastify.get(
-        '/getappraisesusers',
+        '/get-appraises-users',
         {
             onRequest: checkAuthHook(fastify.jwt),
             preValidation: allowedFor([roles.admin, roles.moderator]),
