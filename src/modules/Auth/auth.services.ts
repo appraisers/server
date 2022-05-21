@@ -87,10 +87,12 @@ export const loginService = async (
   const userCheck = await userRepo.findOneUserByKey('email', email);
   if (
     !userCheck ||
-    userCheck.password !== password ||
-    userCheck.deletedAt != null
+    userCheck.password !== password
   ) {
     throw buildError(400, allErrors.userNotFound);
+  }
+  if(userCheck.deletedAt != null) {
+    throw buildError(403, allErrors.deletedUser);
   }
   // const compare = bcrypt.compareSync(password, user.password);
   // if (!compare) throw buildError(400, allErrors.userNotFound);

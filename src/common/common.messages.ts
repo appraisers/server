@@ -27,5 +27,6 @@ export const allErrors = {
   requestedReviewError: 'The last review was less than six months ago',
   requestedDateError: 'The request to rate should be less than two weeks ago',
   unknownCategory: 'Unknown category',
-  emptyEmails: 'Emails is empty'
+  emptyEmails: 'Emails is empty',
+  deletedUser: 'User deleted'
 };

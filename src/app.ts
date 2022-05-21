@@ -69,7 +69,7 @@ export default function build(): FastifyInstance {
     try {
       if (error instanceof Error) {
         const errObj = JSON.parse(error.message);
-        return reply.status(400).send(errObj);
+        return reply.status(errObj.statusCode ?? 400).send(errObj);
       }
       console.log("Error handler", error);
     } catch (err) {
