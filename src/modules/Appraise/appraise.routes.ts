@@ -54,8 +54,8 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
                 offset,
                 limit,
             };
-            const users = await getAppraisesUsersService(data as GetAppraisesUsersData);
-            return { ...commonResponse, users };
+            const { users, authors } = await getAppraisesUsersService(data as GetAppraisesUsersData);
+            return { ...commonResponse, users, authors };
         } catch (error) {
             throw error;
         }

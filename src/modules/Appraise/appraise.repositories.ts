@@ -80,6 +80,7 @@ export class AppraiseRepository extends Repository<Appraise> {
       query.innerJoinAndSelect('appraise.user', 'user');
     } else {
       query.innerJoinAndSelect('appraise.user', 'user');
+      query.innerJoinAndSelect('appraise.author', 'author');
     }
     query
       .orderBy('appraise.createdAt', 'ASC')
