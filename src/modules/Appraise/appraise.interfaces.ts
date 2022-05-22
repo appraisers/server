@@ -24,6 +24,7 @@ export interface GetAppraiseResponse {
   createdAtAfter: Date;
   lastMonth: boolean;
   lastYear: boolean;
+  allTime: boolean;
 }
 
 export interface GetAppraisesUsersData {
@@ -31,6 +32,10 @@ export interface GetAppraisesUsersData {
   authorId: ID;
   limit: number;
   offset: number;
+  createdAtAfter: Date;
+  lastMonth: boolean;
+  lastYear: boolean;
+  allTime: boolean;
 }
 
 export interface GetAppraisesUsersResponseItem {
