@@ -36,9 +36,14 @@ export interface GetAppraisesUsersData {
 export interface GetAppraisesUsersResponseItem {
   id: ID;
   fullname: string;
-  type: string;
 }
 
 export interface GetAppraisesUsersResponse extends CommonResponse {
   users: GetAppraisesUsersResponseItem[];
+  authors: GetAppraisesUsersResponseItem[];
+}
+
+export interface GetAppraisesUsersTypeResponse {
+  users: GetAppraisesUsersResponseItem[];
+  authors: GetAppraisesUsersResponseItem[];
 }
