@@ -21,6 +21,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
                 createdAtAfter,
                 lastMonth,
                 lastYear,
+                allTime,
             } = request.query as GetAppraiseResponse;
             const data: GetAppraiseResponse = {
                 userId,
@@ -30,6 +31,7 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
                 createdAtAfter,
                 lastMonth,
                 lastYear,
+                allTime,
             };
             const appraises = await getAppraisesService(data as GetAppraiseResponse);
             return { ...commonResponse, appraises };
@@ -47,12 +49,20 @@ const routes = async (fastify: FastifyInstance): Promise<void> => {
                 limit,
                 offset,
                 authorId,
+                createdAtAfter,
+                lastMonth,
+                lastYear,
+                allTime,
             } = request.query as GetAppraisesUsersData;
             const data: GetAppraisesUsersData = {
                 userId,
                 authorId,
                 offset,
                 limit,
+                createdAtAfter,
+                lastMonth,
+                lastYear,
+                allTime,
             };
             const { users, authors } = await getAppraisesUsersService(data as GetAppraisesUsersData);
             return { ...commonResponse, users, authors };

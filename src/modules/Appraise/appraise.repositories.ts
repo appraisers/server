@@ -36,6 +36,7 @@ export class AppraiseRepository extends Repository<Appraise> {
       createdAtAfter,
       lastMonth,
       lastYear,
+      allTime,
     } = data;
 
     //Setting the datetime with the last month from the first day.
@@ -52,16 +53,21 @@ export class AppraiseRepository extends Repository<Appraise> {
       .innerJoinAndSelect('appraise.author', 'author');
     if (userId != null) query.andWhere('user_id = :userId', { userId });
     if (authorId != null) query.andWhere('author_id = :authorId', { authorId });
-    if (createdAtAfter != null)
-      query.andWhere('appraise.created_at >= :createdAtAfter', {
-        createdAtAfter,
-      });
-    if (lastMonth != null)
-      query.andWhere('appraise.created_at >= :lastMonthDate', {
-        lastMonthDate,
-      });
-    if (lastYear != null)
-      query.andWhere('appraise.created_at >= :lastYearDate', { lastYearDate });
+    if (allTime == null) {
+      if (createdAtAfter != null)
+        query.andWhere('appraise.created_at >= :createdAtAfter', {
+          createdAtAfter,
+        });
+      if (lastMonth != null) {
+        query.andWhere('appraise.created_at >= :lastMonthDate', {
+          lastMonthDate,
+        });
+      }
+      if (lastYear != null)
+        query.andWhere('appraise.created_at >= :lastYearDate', {
+          lastYearDate,
+        });
+    }
     query
       .orderBy('appraise.createdAt', 'ASC')
       .offset(offset ? Number(offset) : APPRAISE_OFFSET)
@@ -69,9 +75,44 @@ export class AppraiseRepository extends Repository<Appraise> {
     return await query.getMany();
   }
   async findAppraisesUsers(data: GetAppraisesUsersData): Promise<Appraise[]> {
-    const { userId, authorId, limit, offset } = data;
+    const {
+      userId,
+      authorId,
+      limit,
+      offset,
+      createdAtAfter,
+      lastMonth,
+      lastYear,
+      allTime,
+    } = data;
+
+    //Setting the datetime with the last month from the first day.
+    const lastMonthDate = new Date();
+    lastMonthDate.setDate(1);
+
+    //Setting the datetime with the last year from the first month and the first day (example: 2022-01-01).
+    const lastYearDate = new Date();
+    lastYearDate.setMonth(0);
+    lastYearDate.setDate(1);
 
     const query = this.createQueryBuilder('appraise').select(['appraise']);
+
+    if (allTime == null) {
+      if (createdAtAfter != null)
+        query.andWhere('appraise.created_at >= :createdAtAfter', {
+          createdAtAfter,
+        });
+      if (lastMonth != null) {
+        query.andWhere('appraise.created_at >= :lastMonthDate', {
+          lastMonthDate,
+        });
+      }
+      if (lastYear != null)
+        query.andWhere('appraise.created_at >= :lastYearDate', {
+          lastYearDate,
+        });
+    }
+
     if (userId != null) {
       query.andWhere('user_id = :userId', { userId });
       query.innerJoinAndSelect('appraise.author', 'author');
