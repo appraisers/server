@@ -116,7 +116,7 @@
 	VALUES ( true, '2020-01-16', 6, 5);
     INSERT INTO public.appraisers(
 	status, created_at, user_id, author_id)
-	VALUES ( true, '2022-04-15', 5, 5);
+	VALUES ( true, '2022-04-15', 8, 5);
     INSERT INTO public.appraisers(
 	status, created_at, user_id, author_id)
 	VALUES ( true, '2022-04-14', 4, 6);
@@ -176,7 +176,7 @@
 	VALUES ( true, '2016-09-12', 1, 10);
     INSERT INTO public.appraisers(
 	status, created_at, user_id, author_id)
-	VALUES ( true, '2018-10-15', 11, 11);
+	VALUES ( true, '2018-10-15', 11, 1);
     INSERT INTO public.appraisers(
 	status, created_at, user_id, author_id)
 	VALUES ( true, '2018-09-11', 10, 12);

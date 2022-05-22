@@ -26,20 +26,22 @@ export const getAppraisesUsersService = async (
   if (!appraises) throw buildError(400, allErrors.appraiseNotFound);
   const users: GetAppraisesUsersResponseItem[] = [];
   appraises.forEach((appraise) => {
-    if (data.authorId != null && appraise.author != null) {
+    if (appraise.author != null) {
       const isAlreadyUser =
         users.findIndex((user) => user.id === appraise.author.id) >= 0;
       if (!isAlreadyUser) {
         users.push({
+          type: 'author',
           fullname: appraise.author?.fullname!,
           id: appraise.author.id,
         });
       }
-    } else if (appraise.user != null) {
+    } if (appraise.user != null) {
       const isAlreadyUser =
         users.findIndex((user) => user.id === appraise.user.id) >= 0;
       if (!isAlreadyUser) {
         users.push({
+          type: 'user',
           fullname: appraise.user?.fullname!,
           id: appraise.user.id,
         });
