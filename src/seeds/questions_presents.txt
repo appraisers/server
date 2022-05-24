@@ -1,0 +1,56 @@
+  	'Эффективность':
+Как часто {name} пьет чай на рабочем месте?
+Как часто {name} предлагает оригинальные идеи?
+Как часто {name} опаздывает на пары?
+Как быстро {name} может скушать целую пиццу?
+	'Взаимодействие':
+Как часто {name} созванивается с подчиненными?
+Оказывает ли {name} давление на работе?
+Делится ли {name} печеньками с коллегами?
+Оцените насколько {name} умеет управлять людьми.
+	'Оценка способностей':
+Может ли {name} достать языком достать до носа?
+Умеет ли {name} делать из ничего - конфетку(крутой проект)?
+Всегда ли у {name}а одинаковые носки?
+Как часто {name} съедает все печеньки в офисе?
+	'Личные качества':
+Часто ли {name} задает глупые вопросы?
+Насколько {name} любит поболтать?
+Умеет ли {name} поднять настроение?
+Можно ли {name}у поручить заварить чай?
+	'Другое'
+Как часто {name} выражает свое профессиональное мнение?
+На сколько бы вы оценили пижаму {name}а, в которой он работает дома?
+Оцените количество сосисок, которое {name} добавит в свой хотдог.
+Оцените вероятность, что {name} инопланетянин.
+
+--Эффективность(effectiveness)
+INSERT INTO public.questions(description, category, weight, updated_at ,deleted_at, position) VALUES ('Как часто {name} пьет чай на рабочем месте?','effectiveness',10,null,null,'default');  
+INSERT INTO public.questions(description, category, weight, updated_at, deleted_at, position)  VALUES ('Как часто {name} предлагает оригинальные идеи?', 'effectiveness', 9,null, null, 'default');  
+INSERT INTO public.questions(description, category, weight, updated_at, deleted_at, position)  VALUES ('Как часто {name} опаздывает на пары?', 'effectiveness', 8,null, null, 'default');  
+INSERT INTO public.questions(description, category, weight, updated_at, deleted_at, position)  VALUES ('Как быстро {name} может скушать целую пиццу?', 'effectiveness', 7,null, null, 'default');  
+--Взаимодействие(interaction)
+INSERT INTO public.questions(description, category, weight, updated_at, deleted_at, position)  VALUES ('Как часто {name} созванивается с подчиненными?', 'interaction', 10,null, null, 'default');  
+INSERT INTO public.questions(description, category, weight, updated_at, deleted_at, position)  VALUES ('Оказывает ли {name} давление на работе?', 'interaction', 9,null, null, 'default');  
+INSERT INTO public.questions(description, category, weight, updated_at, deleted_at, position)  VALUES ('Делится ли {name} печеньками с коллегами?', 'interaction', 8,null, null, 'default');  
+INSERT INTO public.questions(description, category, weight, updated_at, deleted_at, position)  VALUES ('Оцените насколько {name} умеет управлять людьми.', 'interaction', 7,null, null, 'default');  
+--Оценка способностей (assessment of abilities)
+INSERT INTO public.questions(description, category, weight, updated_at, deleted_at, position)  VALUES ('Может ли {name} достать языком достать до носа?', 'assessment of abilities', 10,null, null, 'default');  
+INSERT INTO public.questions(description, category, weight, updated_at, deleted_at, position)  VALUES ('Умеет ли {name} делать из ничего - конфетку(крутой проект)?', 'assessment of abilities', 9,null, null, 'default');  
+INSERT INTO public.questions(description, category, weight, updated_at, deleted_at, position)  VALUES ('Всегда ли у {name}а одинаковые носки?', 'assessment of abilities', 8,null, null, 'default');  
+INSERT INTO public.questions(description, category, weight, updated_at, deleted_at, position)  VALUES ('Как часто {name} съедает все печеньки в офисе?', 'assessment of abilities', 7,null, null, 'default');  
+--Личные качества('personal qualities')
+INSERT INTO public.questions(description, category, weight, updated_at, deleted_at, position)  VALUES ('Часто ли {name} задает глупые вопросы?', 'personal qualities', 10,null, null, 'default');  
+INSERT INTO public.questions(description, category, weight, updated_at, deleted_at, position)  VALUES ('Насколько {name} любит поболтать?', 'personal qualities', 9,null, null, 'default');  
+INSERT INTO public.questions(description, category, weight, updated_at, deleted_at, position)  VALUES ('Умеет ли {name} поднять настроение?', 'personal qualities', 8,null, null, 'default');  
+INSERT INTO public.questions(description, category, weight, updated_at, deleted_at, position)  VALUES ('Можно ли {name}у поручить заварить чай?', 'personal qualities', 7,null, null, 'default');  
+--Boss
+INSERT INTO public.questions(description, category, weight, updated_at, deleted_at, position)  VALUES ('Как часто {name} выражает свое профессиональное мнение?', 'default', 10,null, null, 'boss');
+INSERT INTO public.questions(description, category, weight, updated_at, deleted_at, position)  VALUES ('На сколько бы вы оценили пижаму {name}а, в которой он работает дома?', 'default', 9,null, null, 'boss');
+INSERT INTO public.questions(description, category, weight, updated_at, deleted_at, position)  VALUES ('Оцените количество сосисок, которое {name} добавит в свой хотдог.', 'default', 8,null, null, 'boss');
+INSERT INTO public.questions(description, category, weight, updated_at, deleted_at, position)  VALUES ('Оцените вероятность, что {name} инопланетянин.', 'default', 7, null, null, 'boss');
+
+--users
+INSERT INTO public.users( fullname, email, password, workplace, position, role, show_info, rating, number_of_completed_reviews, updated_review_at) VALUES ('Олег', 'stelmah.oleg@ya.ru', 'test123', 'iktib', 'boss', 'user', true, 4.6, 2, '2022-04-25 16:58:20');
+INSERT INTO public.users( fullname, email, password, workplace, position, role, show_info, rating, number_of_completed_reviews, updated_review_at) VALUES ('Лучшее жури 1', 'kirill-garnov@mail.ru', 'test123', 'iktib', 'tester', 'user', true, 5, 2, '2022-04-25 16:58:20');
+INSERT INTO public.users( fullname, email, password, workplace, position, role, show_info, rating, number_of_completed_reviews, updated_review_at) VALUES ('Лучшее жури 2', 'adebayomayowa78@gmail.com', 'test123', 'iktib', 'tester', 'user', true, 5, 2, '2022-04-25 16:58:20');
