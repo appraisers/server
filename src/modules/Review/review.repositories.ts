@@ -101,6 +101,7 @@ export class ReviewRepository extends Repository<Review> {
       .select('review')
       .where('user_id = :userId', { userId })
       .andWhere('author_id = :author', { author })
+      .andWhere('active_session = true')
       .orderBy('review.updatedAt', 'DESC')
       .getOne();
   }
