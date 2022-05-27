@@ -229,7 +229,7 @@ export const toggleShowInfoService = async (
 ): Promise<null> => {
   const { userId } = data;
   const userRepo = getCustomRepository(UserRepository);
-  const user = await userRepo.getUserById({ userId });
+  const user = await userRepo.findOneUserByKey('id', userId );
   if (!user) throw buildError(400, allErrors.userNotFound);
   const showInfo = !user.showInfo;
   await userRepo.toggleShowInfo({ userId, showInfo });

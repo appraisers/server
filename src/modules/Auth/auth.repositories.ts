@@ -54,6 +54,8 @@ export class UserRepository extends Repository<User> {
   ): Promise<User | undefined> {
     return this.createQueryBuilder('user')
       .select('user.id')
+      .addSelect('user.fullname')
+      .addSelect('user.workplace')
       .addSelect('user.email')
       .addSelect('user.position')
       .addSelect(`user.${field}`)
